@@ -1,6 +1,8 @@
-const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('tbl_gym', {
+let tbl_gym 
+
+module.exports = function (sequelize, DataTypes)  {
+
+    tbl_gym =  sequelize.define('tbl_gym', {
     Prk_Gym_AutoID: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -58,4 +60,7 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
+
+  return tbl_gym;
+
 };

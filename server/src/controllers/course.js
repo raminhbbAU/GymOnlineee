@@ -1,21 +1,20 @@
 var router = require('express').Router();
-var sequelize = require("sequelize");
-
-var initModels = require("../models/init-models");
+var db = require('../services/sequelizeDb.service.js')
 
 router.get('/', function(req, res, next) {  
-    console.log("course called!");
    
-    var models = initModels(sequelize);
-    console.log(models);
+    let tbl_gym = new db().getInstance().models.tbl_gym;
+    
+    tbl_gym.findAll()
+    .then(gym => {
+      console.log(gym);
+      res.status(200).send(gym);
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(402).send(error);
+    })
 
-    models.User.findAll().then({
-        
-    });
-
-   
-    res.json('this is a fucking course');
  });
-
 
  module.exports = router;  

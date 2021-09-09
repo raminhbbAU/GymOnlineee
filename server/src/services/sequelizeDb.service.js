@@ -32,14 +32,21 @@ class sequelizeDb {
               console.log("Initial models");
               this.models = initModels(this.sequelize);        
 
-              console.log("Sync sequelize");
-              this.sequelize.sync({
-                  logging:false
-              });
 
+              this.sequelize.authenticate()
+              .then( ()=> {
+                console.info('Connection has been established successfully.');
 
-              await this.sequelize.authenticate();
-              console.log('Connection has been established successfully.');
+                console.log("Sync sequelize");
+                this.sequelize.sync({
+                    logging:true
+                });
+  
+              })
+              .catch( (error) => {
+                  console.error('ERROR - Unable to connect to the database:', err);
+              })
+              
        
         } catch (error) {
             console.log(error);

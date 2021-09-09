@@ -1,8 +1,9 @@
-let tbl_gym 
+const Sequelize = require('sequelize');
 
 module.exports = function (sequelize, DataTypes)  {
 
-    tbl_gym =  sequelize.define('tbl_gym', {
+  return sequelize.define('gym', {
+
     Prk_Gym_AutoID: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -46,21 +47,7 @@ module.exports = function (sequelize, DataTypes)  {
       allowNull: false
     }
   }, {
-    sequelize,
-    tableName: 'tbl_gym',
-    timestamps: false,
-    indexes: [
-      {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "Prk_Gym_AutoID" },
-        ]
-      },
-    ]
+    timestamps: false
   });
-
-  return tbl_gym;
 
 };

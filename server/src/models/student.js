@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
+
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('tbl_student', {
+  return sequelize.define('student', {
     Prk_Student_AutoID: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -63,19 +64,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(500),
       allowNull: false
     }
-  }, {
-    sequelize,
-    tableName: 'tbl_student',
-    timestamps: false,
-    indexes: [
-      {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "Prk_Student_AutoID" },
-        ]
-      },
-    ]
+  }, 
+  {
+    timestamps: false
   });
 };

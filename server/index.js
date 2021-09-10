@@ -1,36 +1,38 @@
 const express = require('express');
-const cors = require('cors');
 const app = express();
-const db = require('./src/services/sequelizeDb.service.js')
-
-// db sync
-// const db = require("./src/model");
-// db.sequelize.sync();
+const db = require('./src/models/sequlizeDb.js')
 
 
-//cors config
-var corsOptions = {
-    origin: "http://localhost:3001"
-  };  
-app.use(cors(corsOptions));
+// setup the Express middlware
+require('./src/services/middleware.service.js')(app);
 
 
-// parse requests of content-type - application/json
-app.use(express.json());
-
-
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true }));
-
-
+// setup the api
 app.use('/api/v1',require('./src/routes/route.v1.js'))
+
+
 
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+
+
+// sync sequelize
+db.sequelize.sync({
+    logging:false
+}).then(() => {
+  app.listen(PORT, () => {
+    console.log(db)
+    console.log(`Server is running on port ${PORT}.`);
+  });
+}).catch((error) => {
+    console.error('ERROR - Unable to connect to the database:', err);
 });
+
+
+
+
+
 
 
 // var config = {

@@ -2,9 +2,11 @@ const router = require('express').Router();
 const models  = require('../models/sequlizeDb.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const authToken = require('../services/auth.service.js')
+const authToken = require('../services/auth.service.js');
+const yupValidator = require('../services/validation.service.js');
+const { gymRegisterSchema } = require('../validationSchema/yup.validation.js');
 
- router.post('/register', async (req,res,next) => {
+ router.post('/register',yupValidator(gymRegisterSchema), async (req,res) => {
     
     // Get user input
     const { GymName,OwnerTitle,Address,Tel,Gmail,Mobile,UserName,Password,Description} = req.body;

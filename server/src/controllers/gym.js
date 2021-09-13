@@ -1,9 +1,4 @@
-const router = require('express').Router();
-const models  = require('../models/sequlizeDb.js');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const authToken = require('../services/auth.service.js');
-const yupValidator = require('../services/validation.service.js');
+const {router,models,bcrypt,jwt,authToken,yupValidator} = require('./index')
 const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.validation.js');
 
  router.post('/register',yupValidator(gymRegisterSchema), async (req,res,next) => {

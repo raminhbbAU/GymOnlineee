@@ -55,7 +55,7 @@ const studentRegisterSchema = yup.object({
     Telegram:mobileValidator,
     Gmail:gmailValidator,
     Address:addressValidator,
-    Birthday:yup.required().date(),
+    Birthday:yup.date().required('The birthday is required'),
     UserName:userNameValidator,
     Password:passwordValidator,
     Description:descriptionValidator

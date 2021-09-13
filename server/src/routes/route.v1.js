@@ -1,14 +1,15 @@
 let router = require('express').Router();
 
+const fs = require('fs');
+const path = require('path');
 
-// const gym = require('./routes/gym');
-// const course = require('./routes/course.js');
 
-// router.use('/',gym,course)
-
-router.use('/gym', require('../controllers/gym'));  
-router.use('/trainer', require('../controllers/trainer'));  
-router.use('/student', require('../controllers/student'));  
-
+fs.readdirSync(path.join(__dirname, '..','controllers'))
+  .forEach(file => {
+    if (file !== 'index.js')
+    {
+      router.use('/' + file.replace('.js',''), require('../controllers/' + file.replace('.js','')));  
+    }
+  })
 
 module.exports = router;

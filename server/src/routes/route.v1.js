@@ -7,7 +7,8 @@ let router = require('express').Router();
 // router.use('/',gym,course)
 
 router.use('/gym', require('../controllers/gym'));  
-router.use('/course', require('../controllers/course'));  
+router.use('/trainer', require('../controllers/trainer'));  
+router.use('/student', require('../controllers/student'));  
 
 
 module.exports = router;

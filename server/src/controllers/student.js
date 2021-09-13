@@ -4,22 +4,22 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const authToken = require('../services/auth.service.js');
 const yupValidator = require('../services/validation.service.js');
-const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.validation.js');
+const { studentRegisterSchema,studentLoginSchema } = require('../validationSchema/yup.validation.js');
 
- router.post('/register',yupValidator(gymRegisterSchema), async (req,res,next) => {
+ router.post('/register',yupValidator(studentRegisterSchema), async (req,res,next) => {
     
     // Get user input
-    const { GymName,OwnerTitle,Address,Tel,Gmail,Mobile,UserName,Password,Description} = req.body;
+    const { Name,Family,Mobile,WhatsApp,Telegram,Gmail,Address,Birthday,UserName,Password,Description } = req.body;
 
      // check if user already exist
-     const oldGym = await models.gym.findOne({
+     const oldStudent = await models.student.findOne({
         where:{
             Str_UserName:UserName
         }
     });
 
-     if (oldGym) {
-        return res.status(409).send("User already exist. Please login to your account");
+     if (oldStudent) {
+        return res.status(409).send("Student already exist. Please login to your account");
      }
 
 
@@ -28,20 +28,26 @@ const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.v
 
 
      // create New User
-    models.gym.create({
-        Str_GymName:GymName,
-        Str_OwnerTitle:OwnerTitle,
-        Str_Address:Address,
-        Str_Tel:Tel,
-        Str_Gmail:Gmail,
+    models.student.create({
+        Str_Name:Name ,
+        Str_Family:Family,
         Str_Mobile:Mobile,
+        Str_WhatsApp:WhatsApp,
+        Str_Telegram:Telegram,
+        Str_Gmail:Gmail,
+        Str_Address:Address,
+        Str_Birthday:Birthday,
+        Str_RegisterDate,
+        Str_RegisterTime,
         Str_UserName:UserName,
-        Str_Password:encryptedPassword,
+        Str_Password:Password,
+        Bit_Active:true,
         Str_Description:Description
-     }).then( (gym) => {
+
+     }).then( (student) => {
 
             // create new token
-            let token = jwt.sign({ id: gym.Prk_Gym_AutoID,username:gym.Str_UserName}, process.env.JWT_SECRET, {
+            let token = jwt.sign({ id: student.Prk_Student_AutoID ,username:student.Str_UserName}, process.env.JWT_SECRET, {
                 expiresIn: process.env.JWT_EXPIRES_IN
               });
     
@@ -50,24 +56,23 @@ const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.v
             res.status(200).json({
                 auth:true,
                 token,
-                data:gym
+                data:student
             })
 
      }).catch( (error) => {
         console.log(error);
-        return res.status(500).send('There was a problem registering the user.');
-    
+        return res.status(500).send('There was a problem registering the student.');    
      })
 
 })
 
-router.post('/login',yupValidator(gymLoginSchema), async (req,res,next) => {
+router.post('/login',yupValidator(studentLoginSchema), async (req,res,next) => {
     
     // Get user input
     const { UserName, Password } = req.body;
 
     // check if user already exist
-    const oldGym = await models.gym.findOne({
+    const oldStudent = await models.student.findOne({
         where:{
             Str_UserName:UserName
         }
@@ -75,10 +80,10 @@ router.post('/login',yupValidator(gymLoginSchema), async (req,res,next) => {
 
 
     // Check User & Password
-    if (oldGym && (await bcrypt.compare(Password,oldGym.Str_Password) ) ) {
+    if (oldStudent && (await bcrypt.compare(Password,oldStudent.Str_Password) ) ) {
         
             // create new token
-            let token = jwt.sign({ id: oldGym.Prk_Gym_AutoID,username:oldGym.Str_UserName}, process.env.JWT_SECRET, {
+            let token = jwt.sign({ id: oldStudent.Prk_Student_AutoID ,username:oldStudent.Str_UserName}, process.env.JWT_SECRET, {
                 expiresIn: process.env.JWT_EXPIRES_IN
               });
     
@@ -87,9 +92,8 @@ router.post('/login',yupValidator(gymLoginSchema), async (req,res,next) => {
             res.status(200).json({
                 auth:true,
                 token,
-                data:oldGym
-            })
-        
+                data:oldStudent
+            })       
     }
     else
     {

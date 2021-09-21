@@ -1,3 +1,7 @@
+import axios from "axios";
+
+import apiPath from "../constants/api.config";
+
 const login = async(userName,password,type) => {
     switch(type){
         case "Gym":
@@ -16,8 +20,18 @@ const login = async(userName,password,type) => {
 }
 
 const gymLogin =  async(userName,password) => {
-    console.log("gymLogin called");
-    return 1;
+   
+    console.log(apiPath);
+
+    axios.post(apiPath + 'gym/login',{
+        UserName:userName,
+        Password:password
+    }).then( (res) => {
+        console.log(res);
+    }).catch( (error) => {
+        console.log('something wrong happen!!!!!');
+        console.log(error);
+    })
 }
 
 const trainerLogin =  async(userName,password) => {

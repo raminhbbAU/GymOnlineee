@@ -31,10 +31,10 @@ export default function SignInSide() {
     const data = new FormData(event.currentTarget);
 
     try {
-      console.log(data.get('userType'));
       let value =  loginAPI.login(data.get('username'),data.get('password'),data.get('userType'));
       console.log(value);
     } catch (error) {
+      console.log('something bad happen!!!!!');
       console.log(error);
     }
 

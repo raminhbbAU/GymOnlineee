@@ -14,7 +14,7 @@ module.exports = (app) => {
  
   dotenv.config();
 
-  const PORT = process.env.PORT || 3001;
+  const PORT = 3000;
   var corsOptions = {origin: `http://localhost:${PORT}`}; 
   
   app.use(cors(corsOptions));

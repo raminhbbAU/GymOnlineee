@@ -21,27 +21,40 @@ const login = async(userName,password,type) => {
 
 const gymLogin =  async(userName,password) => {
    
-    console.log(apiPath);
-
-    axios.post(apiPath + 'gym/login',{
+    await axios.post(apiPath + 'gym/login',{
         UserName:userName,
         Password:password
     }).then( (res) => {
-        console.log(res);
+        return res;
     }).catch( (error) => {
-        console.log('something wrong happen!!!!!');
-        console.log(error);
+        return Promise.reject(error);
     })
 }
 
 const trainerLogin =  async(userName,password) => {
-    throw 'this service is unreachable now.'
-    return 1;
+
+    await axios.post(apiPath + 'trainer/login',{
+        UserName:userName,
+        Password:password
+    }).then( (res) => {
+        return res;
+    }).catch( (error) => {
+        return Promise.reject(error);
+    })
+
 }
 
 const athleteLogin =  async(userName,password) => {
-    throw 'this service is unreachable now.'
-    return 1;
+
+    await axios.post(apiPath + 'student/login',{
+        UserName:userName,
+        Password:password
+    }).then( (res) => {
+        return res;
+    }).catch( (error) => {
+        return Promise.reject(error);
+    })
+    
 }
 
 export default {login};

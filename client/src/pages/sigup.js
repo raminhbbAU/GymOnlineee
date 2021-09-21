@@ -11,22 +11,18 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import loginback from "../assests/images/loginback.jpg";
+import Copyright from "../components/copyright.js"
+import { Paper } from '@mui/material';
+import { border } from '@mui/system';
+
 
 const theme = createTheme();
+
 
 export default function SignUp() {
   const handleSubmit = (event) => {
@@ -41,7 +37,7 @@ export default function SignUp() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
@@ -57,37 +53,70 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
+
+          <RadioGroup
+          row
+          aria-label="userType"
+          defaultValue="Gym"
+          name="userType"
+        >
+          <FormControlLabel value="Gym" control={<Radio />} label="Gym" />
+          <FormControlLabel
+            disabled
+            value="Trainer"
+            control={<Radio />}
+            label="Trainer"
+          />
+          <FormControlLabel
+            disabled
+            value="Athlete"
+            control={<Radio />}
+            label="Athlete"
+          />
+        </RadioGroup>
+
+
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} >
                 <TextField
-                  autoComplete="fname"
-                  name="firstName"
+                  autoComplete="gymname"
+                  name="gymname"
                   required
                   fullWidth
-                  id="firstName"
-                  label="First Name"
+                  id="gymname"
+                  label="Gym Name"
                   autoFocus
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} >
                 <TextField
                   required
                   fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="lname"
+                  id="ownertitle"
+                  label="Owner title"
+                  name="ownertitle"
+                  autoComplete="ownertitle"
                 />
               </Grid>
+              <Grid item xs={12} >
+                <TextField
+                  required
+                  fullWidth
+                  id="mobile"
+                  label="Mobile"
+                  name="mobile"
+                  autoComplete="mobile"
+                />
+                </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
+                  id="gmail"
+                  label="Gmail Address / User Name"
+                  name="gmail"
+                  autoComplete="gmail"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -104,7 +133,7 @@ export default function SignUp() {
               <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                  label="I want to receive marketing promotions and updates via email."
                 />
               </Grid>
             </Grid>

@@ -6,7 +6,7 @@ import SignUp from './pages/sigup'
 function App() {
 
   return (
-    <Login></Login>
+    <SignUp></SignUp>
   );
 }
 

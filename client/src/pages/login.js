@@ -34,7 +34,6 @@ export default function SignInSide() {
       let value =  loginAPI.login(data.get('username'),data.get('password'),data.get('userType'));
       console.log(value);
     } catch (error) {
-      console.log('something bad happen!!!!!');
       console.log(error);
     }
 
@@ -119,7 +118,7 @@ export default function SignInSide() {
                   label="Trainer"
                 />
                 <FormControlLabel
-                  disabled
+                  // disabled
                   value="Athlete"
                   control={<Radio />}
                   label="Athlete"

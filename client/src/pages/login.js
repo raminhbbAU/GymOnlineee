@@ -18,7 +18,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import loginback from "../assests/images/loginback.jpg";
 
 import Copyright from "../components/copyright.js"
-import loginAPI from "../api/login.js";
+import API from "../api/login.js";
 
 
 
@@ -30,13 +30,17 @@ export default function SignInSide() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    try {
-      let value =  loginAPI.login(data.get('username'),data.get('password'),data.get('userType'));
-      console.log(value);
-    } catch (error) {
-      console.log(error);
-    }
 
+    API.login(
+      data.get('username'),
+      data.get('password'),
+      data.get('userType')
+      ).then((res) => {
+        console.log(res);
+      }).catch((error) => {
+        console.log(error.response);
+      })
+  
   };
 
   return (

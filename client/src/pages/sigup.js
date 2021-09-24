@@ -15,10 +15,8 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import loginback from "../assests/images/loginback.jpg";
 import Copyright from "../components/copyright.js"
-import { Paper } from '@mui/material';
-import { border } from '@mui/system';
+import API from "../api/signup.js";
 
 
 const theme = createTheme();
@@ -28,12 +26,21 @@ export default function SignUp() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+      API.gymSignUp(
+        data.get('gymname'),
+        data.get('ownertitle'),
+        data.get('mobile'),
+        data.get('gmail'),
+        data.get('password')
+        ).then((res) => {
+          console.log(res);
+        }).catch((error) => {
+          console.log(error.response);
+        })
+
   };
+
 
   return (
     <ThemeProvider theme={theme}>

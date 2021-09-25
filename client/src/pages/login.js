@@ -18,6 +18,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import loginback from "../assests/images/loginback.jpg";
 
 import Copyright from "../components/copyright.js"
+import Storage from "../storage/localstorage.js";
 import API from "../api/login.js";
 
 
@@ -37,6 +38,7 @@ export default function SignInSide() {
       data.get('userType')
       ).then((res) => {
         console.log(res);
+        Storage.set('JWT_Token',res)
       }).catch((error) => {
         console.log(error.response);
       })

@@ -21,7 +21,6 @@ const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.v
      //Encrypt user password
     encryptedPassword = await bcrypt.hash(Password, 10);
 
-
      // create New User
     models.gym.create({
         Str_GymName:GymName,

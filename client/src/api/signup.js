@@ -4,7 +4,7 @@ import apiPath from "../constants/api.config";
 
 const gymSignUp =  async(gymname,ownertitle,mobile,gmail,password) => {
    
-    await axios.post(apiPath + 'gym/register',{
+    let res = await axios.post(apiPath + 'gym/register',{
         GymName:gymname,
         OwnerTitle:ownertitle,
         Address:'',
@@ -14,11 +14,9 @@ const gymSignUp =  async(gymname,ownertitle,mobile,gmail,password) => {
         UserName:gmail,
         Password:password,
         Description:''
-    }).then( (res) => {
-        return res;
-    }).catch( (error) => {        
-        return Promise.reject(error);
-    })
+    });
+
+    return res;
 }
 
 

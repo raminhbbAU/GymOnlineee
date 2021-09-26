@@ -15,11 +15,11 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import loginback from "../assests/images/loginback.jpg";
+import loginback from "../../assests/images/loginback.jpg";
 
-import Copyright from "../components/copyright.js"
-import Storage from "../storage/localstorage.js";
-import API from "../api/login.js";
+import Copyright from "../../components/copyright.js"
+import Storage from "../../storage/localstorage.js";
+import API from "../../api/login.js";
 
 
 
@@ -31,18 +31,17 @@ export default function SignInSide() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
+    API.gymLogin(
+        data.get('username'),
+        data.get('password'),
+        data.get('userType')
+    ).then((result) => {
+      Storage.set('JWT_Token',result.data.token)
+      console.log(result)
+    }).catch((error) => {
+      console.log(error.response);
+    })
 
-    API.login(
-      data.get('username'),
-      data.get('password'),
-      data.get('userType')
-      ).then((res) => {
-        console.log(res);
-        Storage.set('JWT_Token',res)
-      }).catch((error) => {
-        console.log(error.response);
-      })
-  
   };
 
   return (

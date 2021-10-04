@@ -92,13 +92,14 @@ router.post('/login',yupValidator(gymLoginSchema), async (req,res,next) => {
 
 })
 
-router.post('/forgetPasswordbyGmail',authToken, async(req,res,next) => {
-    res.send('the forgetPasswordbyGmail API called');
+router.put('/completeProfile',authToken,async(req,res,next) =>{
+    res.send('the completeProfile API called');
 })
 
-router.post('/forgetPasswordbyMobile',authToken, async(req,res,next) => {
-    res.send('the forgetPasswordbyMobile API called');
+router.post('/activateAccount',authToken,async(req,res,next) =>{
+    res.send('the activateAccount API called');
 })
+
 
 
  module.exports = router;  

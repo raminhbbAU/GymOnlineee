@@ -1,20 +1,20 @@
 const {router,models,bcrypt,jwt,authToken,yupValidator} = require('./index')
-const { trainerRegisterSchema,trainerLoginSchema } = require('../validationSchema/yup.validation.js');
+const { studentRegisterSchema,studentLoginSchema } = require('../validationSchema/yup.validation.js');
 
- router.post('/register',yupValidator(trainerRegisterSchema), async (req,res,next) => {
+ router.post('/register',yupValidator(studentRegisterSchema), async (req,res,next) => {
     
     // Get user input
-    const { TrainerName , TrainerFamily,  Mobile,  WhatsApp,  Gmail, UserName , Password,  Avatar} = req.body;
+    const { Name,Family,Mobile,WhatsApp,Telegram,Gmail,Address,Birthday,UserName,Password,Description } = req.body;
 
      // check if user already exist
-     const oldTrainer = await models.trainer.findOne({
+     const oldStudent = await models.student.findOne({
         where:{
             Str_UserName:UserName
         }
     });
 
-     if (oldTrainer) {
-        return res.status(409).send("Trainer already exist. Please login to your account");
+     if (oldStudent) {
+        return res.status(409).send("Student already exist. Please login to your account");
      }
 
 
@@ -23,20 +23,26 @@ const { trainerRegisterSchema,trainerLoginSchema } = require('../validationSchem
 
 
      // create New User
-    models.trainer.create({
-        Str_TrainerName:TrainerName,
-        Str_TrainerFamily:TrainerFamily,
+    models.student.create({
+        Str_Name:Name ,
+        Str_Family:Family,
         Str_Mobile:Mobile,
         Str_WhatsApp:WhatsApp,
+        Str_Telegram:Telegram,
         Str_Gmail:Gmail,
+        Str_Address:Address,
+        Str_Birthday:Birthday,
+        Str_RegisterDate,
+        Str_RegisterTime,
         Str_UserName:UserName,
         Str_Password:Password,
-        Str_Avatar:Avatar
+        Bit_Active:true,
+        Str_Description:Description
 
-     }).then( (trainer) => {
+     }).then( (student) => {
 
             // create new token
-            let token = jwt.sign({ id: trainer.Prk_Trainer,username:trainer.Str_UserName}, process.env.JWT_SECRET, {
+            let token = jwt.sign({ id: student.Prk_Student_AutoID ,username:student.Str_UserName}, process.env.JWT_SECRET, {
                 expiresIn: process.env.JWT_EXPIRES_IN
               });
     
@@ -45,23 +51,23 @@ const { trainerRegisterSchema,trainerLoginSchema } = require('../validationSchem
             res.status(200).json({
                 auth:true,
                 token,
-                data:trainer
+                data:student
             })
 
      }).catch( (error) => {
         console.log(error);
-        return res.status(500).send('There was a problem registering the trainer.');    
+        return res.status(500).send('There was a problem registering the student.');    
      })
 
 })
 
-router.post('/login',yupValidator(trainerLoginSchema), async (req,res,next) => {
+router.post('/login',yupValidator(studentLoginSchema), async (req,res,next) => {
     
     // Get user input
     const { UserName, Password } = req.body;
 
     // check if user already exist
-    const oldTrainer = await models.trainer.findOne({
+    const oldStudent = await models.student.findOne({
         where:{
             Str_UserName:UserName
         }
@@ -69,10 +75,10 @@ router.post('/login',yupValidator(trainerLoginSchema), async (req,res,next) => {
 
 
     // Check User & Password
-    if (oldTrainer && (await bcrypt.compare(Password,oldTrainer.Str_Password) ) ) {
+    if (oldStudent && (await bcrypt.compare(Password,oldStudent.Str_Password) ) ) {
         
             // create new token
-            let token = jwt.sign({ id: oldTrainer.Prk_Trainer,username:oldTrainer.Str_UserName}, process.env.JWT_SECRET, {
+            let token = jwt.sign({ id: oldStudent.Prk_Student_AutoID ,username:oldStudent.Str_UserName}, process.env.JWT_SECRET, {
                 expiresIn: process.env.JWT_EXPIRES_IN
               });
     
@@ -81,9 +87,8 @@ router.post('/login',yupValidator(trainerLoginSchema), async (req,res,next) => {
             res.status(200).json({
                 auth:true,
                 token,
-                data:oldTrainer
-            })
-        
+                data:oldStudent
+            })       
     }
     else
     {
@@ -112,6 +117,9 @@ router.get('/getByGymID',authToken,async(req,res,next) =>{
     res.send('the getByGymID API called');
 })
 
+router.get('/getByCourseID',authToken,async(req,res,next) =>{
+    res.send('the getByCourseID API called');
+})
 
 
  module.exports = router;  

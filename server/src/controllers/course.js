@@ -1,7 +1,7 @@
 const {router,models,bcrypt,jwt,authToken,yupValidator} = require('./index')
 const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.validation.js');
 
- router.post('/addCourse',yupValidator(gymRegisterSchema), async (req,res,next) => {
+ router.post('/register',yupValidator(gymRegisterSchema), async (req,res,next) => {
     
     // Get user input
     const { CourseName,CourseDescription,Trainer,Active,StartDate,EndDate,TrainerPercent,CourseType,PerSessionCost} = req.body;
@@ -44,7 +44,7 @@ const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.v
 
 })
 
-router.post('/editCourse',yupValidator(gymLoginSchema), async (req,res,next) => {
+router.post('/edit',yupValidator(gymLoginSchema), async (req,res,next) => {
     
     // Get user input
     const { UserName, Password } = req.body;
@@ -79,6 +79,26 @@ router.post('/editCourse',yupValidator(gymLoginSchema), async (req,res,next) => 
         return res.status(409).send("User or Password is wrong. Please Try again");
     }
 
+})
+
+router.delete('/delete',authToken,async(req,res,next) =>{
+    res.send('the delete API called');
+})
+
+router.post('/registerOffTime',authToken,async(req,res,next) =>{
+    res.send('the registerOffTime API called');
+})
+
+router.put('/editOffTime',authToken,async(req,res,next) =>{
+    res.send('the editOffTime API called');
+})
+
+router.delete('/deleteOffTime',authToken,async(req,res,next) =>{
+    res.send('the deleteOffTime API called');
+})
+
+router.get('/getByGymID',authToken,async(req,res,next) =>{
+    res.send('the getByGymID API called');
 })
 
  module.exports = router;  

@@ -4,7 +4,7 @@ const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.v
  router.post('/register',yupValidator(gymRegisterSchema), async (req,res,next) => {
     
     // Get user input
-    const { GymName,OwnerTitle,Address,Tel,Gmail,Mobile,UserName,Password,Description} = req.body;
+    const { GymName,Gmail,Mobile,UserName,Password} = req.body;
 
      // check if user already exist
      const oldGym = await models.gym.findOne({
@@ -14,9 +14,11 @@ const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.v
     });
 
      if (oldGym) {
-        return res.status(409).send("User already exist. Please login to your account");
+        return res.status(409).json({
+            res: false,
+            data: "User already exist. Please login to your account",
+          });
      }
-
 
      //Encrypt user password
     encryptedPassword = await bcrypt.hash(Password, 10);
@@ -24,14 +26,10 @@ const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.v
      // create New User
     models.gym.create({
         Str_GymName:GymName,
-        Str_OwnerTitle:OwnerTitle,
-        Str_Address:Address,
-        Str_Tel:Tel,
         Str_Gmail:Gmail,
         Str_Mobile:Mobile,
         Str_UserName:UserName,
         Str_Password:encryptedPassword,
-        Str_Description:Description
      }).then( (gym) => {
 
             // create new token
@@ -39,9 +37,13 @@ const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.v
                 expiresIn: process.env.JWT_EXPIRES_IN
               });
     
-            if (!token) return res.status(500).send('There was a problem during token generation');
+            if (!token) return res.status(500).json({
+                res: false,
+                data: 'There was a problem during token generation',
+              }); 
     
             res.status(200).json({
+                res:true,
                 auth:true,
                 token,
                 data:gym
@@ -49,8 +51,10 @@ const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.v
 
      }).catch( (error) => {
         console.log(error);
-        return res.status(500).send('There was a problem registering the user.');
-    
+        return res.status(500).json({
+            res: false,
+            data: 'There was a problem registering new gym.',
+          });
      })
 
 })
@@ -76,9 +80,13 @@ router.post('/login',yupValidator(gymLoginSchema), async (req,res,next) => {
                 expiresIn: process.env.JWT_EXPIRES_IN
               });
     
-            if (!token) return res.status(500).send('There was a problem during token generation');
+              if (!token) return res.status(500).json({
+                res: false,
+                data: 'There was a problem during token generation',
+              }); 
     
             res.status(200).json({
+                res:true,
                 auth:true,
                 token,
                 data:oldGym
@@ -87,17 +95,96 @@ router.post('/login',yupValidator(gymLoginSchema), async (req,res,next) => {
     }
     else
     {
-        return res.status(409).send("User or Password is wrong. Please Try again");
+        return res.status(409).json({
+            res: false,
+            data: "User or Password is wrong. Please Try again",
+          });
     }
 
 })
 
-router.put('/completeProfile',authToken,async(req,res,next) =>{
-    res.send('the completeProfile API called');
+router.put('/edit',authToken,async(req,res,next) =>{
+    
+   // Get user input
+   const { ID,GymName,OwnerTitle,Address,Tel,Gmail,Mobile,Description} = req.body;
+
+   // check if user already exist
+   const oldGym = await models.gym.findOne({
+      where:{
+        Prk_Gym_AutoID:ID
+      }
+  });
+
+   if (!oldGym) {
+      return res.status(409).json({
+          res: false,
+          data: "The specific gym doesn't exist! it must've deleted before.",
+        });
+   }
+   else {
+
+    oldGym.update({
+        Str_GymName:GymName,
+        Str_OwnerTitle:OwnerTitle,
+        Str_Address:Address,
+        Str_Tel:Tel,
+        Str_Gmail:Gmail,
+        Str_Mobile:Mobile,
+        Str_Description:Description
+    }).then( (updatedrecord) => {
+        res.status(200).json({
+            res: true,
+            data: updatedrecord,
+          });
+   }).catch( (error) => {
+        console.log(error);
+        return res.status(500).json({
+        res: false,
+        data: "something wrong happend during editing gym. Please try again a bit later!",
+        });
+   })
+
+   }
+
 })
 
 router.post('/activateAccount',authToken,async(req,res,next) =>{
-    res.send('the activateAccount API called');
+    
+   // Get user input
+   const { ID} = req.body;
+
+   // check if user already exist
+   const oldGym = await models.gym.findOne({
+      where:{
+        Prk_Gym_AutoID:ID
+      }
+  });
+
+   if (!oldGym) {
+      return res.status(409).json({
+          res: false,
+          data: "The specific gym doesn't exist! it must've deleted before.",
+        });
+   }
+   else {
+
+    oldGym.update({
+        Bit_Active:true
+    }).then( (updatedrecord) => {
+        res.status(200).json({
+            res: true,
+            data: updatedrecord,
+          });
+   }).catch( (error) => {
+        console.log(error);
+        return res.status(500).json({
+            res: false,
+            data: "something wrong happend during activating gym. Please try again a bit later!",
+        });
+   })
+
+   }
+
 })
 
 

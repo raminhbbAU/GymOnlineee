@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(500),
             allowNull: false
         },
+        Frk_Gym:{
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
         Frk_Trainer:{
             type: DataTypes.INTEGER,
             allowNull: false

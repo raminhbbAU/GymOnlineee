@@ -8,6 +8,10 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
+    Frk_gym:{
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     Str_Name: {
       type: DataTypes.STRING(100),
       allowNull: false

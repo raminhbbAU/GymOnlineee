@@ -7,8 +7,11 @@ module.exports = (sequelize, DataTypes) => {
             type:DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true
-        }
-        ,
+        },
+        Frk_gym:{
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
         Str_TrainerName:{
             type: DataTypes.STRING(300),
             allowNull: false

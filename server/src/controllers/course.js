@@ -1,21 +1,12 @@
-const {
-  router,
-  models,
-  bcrypt,
-  jwt,
-  authToken,
-  yupValidator,
-} = require("./index");
-const {
-  gymRegisterSchema,
-  gymLoginSchema,
-} = require("../validationSchema/yup.validation.js");
+const {router,models,bcrypt,jwt,authToken,yupValidator} = require('./index')
+const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.validation.js');
 
 router.post("/register", authToken, async (req, res, next) => {
   // Get user input
   const {
     CourseName,
     CourseDescription,
+    Gym,
     Trainer,
     Active,
     StartDate,
@@ -43,6 +34,7 @@ router.post("/register", authToken, async (req, res, next) => {
     .create({
       Str_CourseName: CourseName,
       Str_CourseDescription: CourseDescription,
+      Frk_Gym: Gym,
       Frk_Trainer: Trainer,
       Bit_Active: Active,
       Str_StartDate: StartDate,
@@ -72,6 +64,7 @@ router.put("/edit", authToken, async (req, res, next) => {
     id,
     CourseName,
     CourseDescription,
+    Gym,
     Trainer,
     Active,
     StartDate,
@@ -91,7 +84,7 @@ router.put("/edit", authToken, async (req, res, next) => {
   if (!oldCourse) {
     return res.status(409).json({
       res: false,
-      data: "The specific course doesn't exist! it must've deleted before",
+      data: "The specific course doesn't exist! it must've deleted before.",
     });
   }
 
@@ -101,6 +94,7 @@ router.put("/edit", authToken, async (req, res, next) => {
     .update({
       Str_CourseName: CourseName,
       Str_CourseDescription: CourseDescription,
+      Frk_Gym: Gym,
       Frk_Trainer: Trainer,
       Bit_Active: Active,
       Str_StartDate: StartDate,
@@ -122,6 +116,7 @@ router.put("/edit", authToken, async (req, res, next) => {
         data: "something wrong happend during editing course. Please try again a bit later!",
       });
     });
+    
 });
 
 router.delete("/delete", authToken, async (req, res, next) => {
@@ -151,9 +146,9 @@ router.delete("/delete", authToken, async (req, res, next) => {
           data: updatedrecord,
         });
       } else {
-        res.status(200).json({
-          res: 500,
-          data: "",
+        res.status(500).json({
+          res: false,
+          data: "something wrong happend during deleting course. Please try again a bit later!",
         });
       }
     })
@@ -164,6 +159,7 @@ router.delete("/delete", authToken, async (req, res, next) => {
         data: "something wrong happend during deleting course. Please try again a bit later!",
       });
     });
+
 });
 
 router.post("/registerOffTime", authToken, async (req, res, next) => {
@@ -216,11 +212,74 @@ router.put("/editOffTime", authToken, async (req, res, next) => {
 });
 
 router.delete("/deleteOffTime", authToken, async (req, res, next) => {
-  res.send("the deleteOffTime API called");
+    
+    // Get user input
+    const { id } = req.body;
+
+    // check if Off Time already exist
+    const oldOffTime = await models.courseofftimes.findOne({
+      where: {
+        Prk_CourseOffTimes: id,
+      },
+    });
+  
+    if (!oldOffTime) {
+      return res.status(409).json({
+        res: false,
+        data: "The specific course off time doesn't exist! it must've deleted before",
+      });
+    }
+  
+    oldOffTime
+      .destroy()
+      .then((rowDeleted) => {
+        if (rowDeleted === 1) {
+          res.status(200).json({
+            res: true,
+            data: updatedrecord,
+          });
+        } else {
+          res.status(200).json({
+            res: 500,
+            data: "something wrong happend during deleting course off time. Please try again a bit later!",
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        return res.status(500).json({
+          res: false,
+          data: "something wrong happend during deleting course off time. Please try again a bit later!",
+        });
+      });
 });
 
 router.get("/getByGymID", authToken, async (req, res, next) => {
-  res.send("the getByGymID API called");
+  
+ // Get user input
+ const { gymID } = req.body;
+
+ // check if Off Time already exist
+ const coursesByGymID = await models.course.findOne({
+   where: {
+    Frk_Gym: gymID,
+   },
+ });
+
+ if (!coursesByGymID) {
+   return res.status(409).json({
+     res: false,
+     data: "There is no course related to this specific gym.",
+   });
+ }
+ else
+ {
+    res.status(200).json({
+        res: true,
+        data: coursesByGymID,
+     });
+ }
+
 });
 
 module.exports = router;

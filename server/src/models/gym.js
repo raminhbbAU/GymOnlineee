@@ -41,6 +41,10 @@ module.exports = (sequelize, DataTypes) =>  {
       type: DataTypes.STRING(100),
       allowNull: false
     },
+    Bit_Active: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    },
     Str_Description: {
       type: DataTypes.STRING(500),
       allowNull: false

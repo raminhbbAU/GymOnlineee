@@ -30,7 +30,6 @@ export default function SignUp() {
 
       API.gymSignUp(
         data.get('gymname'),
-        data.get('ownertitle'),
         data.get('mobile'),
         data.get('gmail'),
         data.get('password')
@@ -96,16 +95,6 @@ export default function SignUp() {
                   id="gymname"
                   label="Gym Name"
                   autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} >
-                <TextField
-                  required
-                  fullWidth
-                  id="ownertitle"
-                  label="Owner title"
-                  name="ownertitle"
-                  autoComplete="ownertitle"
                 />
               </Grid>
               <Grid item xs={12} >

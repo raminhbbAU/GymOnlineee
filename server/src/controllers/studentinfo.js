@@ -1,5 +1,6 @@
 const {router,models,bcrypt,jwt,authToken,yupValidator} = require('./index')
 const { studentRegisterSchema,studentLoginSchema } = require('../validationSchema/yup.validation.js');
+const {getDate,getTime} = require('../services/utility.service')
 
  router.post('/register',yupValidator(studentRegisterSchema), async (req,res,next) => {
     
@@ -14,13 +15,17 @@ const { studentRegisterSchema,studentLoginSchema } = require('../validationSchem
     });
 
      if (oldStudent) {
-        return res.status(409).send("Student already exist. Please login to your account");
-     }
+        return res.status(409).json({
+            res: false,
+            data: "Student already exist. Please login to your account",
+          });
+     }  
 
 
      //Encrypt user password
     encryptedPassword = await bcrypt.hash(Password, 10);
 
+    
 
      // create New User
     models.student.create({
@@ -32,11 +37,11 @@ const { studentRegisterSchema,studentLoginSchema } = require('../validationSchem
         Str_Gmail:Gmail,
         Str_Address:Address,
         Str_Birthday:Birthday,
-        Str_RegisterDate,
-        Str_RegisterTime,
+        Str_RegisterDate:getDate(),
+        Str_RegisterTime:getTime(),
         Str_UserName:UserName,
         Str_Password:Password,
-        Bit_Active:true,
+        Bit_Active:false,
         Str_Description:Description
 
      }).then( (student) => {
@@ -46,9 +51,13 @@ const { studentRegisterSchema,studentLoginSchema } = require('../validationSchem
                 expiresIn: process.env.JWT_EXPIRES_IN
               });
     
-            if (!token) return res.status(500).send('There was a problem during token generation');
+              if (!token) return res.status(500).json({
+                res: false,
+                data: 'There was a problem during token generation',
+              }); 
     
             res.status(200).json({
+                res:true,
                 auth:true,
                 token,
                 data:student
@@ -56,7 +65,10 @@ const { studentRegisterSchema,studentLoginSchema } = require('../validationSchem
 
      }).catch( (error) => {
         console.log(error);
-        return res.status(500).send('There was a problem registering the student.');    
+        return res.status(500).json({
+            res: false,
+            data: 'There was a problem registering new gym.',
+          });   
      })
 
 })
@@ -82,9 +94,13 @@ router.post('/login',yupValidator(studentLoginSchema), async (req,res,next) => {
                 expiresIn: process.env.JWT_EXPIRES_IN
               });
     
-            if (!token) return res.status(500).send('There was a problem during token generation');
+              if (!token) return res.status(500).json({
+                res: false,
+                data: 'There was a problem during token generation',
+              }); 
     
             res.status(200).json({
+                res:true,
                 auth:true,
                 token,
                 data:oldStudent
@@ -92,29 +108,166 @@ router.post('/login',yupValidator(studentLoginSchema), async (req,res,next) => {
     }
     else
     {
-        return res.status(409).send("User or Password is wrong. Please Try again");
+        return res.status(409).json({
+            res: false,
+            data: "User or Password is wrong. Please Try again",
+          });
     }
 
 })
 
-router.put('/completeProfile',authToken,async(req,res,next) =>{
-    res.send('the completeProfile API called');
-})
-
 router.post('/activateAccount',authToken,async(req,res,next) =>{
-    res.send('the activateAccount API called');
+    // Get user input
+    const { ID } = req.body;
+
+     // check if user already exist
+     const oldStudent = await models.student.findOne({
+        where:{
+            Prk_Student_AutoID:ID
+        }
+    });
+
+    if (!oldStudent) {
+        return res.status(409).json({
+            res: false,
+            data: "The specific student doesn't exist! it must've deleted before.",
+          });
+    }
+    else
+    {
+        oldStudent.update({
+            Bit_Active:true
+        }).then( (updatedrecord) => {
+            res.status(200).json({
+                res: true,
+                data: updatedrecord,
+              });
+        }).catch( (error) => {
+                console.log(error);
+                return res.status(500).json({
+                    res: false,
+                    data: "something wrong happend during activating student. Please try again a bit later!",
+                });
+        })
+    }
 })
 
 router.put('/edit',authToken,async(req,res,next) =>{
-    res.send('the edit API called');
+    
+    // Get user input
+    const { ID, Name,Family,Mobile,WhatsApp,Telegram,Gmail,Address,Birthday,Description } = req.body;
+
+     // check if user already exist
+     const oldStudent = await models.student.findOne({
+        where:{
+            Prk_Student_AutoID:ID
+        }
+    });
+
+    if (!oldStudent) {
+        return res.status(409).json({
+            res: false,
+            data: "The specific student doesn't exist! it must've deleted before.",
+          });
+    }
+    else
+    {
+        oldStudent.update({
+            Str_Name:Name ,
+            Str_Family:Family,
+            Str_Mobile:Mobile,
+            Str_WhatsApp:WhatsApp,
+            Str_Telegram:Telegram,
+            Str_Gmail:Gmail,
+            Str_Address:Address,
+            Str_Birthday:Birthday,
+            Str_Description:Description
+        }).then( (updatedrecord) => {
+            res.status(200).json({
+                res: true,
+                data: updatedrecord,
+              });
+        }).catch( (error) => {
+                console.log(error);
+                return res.status(500).json({
+                    res: false,
+                    data: "something wrong happend during editing student. Please try again a bit later!",
+                });
+        })
+    }
+
+
 })
 
 router.delete('/delete',authToken,async(req,res,next) =>{
-    res.send('the delete API called');
+  
+    // Get user input
+  const { ID } = req.body;
+
+     // check if user already exist
+    const oldStudent = await models.student.findOne({
+        where:{
+            Prk_Student_AutoID:ID
+        }
+    });
+
+    if (!oldStudent) {
+        return res.status(409).json({
+            res: false,
+            data: "The specific student doesn't exist! it must've deleted before.",
+          });
+    }
+
+    oldStudent
+    .destroy()
+    .then((rowDeleted) => {
+      if (rowDeleted === 1) {
+        res.status(200).json({
+          res: true,
+          data: updatedrecord,
+        });
+      } else {
+        res.status(500).json({
+          res: false,
+          data: "something wrong happend during deleting student. Please try again a bit later!",
+        });
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      return res.status(500).json({
+        res: false,
+        data: "something wrong happend during deleting student. Please try again a bit later!",
+      });
+    });
+
 })
 
 router.get('/getByGymID',authToken,async(req,res,next) =>{
-    res.send('the getByGymID API called');
+   
+    // Get user input
+    const { gymID } = req.body;
+
+    // check if Off Time already exist
+    const studentsByGymID = await models.student.findOne({
+        where: {
+            Frk_gym: gymID,
+        },
+    });
+
+    if (!studentsByGymID) {
+        return res.status(409).json({
+            res: false,
+            data: "There is no student related to this specific gym.",
+        });
+    }
+    else
+    {
+        res.status(200).json({
+            res: true,
+            data: studentsByGymID,
+        });
+    }   
 })
 
 router.get('/getByCourseID',authToken,async(req,res,next) =>{

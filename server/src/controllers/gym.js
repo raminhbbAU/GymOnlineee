@@ -123,26 +123,26 @@ router.put('/edit',authToken,async(req,res,next) =>{
    }
    else {
 
-    oldGym.update({
-        Str_GymName:GymName,
-        Str_OwnerTitle:OwnerTitle,
-        Str_Address:Address,
-        Str_Tel:Tel,
-        Str_Gmail:Gmail,
-        Str_Mobile:Mobile,
-        Str_Description:Description
-    }).then( (updatedrecord) => {
-        res.status(200).json({
-            res: true,
-            data: updatedrecord,
+      oldGym.update({
+          Str_GymName:GymName,
+          Str_OwnerTitle:OwnerTitle,
+          Str_Address:Address,
+          Str_Tel:Tel,
+          Str_Gmail:Gmail,
+          Str_Mobile:Mobile,
+          Str_Description:Description
+      }).then( (updatedrecord) => {
+          res.status(200).json({
+              res: true,
+              data: updatedrecord,
+            });
+    }).catch( (error) => {
+          console.log(error);
+          return res.status(500).json({
+          res: false,
+          data: "something wrong happend during editing gym. Please try again a bit later!",
           });
-   }).catch( (error) => {
-        console.log(error);
-        return res.status(500).json({
-        res: false,
-        data: "something wrong happend during editing gym. Please try again a bit later!",
-        });
-   })
+    })
 
    }
 

@@ -249,13 +249,13 @@ router.get('/getByGymID',authToken,async(req,res,next) =>{
     const { gymID } = req.body;
 
     // check if Off Time already exist
-    const studentsByGymID = await models.student.findOne({
+    const studentList = await models.student.findAll({
         where: {
             Frk_gym: gymID,
         },
     });
-
-    if (!studentsByGymID) {
+     
+    if (!studentList) {
         return res.status(409).json({
             res: false,
             data: "There is no student related to this specific gym.",
@@ -265,13 +265,38 @@ router.get('/getByGymID',authToken,async(req,res,next) =>{
     {
         res.status(200).json({
             res: true,
-            data: studentsByGymID,
+            data: studentList,
         });
     }   
+
 })
 
 router.get('/getByCourseID',authToken,async(req,res,next) =>{
-    res.send('the getByCourseID API called');
+    
+    // Get user input
+    const { courseID } = req.body;
+
+    // check if Off Time already exist
+    const studentList = await models.studentvcourse.findAll({
+        where: {
+            Frk_Course: courseID,
+        },
+    });
+     
+    if (!studentList) {
+        return res.status(409).json({
+            res: false,
+            data: "There is no student related to this specific course.",
+        });
+    }
+    else
+    {
+        res.status(200).json({
+            res: true,
+            data: studentList,
+        });
+    }   
+
 })
 
 

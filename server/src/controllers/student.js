@@ -138,7 +138,7 @@ router.post('/registerStudentHealthParameters',authToken,async(req,res,next) =>{
          .create({
            Frk_student: Student,
            Frk_HealthParameter: HealthParameter,
-           Str_Value = Value,
+           Str_Value: Value,
            Str_RegisterDate: getDate(),
            Str_RegisterTime: getTime(),
            Str_Description: Description
@@ -172,7 +172,7 @@ router.post('/registerStudentAttendance',authToken,async(req,res,next) =>{
           .create({
             Frk_StudentVCourse: StudentVCourse,
             Str_Date: Date,
-            Int_Status = Status,
+            Int_Status: Status,
             Str_AbsentReason: AbsentReason,
             Str_TrainerNote: TrainerNote
           })

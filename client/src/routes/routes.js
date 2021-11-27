@@ -5,39 +5,38 @@ import DashboardLayout from '../layout/dashboardLayout';
 // //
 // import Login from './pages/Login';
 // import Register from './pages/Register';
- import DashboardApp from '../pages/dashboard/DashboardApp';
-// import Products from './pages/Products';
-// import Blog from './pages/Blog';
-// import User from './pages/User';
-// import NotFound from './pages/Page404';
+
+import DashboardApp from '../pages/dashboard/DashboardApp';
+import Gym from '../pages/gym/gym';
+import Trainer from '../pages/trainer/trainer';
+import Course from '../pages/course/course';
+import Student from '../pages/student/student';
+import NotFound from '../pages/page404/page404';
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
   return useRoutes([
     {
-      path: '/dashboard',
+      path: '/gym',
       element: <DashboardLayout />,
       children: [
-        { element: <Navigate to="/dashboard/app" replace /> },
-        { path: 'app', element: <DashboardApp /> },
-        { path: 'user', element: <DashboardApp /> },
-        { path: 'products', element: <DashboardApp /> },
-        { path: 'blog', element: <DashboardApp /> }
+        { path: 'dashboard', element: <DashboardApp /> },
+        { path: 'gym', element: <Gym /> },
+        { path: 'trainer', element: <Trainer /> },
+        { path: 'course', element: <Course /> },
+        { path: 'Student', element: <Student /> },
       ]
     }
     ,
-    // {
-    //   path: '/',
-    //   element: <LogoOnlyLayout />,
-    //   children: [
-    //     { path: 'login', element: <Login /> },
-    //     { path: 'register', element: <Register /> },
-    //     { path: '404', element: <NotFound /> },
-    //     { path: '/', element: <Navigate to="/dashboard" /> },
-    //     { path: '*', element: <Navigate to="/404" /> }
-    //   ]
-    // },
+    {
+      path: '/',
+      element: <DashboardLayout />,
+      children: [
+        { path: '404', element: <NotFound /> },
+        { path: '*', element: <Navigate to="/404" /> }
+      ]
+    },
     { path: '*', element: <Navigate to="/404" replace /> }
   ]);
 }

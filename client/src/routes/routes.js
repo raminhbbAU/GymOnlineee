@@ -12,6 +12,8 @@ import Trainer from '../pages/trainer/trainer';
 import Course from '../pages/course/course';
 import Student from '../pages/student/student';
 import NotFound from '../pages/page404/page404';
+import Login from '../pages/login/login';
+import Signup from '../pages/signup/signup';
 
 // ----------------------------------------------------------------------
 
@@ -33,6 +35,8 @@ export default function Router() {
       path: '/',
       element: <DashboardLayout />,
       children: [
+        { path: 'login', element: <Login /> },
+        { path: 'signup', element: <Signup /> },
         { path: '404', element: <NotFound /> },
         { path: '*', element: <Navigate to="/404" /> }
       ]

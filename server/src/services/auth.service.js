@@ -3,8 +3,10 @@ const jwt = require("jsonwebtoken");
 const VerifyToken = (req,res,next) => {
 
     console.log("Verify Token >>>>>>")
-    
+
     const token = req.body.token || req.query.token || req.headers["x-access-token"]
+
+    console.log(token);
 
     if (!token)
     {
@@ -13,7 +15,7 @@ const VerifyToken = (req,res,next) => {
 
     try {
         
-        const decode = jwt.verify(token,process.env.JWT_SECRET);
+        const decode = jwt.verify(token,process.env.JWT_SECRET || 'WeAre!nTh!$fuck!ngCov!dT!me');
         req.authToken = decode;
         
 

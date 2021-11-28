@@ -1,18 +1,18 @@
-const set = (name,data) => {
-    localStorage.setItem(name, data);
+const setToStorage = (name,data) => {
+    localStorage.setItem(name,JSON.stringify(data));
 }
 
-const get = (name) => {
-    localStorage.getItem(name);
+const getFromStorage = (name) => {
+    return localStorage.getItem(name);
 }
 
-const remove = (name) => {
+const removeFromStorage = (name) => {
     localStorage.removeItem(name);
 }
 
-const removeAll = () => {
+const removeAllFromStorage = () => {
     localStorage.clear();
 }
 
 
-export default {set,get,remove,removeAll}
+export {setToStorage,getFromStorage,removeFromStorage,removeAllFromStorage}

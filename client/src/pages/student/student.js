@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -16,7 +16,6 @@ import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_d
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import USERLIST from '../../_mocks_/user';
 import API from "../../api/student";
 
 
@@ -27,7 +26,6 @@ const TABLE_HEAD = [
   { id: 'gmail', label: 'Gmail', alignRight: false },
   { id: 'mobile', label: 'Mobile', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
-  { id: '' }
 ];
 
 
@@ -42,6 +40,28 @@ export default function Student() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [studentList, setStudentList] = useState([]);
+  const [refreshDataset,setRefreshDataset] = useState(false);
+
+  const gymID =1;
+
+  useEffect( () => {
+
+    API.getByGymID(
+      gymID
+    ).then((result) => {
+      console.log(result);
+      setStudentList(result.data.data)
+    }).catch((error) => {
+      console.log(error.response);
+    })
+
+  },[refreshDataset])
+
+  const UseEffectCheck = () => {
+    setRefreshDataset(!refreshDataset);
+    //console.log(refreshDataset);
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -51,7 +71,7 @@ export default function Student() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = studentList.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -89,11 +109,11 @@ export default function Student() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - studentList.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredItems = applySortFilter(studentList, getComparator(order, orderBy), filterName);
 
-  const isUserNotFound = filteredUsers.length === 0;
+  const isUserNotFound = filteredItems.length === 0;
 
   return (
     <Page title="User | Minimal-UI">
@@ -106,10 +126,11 @@ export default function Student() {
             variant="contained"
             component={RouterLink}
             to="#"
-            startIcon={<Icon icon={plusFill} />}
+            startIcon={<Icon icon={plusFill} />}          
           >
             New Student
           </Button>
+          <Button onClick={UseEffectCheck}> Test</Button>
         </Stack>
 
         <Card>
@@ -126,22 +147,22 @@ export default function Student() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={studentList.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers
+                  {filteredItems
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                      const isItemSelected = selected.indexOf(name) !== -1;
+                      const { Prk_Student_AutoID,Str_Name,Str_Family,Str_Gmail,Str_Mobile,Bit_Active,avatarUrl } = row;
+                      const isItemSelected = selected.indexOf(Str_Name) !== -1;
 
                       return (
                         <TableRow
                           hover
-                          key={id}
+                          key={Prk_Student_AutoID}
                           tabIndex={-1}
                           role="checkbox"
                           selected={isItemSelected}
@@ -150,26 +171,25 @@ export default function Student() {
                           <TableCell padding="checkbox">
                             <Checkbox
                               checked={isItemSelected}
-                              onChange={(event) => handleClick(event, name)}
+                              onChange={(event) => handleClick(event, Str_Name)}
                             />
                           </TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar alt={name} src={avatarUrl} />
+                              <Avatar alt={Str_Name + ' ' + Str_Family} src={avatarUrl} />
                               <Typography variant="subtitle2" noWrap>
-                                {name}
+                              {Str_Name + ' ' + Str_Family}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{company}</TableCell>
-                          <TableCell align="left">{role}</TableCell>
-                          <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
+                          <TableCell align="left">{Str_Gmail}</TableCell>
+                          <TableCell align="left">{Str_Mobile}</TableCell>
                           <TableCell align="left">
                             <Label
                               variant="ghost"
-                              color={(status === 'banned' && 'error') || 'success'}
+                              color= {Bit_Active ? 'success' : 'error'}
                             >
-                              {sentenceCase(status)}
+                              {Bit_Active ? 'Active' : 'Disable'}
                             </Label>
                           </TableCell>
 
@@ -201,7 +221,7 @@ export default function Student() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={studentList.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

@@ -22,19 +22,9 @@ MHidden.propTypes = {
 
 export default function MHidden({ width, children }) {
 
-  console.log('////////////////\\\\\\\\\\\\\\\\\\');
-  console.log(width);
-  console.log(children);
-
   const breakpoint = width.substring(0, 2);
-
-  console.log(breakpoint);
-
   const hiddenUp = useMediaQuery((theme) => theme.breakpoints.up(breakpoint));
   const hiddenDown = useMediaQuery((theme) => theme.breakpoints.down(breakpoint));
-
-  console.log(hiddenUp);
-  console.log(hiddenDown);
 
   if (width.includes('Down')) {
     return hiddenDown ? null : children;

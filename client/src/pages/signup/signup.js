@@ -17,7 +17,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import Copyright from "../../components/copyright.js"
 import API from "../../api/signup.js";
-import Storage from "../../storage/localstorage.js";
+import {setToStorage,getFromStorage,removeFromStorage,removeAllFromStorage}  from "../../storage/localstorage.js";
 
 
 const theme = createTheme();
@@ -35,7 +35,7 @@ export default function SignUp() {
         data.get('password')
         ).then((res) => {
           console.log(res);
-          Storage.set('JWT_Token',res.data.token)
+          setToStorage('JWT_Token',res.data.token)
         }).catch((error) => {
           console.log(error.response);
         })

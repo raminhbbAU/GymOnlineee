@@ -243,10 +243,20 @@ router.delete('/delete',authToken,async(req,res,next) =>{
 
 })
 
-router.get('/getByGymID',authToken,async(req,res,next) =>{
+router.get('/getStudentInfoByGymID',authToken,async(req,res,next) =>{
    
+    console.log("////////// &&&&&&&&&&&&& ////////////////////");
+    console.log('params: ' + req.params);
+
     // Get user input
-    const { gymID } = req.body;
+    const { gymID } = req.query;
+
+    if (!gymID) {
+        return res.status(409).json({
+            res: false,
+            data: "gymID is not provided!",
+        });
+    }
 
     // check if Off Time already exist
     const studentList = await models.student.findAll({

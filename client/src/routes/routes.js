@@ -11,9 +11,11 @@ import Gym from '../pages/gym/gym';
 import Trainer from '../pages/trainer/trainer';
 import Course from '../pages/course/course';
 import Student from '../pages/student/student';
+import NewStudent from '../pages/student/studentform';
 import NotFound from '../pages/page404/page404';
 import Login from '../pages/login/login';
 import Signup from '../pages/signup/signup';
+
 
 // ----------------------------------------------------------------------
 
@@ -28,6 +30,7 @@ export default function Router() {
         { path: 'trainer', element: <Trainer /> },
         { path: 'course', element: <Course /> },
         { path: 'Student', element: <Student /> },
+        { path: 'NewStudent', element: <NewStudent /> },
       ]
     }
     ,

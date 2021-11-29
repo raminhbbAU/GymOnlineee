@@ -1,5 +1,5 @@
 const setToStorage = (name,data) => {
-    localStorage.setItem(name,JSON.stringify(data));
+    localStorage.setItem(name,data);
 }
 
 const getFromStorage = (name) => {

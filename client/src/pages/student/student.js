@@ -58,10 +58,6 @@ export default function Student() {
 
   },[refreshDataset])
 
-  const UseEffectCheck = () => {
-    setRefreshDataset(!refreshDataset);
-    //console.log(refreshDataset);
-  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -116,7 +112,7 @@ export default function Student() {
   const isUserNotFound = filteredItems.length === 0;
 
   return (
-    <Page title="User | Minimal-UI">
+    <Page title="Students | GymOnlineee">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
@@ -130,7 +126,6 @@ export default function Student() {
           >
             New Student
           </Button>
-          <Button onClick={UseEffectCheck}> Test</Button>
         </Stack>
 
         <Card>

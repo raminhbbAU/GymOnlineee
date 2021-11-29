@@ -14,8 +14,10 @@ const VerifyToken = (req,res,next) => {
     }
 
     try {
-        
-        const decode = jwt.verify(token,process.env.JWT_SECRET || 'WeAre!nTh!$fuck!ngCov!dT!me');
+
+        const SECRET=  process.env.JWT_SECRET || 'WeAre!nTh!$fuck!ngCov!dT!me';
+        console.log(SECRET);
+        const decode = jwt.verify(token,SECRET);
         req.authToken = decode;
         
 

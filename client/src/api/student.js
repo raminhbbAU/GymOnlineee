@@ -5,6 +5,30 @@ import {setToStorage,getFromStorage,removeFromStorage,removeAllFromStorage} from
 
 //const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJuaWxvb2JraC5hdUBnbWFpbC5jb20iLCJpYXQiOjE2MzgwNzg3NzQsImV4cCI6MTYzODA4MjM3NH0.txAeYd_pEhAk9f3q7Kv8xL68nOmDpGQgWt7E9i-rDe8';
 
+const registerNewStudent =  async(gymID,Name,Family,Mobile,WhatsApp,Telegram,Gmail,Address,Birthday,UserName,Password,Description) => {
+   
+    let token = getFromStorage('JWT_Token') 
+
+    let res = await axios.post(apiPath + 'studentinfo/registerNewStudent',
+    {
+        gymID,
+        Name,
+        Family,
+        Mobile,
+        WhatsApp,
+        Telegram,
+        Gmail,
+        Address,
+        Birthday,
+        UserName,
+        Password,
+        Description,
+        token
+    });
+
+    return res;
+}
+
 const getByGymID =  async(gymID) => {
    
     let token = getFromStorage('JWT_Token') 
@@ -24,4 +48,4 @@ const getByGymID =  async(gymID) => {
 }
 
 
-export default {getByGymID};
+export default {registerNewStudent,getByGymID};

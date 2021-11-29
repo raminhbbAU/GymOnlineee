@@ -2,15 +2,16 @@ const {router,models,bcrypt,jwt,authToken,yupValidator} = require('./index')
 const { studentRegisterSchema,studentLoginSchema } = require('../validationSchema/yup.validation.js');
 const {getDate,getTime} = require('../services/utility.service')
 
- router.post('/register',yupValidator(studentRegisterSchema), async (req,res,next) => {
+ router.post('/registerNewStudent',authToken,yupValidator(studentRegisterSchema), async (req,res,next) => {
     
     // Get user input
-    const { Name,Family,Mobile,WhatsApp,Telegram,Gmail,Address,Birthday,UserName,Password,Description } = req.body;
+    const { gymID,Name,Family,Mobile,WhatsApp,Telegram,Gmail,Address,Birthday,UserName,Password,Description } = req.body;
 
      // check if user already exist
      const oldStudent = await models.student.findOne({
         where:{
-            Str_UserName:UserName
+            Str_UserName:UserName,
+            Frk_gym:gymID
         }
     });
 
@@ -29,7 +30,8 @@ const {getDate,getTime} = require('../services/utility.service')
 
      // create New User
     models.student.create({
-        Str_Name:Name ,
+        Frk_gym:gymID,
+        Str_Name:Name,
         Str_Family:Family,
         Str_Mobile:Mobile,
         Str_WhatsApp:WhatsApp,
@@ -46,20 +48,9 @@ const {getDate,getTime} = require('../services/utility.service')
 
      }).then( (student) => {
 
-            // create new token
-            let token = jwt.sign({ id: student.Prk_Student_AutoID ,username:student.Str_UserName}, process.env.JWT_SECRET, {
-                expiresIn: process.env.JWT_EXPIRES_IN
-              });
-    
-              if (!token) return res.status(500).json({
-                res: false,
-                data: 'There was a problem during token generation',
-              }); 
-    
             res.status(200).json({
                 res:true,
                 auth:true,
-                token,
                 data:student
             })
 
@@ -73,7 +64,7 @@ const {getDate,getTime} = require('../services/utility.service')
 
 })
 
-router.post('/login',yupValidator(studentLoginSchema), async (req,res,next) => {
+router.post('/loginStudent',yupValidator(studentLoginSchema), async (req,res,next) => {
     
     // Get user input
     const { UserName, Password } = req.body;

@@ -37,7 +37,7 @@ export default function SignInSide() {
         data.get('userType')
     ).then((result) => {
       setToStorage('JWT_Token',result.data.token)
-      console.log(result)
+      console.log(result.data.token)
     }).catch((error) => {
       console.log(error.response);
     })

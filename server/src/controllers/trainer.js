@@ -192,15 +192,23 @@ router.delete('/delete',authToken,async(req,res,next) =>{
 
 })
 
-router.get('/getByGymID',authToken,async(req,res,next) =>{
+router.get('/getTrainerByGymID',authToken,async(req,res,next) =>{
    
     // Get user input
-    const { GymID } = req.body;
+    const { gymID } = req.query;
+
+    if (!gymID) {
+        return res.status(409).json({
+            res: false,
+            data: "gymID is not provided!",
+        });
+    }
+    
 
     // check if user already exist
     const trainerList = await models.trainer.findAll({
         where:{
-            Frk_gym:GymID
+          Frk_gym:gymID
         }
     });
 

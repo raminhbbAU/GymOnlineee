@@ -29,7 +29,7 @@ const registerNewStudent =  async(gymID,Name,Family,Mobile,WhatsApp,Telegram,Gma
     return res;
 }
 
-const getByGymID =  async(gymID) => {
+const getStudentInfoByGymID =  async(gymID) => {
    
     let token = getFromStorage('JWT_Token') 
     console.log(token);
@@ -48,4 +48,4 @@ const getByGymID =  async(gymID) => {
 }
 
 
-export default {registerNewStudent,getByGymID};
+export default {registerNewStudent,getStudentInfoByGymID};

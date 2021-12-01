@@ -254,19 +254,28 @@ router.delete("/deleteOffTime", authToken, async (req, res, next) => {
       });
 });
 
-router.get("/getByGymID", authToken, async (req, res, next) => {
+router.get("/getCourseByGymID", authToken, async (req, res, next) => {
   
- // Get user input
- const { gymID } = req.body;
+  // Get user input
+  const { gymID } = req.query;
 
- // check if Off Time already exist
- const coursesByGymID = await models.course.findOne({
-   where: {
-    Frk_Gym: gymID,
-   },
- });
+  if (!gymID) {
+        return res.status(409).json({
+            res: false,
+            data: "gymID is not provided!",
+        });
+  }
+    
 
- if (!coursesByGymID) {
+  // check if user already exist
+  const courseList = await models.course.findAll({
+      where:{
+        Frk_gym:gymID
+      }
+  });
+
+
+ if (!courseList) {
    return res.status(409).json({
      res: false,
      data: "There is no course related to this specific gym.",
@@ -276,7 +285,7 @@ router.get("/getByGymID", authToken, async (req, res, next) => {
  {
     res.status(200).json({
         res: true,
-        data: coursesByGymID,
+        data: courseList,
      });
  }
 

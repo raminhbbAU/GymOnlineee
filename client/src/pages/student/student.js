@@ -1,5 +1,4 @@
 import { Icon } from '@iconify/react';
-import { sentenceCase } from 'change-case';
 import { useState,useEffect } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
@@ -19,7 +18,7 @@ import { descendingComparator,getComparator,applySortFilter } from "../../utils/
 import API from "../../api/student";
 
 
-// ----------------------------------------------------------------------
+// -------------------------------Header--------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
@@ -47,7 +46,7 @@ export default function Student() {
 
   useEffect( () => {
 
-    API.getByGymID(
+    API.getStudentInfoByGymID(
       gymID
     ).then((result) => {
       console.log(result);
@@ -116,7 +115,7 @@ export default function Student() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Student
+            Student List
           </Typography>
           <Button
             variant="contained"

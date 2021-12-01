@@ -43,6 +43,10 @@ module.exports = (sequelize, DataTypes) => {
         Str_Avatar:{
             type: DataTypes.TEXT,
             allowNull: false
+        },
+        Bit_Active: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
         }
     },
     {

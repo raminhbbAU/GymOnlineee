@@ -235,9 +235,6 @@ router.delete('/delete',authToken,async(req,res,next) =>{
 })
 
 router.get('/getStudentInfoByGymID',authToken,async(req,res,next) =>{
-   
-    console.log("////////// &&&&&&&&&&&&& ////////////////////");
-    console.log('params: ' + req.params);
 
     // Get user input
     const { gymID } = req.query;

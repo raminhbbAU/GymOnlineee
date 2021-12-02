@@ -152,7 +152,7 @@ export default function Trainer() {
                   {filteredItems
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { Prk_Course,Str_CourseName,Str_TrainerName,Str_StartDate,Str_EndDate,Int_CourseType,Bit_Active,avatarUrl } = row;
+                      const { Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Str_StartDate,Str_EndDate,Int_CourseType,Bit_Active } = row;
                       const isItemSelected = selected.indexOf(Str_CourseName) !== -1;
 
                       return (
@@ -172,20 +172,19 @@ export default function Trainer() {
                           </TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar alt={Str_CourseName} src={avatarUrl} />
                               <Typography variant="subtitle2" noWrap>
                               {Str_CourseName}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{Str_TrainerName}</TableCell>
+                          <TableCell align="left">{Str_TrainerName + ' ' + Str_TrainerFamily}</TableCell>
                           <TableCell align="left">{Str_StartDate}</TableCell>
                           <TableCell align="left">{Str_EndDate}</TableCell>
 
                           <TableCell align="left">
                             <Label
                               variant="ghost"
-                              color= {(Int_CourseType==1) ? 'Gym' : 'Online'}
+                              color= {(Int_CourseType==1) ? 'success' : 'error'}
                             >
                               {(Int_CourseType==1) ? 'Gym' : 'Online'}
                             </Label>

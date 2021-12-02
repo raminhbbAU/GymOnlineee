@@ -265,17 +265,22 @@ router.get("/getCourseByGymID", authToken, async (req, res, next) => {
             data: "gymID is not provided!",
         });
   }
-    
 
-  // check if user already exist
-  const courseList = await models.course.findAll({
-      where:{
-        Frk_gym:gymID
-      }
+  if(isNaN(gymID)){
+    return res.status(409).json({
+      res: false,
+      data: "gymID is not properly provided!",
   });
+  }
+    
+  //console.log(models.sequelize);
+  const courseList = await models.sequelize.query("SELECT courses.*,trainers.Str_TrainerName,trainers.Str_TrainerFamily FROM courses inner join trainers on Frk_Trainer = Prk_Trainer where courses.Frk_gym=" + gymID + ";");
+
+  //console.log(courseList);
+  console.log(JSON.stringify(courseList[0], null, 2));
 
 
- if (!courseList) {
+ if (!courseList[0]) {
    return res.status(409).json({
      res: false,
      data: "There is no course related to this specific gym.",
@@ -285,7 +290,7 @@ router.get("/getCourseByGymID", authToken, async (req, res, next) => {
  {
     res.status(200).json({
         res: true,
-        data: courseList,
+        data: courseList[0],
      });
  }
 

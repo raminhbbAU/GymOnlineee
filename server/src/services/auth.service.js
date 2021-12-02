@@ -16,7 +16,7 @@ const VerifyToken = (req,res,next) => {
     try {
 
         const SECRET=  process.env.JWT_SECRET || 'WeAre!nTh!$fuck!ngCov!dT!me';
-        console.log(SECRET);
+        //console.log(SECRET);
         const decode = jwt.verify(token,SECRET);
         req.authToken = decode;
         

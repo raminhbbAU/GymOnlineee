@@ -4,6 +4,27 @@ import apiPath from "../constants/api.config";
 import {getFromStorage} from "../storage/localstorage.js";
 
 
+const registerNewTrainer =  async(GymID,TrainerName , TrainerFamily,  Mobile,  WhatsApp,  Gmail, UserName , Password,  Avatar) => {
+   
+    let token = getFromStorage('JWT_Token') 
+
+    let res = await axios.post(apiPath + 'trainer/registerNewTrainer',
+    {
+        GymID,
+        TrainerName,
+        TrainerFamily,
+        Mobile,
+        WhatsApp,
+        Gmail,
+        UserName,
+        Password,
+        Avatar,
+        token
+    });
+
+    return res;
+}
+
 const getTrainerByGymID =  async(gymID) => {
    
     let token = getFromStorage('JWT_Token') 
@@ -23,4 +44,4 @@ const getTrainerByGymID =  async(gymID) => {
 }
 
 
-export default {getTrainerByGymID};
+export default {getTrainerByGymID,registerNewTrainer};

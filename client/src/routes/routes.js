@@ -9,7 +9,9 @@ import DashboardLayout from '../layout/dashboardLayout';
 import DashboardApp from '../pages/dashboard/DashboardApp';
 import Gym from '../pages/gym/gym';
 import Trainer from '../pages/trainer/trainer';
+import NewTrainer from '../pages/trainer/trainerform';
 import Course from '../pages/course/course';
+import NewCourse from '../pages/course/courseform';
 import Student from '../pages/student/student';
 import NewStudent from '../pages/student/studentform';
 import NotFound from '../pages/page404/page404';
@@ -25,12 +27,15 @@ export default function Router() {
       path: '/gym',
       element: <DashboardLayout />,
       children: [
-        { path: 'dashboard', element: <DashboardApp /> },
-        { path: 'gym', element: <Gym /> },
-        { path: 'trainer', element: <Trainer /> },
-        { path: 'course', element: <Course /> },
+        { path: 'Dashboard', element: <DashboardApp /> },
+        { path: 'Gym', element: <Gym /> },
+        { path: 'Trainer', element: <Trainer /> },
+        { path: 'NewTrainer', element: <NewTrainer /> },
+        { path: 'Course', element: <Course /> },
+        { path: 'NewCourse', element: <NewCourse /> },
         { path: 'Student', element: <Student /> },
         { path: 'NewStudent', element: <NewStudent /> },
+
       ]
     }
     ,

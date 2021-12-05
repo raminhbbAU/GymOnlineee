@@ -15,7 +15,7 @@ import Scrollbar from '../../components/Scrollbar';
 // utils / API
 import API from "../../api/student";
 
-export default function StudentList () {
+export default function StudentForm () {
 
     const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = () => setShowPassword(!showPassword);
@@ -33,8 +33,6 @@ export default function StudentList () {
             Gmail:'',
             Address:'',
             Birthday:'',
-            UserName:'',
-            Password:'',
             Description:''
         }, 
         validationSchema: studentRegisterSchema,
@@ -50,8 +48,8 @@ export default function StudentList () {
                 values.Gmail,
                 values.Address,
                 values.Birthday,
-                values.UserName,
-                values.Password,
+                values.Gmail, //values.UserName,
+                values.Mobile, //values.Password,
                 values.Description,
               ).then((result) => {
                 console.log(result);
@@ -165,7 +163,7 @@ export default function StudentList () {
                             helperText={formik.touched.Birthday && formik.errors.Birthday}
                         />
 
-                        <TextField
+                        {/* <TextField
                             fullWidth
                             id="UserName"
                             name="UserName"
@@ -199,7 +197,7 @@ export default function StudentList () {
                                 </InputAdornment>
                                 )
                             }}
-                        />
+                        /> */}
 
                         <TextField
                             fullWidth

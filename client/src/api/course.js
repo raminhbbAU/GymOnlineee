@@ -4,6 +4,28 @@ import apiPath from "../constants/api.config";
 import {getFromStorage} from "../storage/localstorage.js";
 
 
+const registerNewCourse =  async(GymID,CourseName,CourseDescription,TrainerID, Active,StartDate,EndDate,TrainerPercent,CourseType,PerSessionCost) => {
+   
+    let token = getFromStorage('JWT_Token') 
+
+    let res = await axios.post(apiPath + 'course/registerNewCourse',
+    {
+        GymID,
+        CourseName,
+        CourseDescription,
+        TrainerID,
+        Active,
+        StartDate,
+        EndDate,
+        TrainerPercent,
+        CourseType,
+        PerSessionCost,
+        token
+    });
+
+    return res;
+}
+
 const getCourseByGymID =  async(gymID) => {
    
     let token = getFromStorage('JWT_Token') 
@@ -23,4 +45,4 @@ const getCourseByGymID =  async(gymID) => {
 }
 
 
-export default {getCourseByGymID};
+export default {getCourseByGymID,registerNewCourse};

@@ -1,13 +1,13 @@
 const {router,models,bcrypt,jwt,authToken,yupValidator} = require('./index')
-const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.validation.js');
+const { courseRegisterSchema } = require('../validationSchema/yup.validation.js');
 
-router.post("/register", authToken, async (req, res, next) => {
+router.post("/registerNewCourse", authToken,yupValidator(courseRegisterSchema), async (req, res, next) => {
   // Get user input
   const {
     CourseName,
     CourseDescription,
-    Gym,
-    Trainer,
+    GymID,
+    TrainerID,
     Active,
     StartDate,
     EndDate,
@@ -20,6 +20,8 @@ router.post("/register", authToken, async (req, res, next) => {
   const oldCourse = await models.course.findOne({
     where: {
       Str_CourseName: CourseName,
+      Frk_Gym:GymID,
+      Frk_Trainer:TrainerID,
     },
   });
 
@@ -34,8 +36,8 @@ router.post("/register", authToken, async (req, res, next) => {
     .create({
       Str_CourseName: CourseName,
       Str_CourseDescription: CourseDescription,
-      Frk_Gym: Gym,
-      Frk_Trainer: Trainer,
+      Frk_Gym: GymID,
+      Frk_Trainer: TrainerID,
       Bit_Active: Active,
       Str_StartDate: StartDate,
       Str_EndDate: EndDate,
@@ -275,9 +277,6 @@ router.get("/getCourseByGymID", authToken, async (req, res, next) => {
     
   //console.log(models.sequelize);
   const courseList = await models.sequelize.query("SELECT courses.*,trainers.Str_TrainerName,trainers.Str_TrainerFamily FROM courses inner join trainers on Frk_Trainer = Prk_Trainer where courses.Frk_gym=" + gymID + ";");
-
-  //console.log(courseList);
-  console.log(JSON.stringify(courseList[0], null, 2));
 
 
  if (!courseList[0]) {

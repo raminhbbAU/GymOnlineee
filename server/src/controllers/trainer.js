@@ -1,7 +1,7 @@
 const {router,models,bcrypt,jwt,authToken,yupValidator} = require('./index')
 const { trainerRegisterSchema,trainerLoginSchema } = require('../validationSchema/yup.validation.js');
 
- router.post('/register',yupValidator(trainerRegisterSchema), async (req,res,next) => {
+ router.post('/registerNewTrainer',authToken,yupValidator(trainerRegisterSchema), async (req,res,next) => {
     
     // Get user input
     const { GymID,TrainerName , TrainerFamily,  Mobile,  WhatsApp,  Gmail, UserName , Password,  Avatar} = req.body;
@@ -9,7 +9,8 @@ const { trainerRegisterSchema,trainerLoginSchema } = require('../validationSchem
      // check if user already exist
      const oldTrainer = await models.trainer.findOne({
         where:{
-            Str_UserName:UserName
+            Str_UserName:UserName,
+            Frk_gym: GymID
         }
     });
 
@@ -35,7 +36,8 @@ const { trainerRegisterSchema,trainerLoginSchema } = require('../validationSchem
         Str_Gmail:Gmail,
         Str_UserName:UserName,
         Str_Password:encryptedPassword,
-        Str_Avatar:Avatar
+        Str_Avatar:Avatar,
+        Bit_Active:true
 
      }).then( (trainer) => {
         return res.status(200).json({

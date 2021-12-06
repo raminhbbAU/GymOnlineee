@@ -1,4 +1,8 @@
 import * as React from "react";
+import { useNavigate } from 'react-router-dom';
+
+
+
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -15,17 +19,21 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+
 import loginback from "../../assests/images/loginback.jpg";
 
 import Copyright from "../../components/copyright.js"
-import {setToStorage,getFromStorage,removeFromStorage,removeAllFromStorage} from "../../storage/localstorage.js";
-import API from "../../api/login.js";
+import {setToStorage} from "../../storage/localstorage.js";
+import API from "../../api/auth";
 
 
 
 const theme = createTheme();
 
+
 export default function SignInSide() {
+
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -36,10 +44,16 @@ export default function SignInSide() {
         data.get('password'),
         data.get('userType')
     ).then((result) => {
-      setToStorage('JWT_Token',result.data.token)
-      console.log(result.data.token)
+      if (result) {
+        if (result.data.auth) {
+          setToStorage('isAuth',result.data.auth);
+          setToStorage('JWT_Token',result.data.token);
+          setToStorage('logininfo', JSON.stringify(result.data.data));
+          navigate("/gym/dashboard");
+        }
+      }
     }).catch((error) => {
-      console.log(error.response);
+      console.log(error);
     })
 
   };
@@ -144,12 +158,12 @@ export default function SignInSide() {
               />
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link href="/forgetPassword" variant="body2">
                     Forgot password?
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link href="/signUp" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>

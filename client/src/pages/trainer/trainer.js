@@ -16,7 +16,7 @@ import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_d
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
 import API from "../../api/trainer";
-
+import {getFromStorage} from "../../storage/localstorage.js";
 
 // -------------------------------Header--------------------------------
 
@@ -42,12 +42,12 @@ export default function Trainer() {
   const [trainerList, setTrainerList] = useState([]);
   const [refreshDataset,setRefreshDataset] = useState(false);
 
-  const gymID =1;
+  let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
 
   useEffect( () => {
 
     API.getTrainerByGymID(
-      gymID
+      Prk_Gym_AutoID
     ).then((result) => {
       console.log(result);
       setTrainerList(result.data.data)
@@ -120,7 +120,7 @@ export default function Trainer() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="#"
+            to="/gym/newtrainer"
             startIcon={<Icon icon={plusFill} />}          
           >
             New Trainer

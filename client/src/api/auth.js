@@ -38,4 +38,19 @@ const athleteLogin =  async(userName,password) => {
     
 }
 
-export default {gymLogin,trainerLogin,athleteLogin};
+const registerNewGym =  async(gymname,mobile,gmail,password) => {
+   
+    let res = await axios.post(apiPath + 'gym/registerNewGym',{
+        GymName:gymname,
+        OwnerTitle:gymname,
+        Gmail:gmail,
+        Mobile:mobile,
+        UserName:gmail,
+        Password:password,
+    });
+
+    return res;
+}
+
+
+export default {gymLogin,trainerLogin,athleteLogin,registerNewGym};

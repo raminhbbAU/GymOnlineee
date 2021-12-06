@@ -16,6 +16,7 @@ import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_d
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
 import API from "../../api/student";
+import {getFromStorage} from "../../storage/localstorage.js";
 
 
 // -------------------------------Header--------------------------------
@@ -42,12 +43,12 @@ export default function Student() {
   const [studentList, setStudentList] = useState([]);
   const [refreshDataset,setRefreshDataset] = useState(false);
 
-  const gymID =1;
+  let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
 
   useEffect( () => {
 
     API.getStudentInfoByGymID(
-      gymID
+      Prk_Gym_AutoID
     ).then((result) => {
       console.log(result);
       setStudentList(result.data.data)
@@ -120,7 +121,7 @@ export default function Student() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="#"
+            to="/gym/newstudent"
             startIcon={<Icon icon={plusFill} />}          
           >
             New Student

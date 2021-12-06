@@ -14,6 +14,18 @@ const dateValidator = yup.date('the given date is invalid.').required('it is req
 const percentageValidator = yup.number('the given value is not a valid number').required('it is required').min(0,'The valid number is between 0 to 100.').max(100,'The valid number is between 0 to 100.')
 
 
+const gymRegisterSchema = yup.object({
+    Str_GymName:yup.string().required('Gym Name is required.').min(3,'Gym Name is too short.').max(100,'Gym Name is too long'),
+    Str_OwnerTitle:yup.string().required('Owner Title is required.').min(3,'Owner Title is too short.').max(100,'Gym Name is too long'),
+    Str_Address: addressValidator,
+    Str_Tel: telValidator,
+    Str_Gmail: gmailValidator,
+    Str_Mobile:mobileValidator,
+    Str_UserName:userNameValidator,
+    Str_Password:passwordValidator,
+    Str_Description: descriptionValidator
+})
+
 const studentRegisterSchema = yup.object({
     Name:nameValidator ,
     Family:familyValidator,
@@ -27,7 +39,6 @@ const studentRegisterSchema = yup.object({
     // Password:passwordValidator,
     Description:descriptionValidator
 })
-
 
 const trainerRegisterSchema = yup.object({
     TrainerName:nameValidator,
@@ -52,4 +63,4 @@ const courseRegisterSchema = yup.object({
 })
 
 
-export {studentRegisterSchema,trainerRegisterSchema,courseRegisterSchema}
+export {gymRegisterSchema,studentRegisterSchema,trainerRegisterSchema,courseRegisterSchema}

@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,26 +19,35 @@ import RadioGroup from "@mui/material/RadioGroup";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import Copyright from "../../components/copyright.js"
-import API from "../../api/signup.js";
-import {setToStorage,getFromStorage,removeFromStorage,removeAllFromStorage}  from "../../storage/localstorage.js";
+import API from "../../api/auth";
+import {setToStorage}  from "../../storage/localstorage.js";
 
 
 const theme = createTheme();
 
 
 export default function SignUp() {
+
+  const navigate = useNavigate();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-      API.gymSignUp(
+      API.registerNewGym(
         data.get('gymname'),
         data.get('mobile'),
         data.get('gmail'),
         data.get('password')
-        ).then((res) => {
-          console.log(res);
-          setToStorage('JWT_Token',res.data.token)
+        ).then((result) => {
+          if (result) {
+            if (result.data.auth) {
+              setToStorage('isAuth',result.data.auth);
+              setToStorage('JWT_Token',result.data.token);
+              setToStorage('logininfo', JSON.stringify(result.data.data));
+              navigate("/gym/dashboard");
+            }
+          }
         }).catch((error) => {
           console.log(error.response);
         })

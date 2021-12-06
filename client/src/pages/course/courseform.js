@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useFormik} from 'formik';
 import {courseRegisterSchema} from '../../utils/yup.validation';
-
+import { useNavigate } from 'react-router-dom';
 
 // material
 import {TextField,Button,Stack,Container,Typography} from '@mui/material';
@@ -13,10 +13,13 @@ import Scrollbar from '../../components/Scrollbar';
 
 // utils / API
 import API from "../../api/course";
+import {getFromStorage} from "../../storage/localstorage.js";
+
 
 export default function CourseForm () {
 
-    const gymID =1;
+    const navigate = useNavigate();
+    let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
     const trainerID=1;
 
     const formik = useFormik({
@@ -33,7 +36,7 @@ export default function CourseForm () {
         onSubmit: (values) => {
             
             API.registerNewCourse(
-                gymID,
+                Prk_Gym_AutoID,
                 values.CourseName,
                 values.CourseDescription,
                 trainerID,
@@ -45,6 +48,7 @@ export default function CourseForm () {
                 values.PerSessionCost
               ).then((result) => {
                 console.log(result);
+                navigate("/gym/course");
               }).catch((error) => {
                 console.log(error.response);
               })

@@ -1,10 +1,10 @@
 const {router,models,bcrypt,jwt,authToken,yupValidator} = require('./index')
 const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.validation.js');
 
- router.post('/register',yupValidator(gymRegisterSchema), async (req,res,next) => {
+ router.post('/registerNewGym',yupValidator(gymRegisterSchema), async (req,res,next) => {
     
     // Get user input
-    const { GymName,Gmail,Mobile,UserName,Password} = req.body;
+    const { GymName,OwnerTitle,Gmail,Mobile,UserName,Password} = req.body;
 
      // check if user already exist
      const oldGym = await models.gym.findOne({
@@ -26,10 +26,16 @@ const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.v
      // create New User
     models.gym.create({
         Str_GymName:GymName,
+        Str_OwnerTitle:OwnerTitle,
+        Str_Address:'',
+        Str_Tel:'',
         Str_Gmail:Gmail,
         Str_Mobile:Mobile,
         Str_UserName:UserName,
         Str_Password:encryptedPassword,
+        Bit_Active:true,
+        Str_Description:'',
+
      }).then( (gym) => {
 
             // create new token
@@ -103,15 +109,15 @@ router.post('/login',yupValidator(gymLoginSchema), async (req,res,next) => {
 
 })
 
-router.put('/edit',authToken,async(req,res,next) =>{
+router.put('/editGym',authToken,yupValidator(gymRegisterSchema),async(req,res,next) =>{
     
    // Get user input
-   const { ID,GymName,OwnerTitle,Address,Tel,Gmail,Mobile,Description} = req.body;
-
+   const { GymID,GymName,OwnerTitle,Address,Tel,Gmail,Mobile,UserName,Password,Description} = req.body;
+   
    // check if user already exist
    const oldGym = await models.gym.findOne({
       where:{
-        Prk_Gym_AutoID:ID
+        Prk_Gym_AutoID:GymID
       }
   });
 
@@ -123,6 +129,9 @@ router.put('/edit',authToken,async(req,res,next) =>{
    }
    else {
 
+      //Encrypt user password
+      encryptedPassword = await bcrypt.hash(Password, 10);
+
       oldGym.update({
           Str_GymName:GymName,
           Str_OwnerTitle:OwnerTitle,
@@ -130,7 +139,9 @@ router.put('/edit',authToken,async(req,res,next) =>{
           Str_Tel:Tel,
           Str_Gmail:Gmail,
           Str_Mobile:Mobile,
-          Str_Description:Description
+          Str_UserName:UserName,
+          Str_Password:encryptedPassword,
+          Str_Description:Description,
       }).then( (updatedrecord) => {
           res.status(200).json({
               res: true,

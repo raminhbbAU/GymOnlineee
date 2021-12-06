@@ -1,19 +1,26 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
+
 // material
 import { styled } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
+
 // components
 import Logo from '../../components/Logo';
 import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
 import { MHidden } from '../../components/@material-extend';
+
 //
 import sidebarConfig from './SidebarConfig';
-import account from '../../_mocks_/account';
+
+// utils / API
+import {getFromStorage,removeFromStorage} from "../../storage/localstorage.js";
 
 // ----------------------------------------------------------------------
+
+const avator = '/assets/avatar/avatar_default.jpg';
 
 const DRAWER_WIDTH = 280;
 
@@ -40,7 +47,9 @@ DashboardSidebar.propTypes = {
 };
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
+  
   const { pathname } = useLocation();
+  let {Str_GymName,Str_Gmail} = JSON.parse(getFromStorage('logininfo'));
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -65,13 +74,13 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none" component={RouterLink} to="#">
           <AccountStyle>
-            <Avatar src={account.photoURL} alt="photoURL" />
+            <Avatar src={avator} alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
+                {Str_GymName}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role}
+                {Str_Gmail}
               </Typography>
             </Box>
           </AccountStyle>

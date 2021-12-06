@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useFormik} from 'formik';
 import {trainerRegisterSchema} from '../../utils/yup.validation';
-
+import { useNavigate } from 'react-router-dom';
 
 // material
 import {TextField,Button,InputAdornment,IconButton,Stack,Container,Typography} from '@mui/material';
@@ -14,14 +14,17 @@ import Scrollbar from '../../components/Scrollbar';
 
 // utils / API
 import API from "../../api/trainer";
+import {getFromStorage} from "../../storage/localstorage.js";
 
 export default function TrainerForm () {
 
+    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = () => setShowPassword(!showPassword);
     const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
-    const gymID =1;
+   
+    let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
     const avatar ='';
 
     const formik = useFormik({
@@ -38,7 +41,7 @@ export default function TrainerForm () {
             console.log(values);
 
             API.registerNewTrainer(
-                gymID,
+                Prk_Gym_AutoID,
                 values.TrainerName,
                 values.TrainerFamily,
                 values.Mobile,
@@ -49,6 +52,7 @@ export default function TrainerForm () {
                 avatar,
               ).then((result) => {
                 console.log(result);
+                navigate("/gym/trainer");
               }).catch((error) => {
                 console.log(error.response);
               })

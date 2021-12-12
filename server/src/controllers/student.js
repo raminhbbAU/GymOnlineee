@@ -126,7 +126,42 @@ router.post('/registerStudentCourse',authToken,async(req,res,next) =>{
 })
 
 router.get('/getRegisteredCourses',authToken,async(req,res,next) =>{
-    res.send('the getRegisteredCourses API called');
+    
+  // Get user input
+  const { studentID } = req.query;
+
+  if (!studentID) {
+        return res.status(409).json({
+            res: false,
+            data: "studentID is not provided!",
+        });
+  }
+
+  if(isNaN(studentID)){
+    return res.status(409).json({
+      res: false,
+      data: "studentID is not properly provided!",
+  });
+  }
+    
+  //console.log(models.sequelize);
+  const studentRegisteredCourseList = await models.sequelize.query("SELECT Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_family,studentvcourses.Str_RegisterDate,Int_RegisteredSession,0 as Present,0 as Absent, 0 as AcceptableAbsence FROM courses inner join studentvcourses on Frk_Course = Prk_Course inner join students on Frk_student = Prk_Student_AutoID inner join trainers on Frk_Trainer = Prk_Trainer where students.Prk_Student_AutoID=" + studentID + ";");
+
+
+  if (!studentRegisteredCourseList[0]) {
+    return res.status(409).json({
+      res: false,
+      data: "There is no registered course related to this specific student.",
+    });
+  }
+  else
+  {
+    res.status(200).json({
+        res: true,
+        data: studentRegisteredCourseList[0],
+      });
+  }
+    
 })
 
 router.post('/registerStudentHealthParameters',authToken,async(req,res,next) =>{

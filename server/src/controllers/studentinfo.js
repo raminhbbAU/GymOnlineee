@@ -143,15 +143,15 @@ router.post('/activateAccount',authToken,async(req,res,next) =>{
     }
 })
 
-router.put('/edit',authToken,async(req,res,next) =>{
+router.put('/editStudentInfo',authToken,async(req,res,next) =>{
     
     // Get user input
-    const { ID, Name,Family,Mobile,WhatsApp,Telegram,Gmail,Address,Birthday,Description } = req.body;
+    const { studentID, Name,Family,Mobile,WhatsApp,Telegram,Gmail,Address,Birthday,Description } = req.body;
 
      // check if user already exist
      const oldStudent = await models.student.findOne({
         where:{
-            Prk_Student_AutoID:ID
+            Prk_Student_AutoID:studentID
         }
     });
 
@@ -231,6 +231,49 @@ router.delete('/delete',authToken,async(req,res,next) =>{
         data: "something wrong happend during deleting student. Please try again a bit later!",
       });
     });
+
+})
+
+router.get('/getStudentInfoByStudentID',authToken,async(req,res,next) =>{
+
+    // Get user input
+    const { gymID,studentID } = req.query;
+
+    if (!gymID) {
+        return res.status(409).json({
+            res: false,
+            data: "gymID is not provided!",
+        });
+    }
+
+    if (!studentID) {
+        return res.status(409).json({
+            res: false,
+            data: "studentID is not provided!",
+        });
+    }
+
+    // check if Off Time already exist
+    const studentInfo = await models.student.findOne({
+        where: {
+            Frk_gym: gymID,
+            Prk_Student_AutoID: studentID,
+        },
+    });
+     
+    if (!studentInfo) {
+        return res.status(409).json({
+            res: false,
+            data: "There is no student related to this specific gym.",
+        });
+    }
+    else
+    {
+        res.status(200).json({
+            res: true,
+            data: studentInfo,
+        });
+    }   
 
 })
 

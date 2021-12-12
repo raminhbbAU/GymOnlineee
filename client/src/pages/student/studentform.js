@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useFormik} from 'formik';
 import {studentRegisterSchema} from '../../utils/yup.validation';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 
 // material
 import {TextField,Button,InputAdornment,IconButton,Stack,Container,Typography} from '@mui/material';
@@ -15,18 +15,61 @@ import Scrollbar from '../../components/Scrollbar';
 // utils / API
 import API from "../../api/student";
 import {getFromStorage} from "../../storage/localstorage.js";
+import { replace } from "lodash";
 
 
 export default function StudentForm () {
 
     const navigate = useNavigate();
-    const [showPassword, setShowPassword] = useState(false);
-    const handleClickShowPassword = () => setShowPassword(!showPassword);
-    const handleMouseDownPassword = () => setShowPassword(!showPassword);
-
+    const [editMode, setEditMode] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [fullName, setFullName] = useState('');
     
+    let { studentID } = useParams();
     let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
 
+    if (studentID)
+    {
+        studentID = replace(studentID,":","");
+    }
+
+
+    useEffect( () => {
+
+        if (studentID)
+        {
+            setEditMode(true);
+
+            API.getStudentInfoByStudentID(
+                Prk_Gym_AutoID,
+                studentID
+              ).then((result) => {
+
+                setFullName(result.data.data.Str_Name + ' ' + result.data.data.Str_Family)
+                formik.setFieldValue('Name',result.data.data.Str_Name);
+                formik.setFieldValue('Family',result.data.data.Str_Family);
+                formik.setFieldValue('Mobile',result.data.data.Str_Mobile);
+                formik.setFieldValue('WhatsApp',result.data.data.Str_WhatsApp);
+                formik.setFieldValue('Telegram',result.data.data.Str_Telegram);
+                formik.setFieldValue('Gmail',result.data.data.Str_Gmail);
+                formik.setFieldValue('Address',result.data.data.Str_Address);
+                formik.setFieldValue('Birthday',result.data.data.Str_Birthday);
+                formik.setFieldValue('Description',result.data.data.Str_Description);
+
+                setIsLoading(true);           
+
+              }).catch((error) => {
+                console.log(error.response);
+              })
+        }
+        else
+        {
+            setIsLoading(true);
+        }
+      },[])
+
+
+    
     const formik = useFormik({
         initialValues: {
             Name:'' ,
@@ -40,8 +83,37 @@ export default function StudentForm () {
             Description:''
         }, 
         validationSchema: studentRegisterSchema,
+        enableReinitialize:true,
         onSubmit: (values) => {
-            
+            handleSubmit(values);
+        }
+    });
+
+
+    const handleSubmit = (values) => {
+
+        if (editMode)
+        {
+            API.editStudentInfo(
+                studentID,
+                values.Name,
+                values.Family,
+                values.Mobile,
+                values.WhatsApp,
+                values.Telegram,
+                values.Gmail,
+                values.Address,
+                values.Birthday,
+                values.Description,
+              ).then((result) => {
+                console.log(result);              
+                navigate("/gym/student");
+              }).catch((error) => {
+                console.log(error.response);
+              })
+        }
+        else
+        {
             API.registerNewStudent(
                 Prk_Gym_AutoID,
                 values.Name,
@@ -52,8 +124,6 @@ export default function StudentForm () {
                 values.Gmail,
                 values.Address,
                 values.Birthday,
-                values.Gmail, //values.UserName,
-                values.Mobile, //values.Password,
                 values.Description,
               ).then((result) => {
                 console.log(result);              
@@ -61,167 +131,172 @@ export default function StudentForm () {
               }).catch((error) => {
                 console.log(error.response);
               })
+        }
 
-        },
-    });
 
+    }
 
     return (
         <Page title="New Student | GymOnlineee">
+
+        {isLoading && (
           <Container>
             
-            <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-              <Typography variant="h4" gutterBottom>
-                Add New Student
-              </Typography>
-            </Stack>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+            <Typography variant="h4" gutterBottom>
+              {editMode ? `Edit Student [${fullName}]` : 'Add New Student'}
+            </Typography>
+          </Stack>
 
-            <Scrollbar>
-                <div>
-                    <form onSubmit={formik.handleSubmit}>
+          <Scrollbar>
+              <div>
+                  <form onSubmit={formik.handleSubmit}>
 
-                        <TextField
-                            fullWidth
-                            id="Name"
-                            name="Name"
-                            label="Name"
-                            value={formik.values.Name}
-                            onChange={formik.handleChange}
-                            error={formik.touched.Name && Boolean(formik.errors.Name)}
-                            helperText={formik.touched.Name && formik.errors.Name}
-                        />
+                      <TextField
+                          fullWidth
+                          id="Name"
+                          name="Name"
+                          label="Name"
+                          value={formik.values.Name}
+                          onChange={formik.handleChange}
+                          error={formik.touched.Name && Boolean(formik.errors.Name)}
+                          helperText={formik.touched.Name && formik.errors.Name}
+                      />
 
-                        <TextField
-                            fullWidth
-                            id="Family"
-                            name="Family"
-                            label="Family"
-                            value={formik.values.Family}
-                            onChange={formik.handleChange}
-                            error={formik.touched.Family && Boolean(formik.errors.Family)}
-                            helperText={formik.touched.Family && formik.errors.Family}
-                        />
+                      <TextField
+                          fullWidth
+                          id="Family"
+                          name="Family"
+                          label="Family"
+                          value={formik.values.Family}
+                          onChange={formik.handleChange}
+                          error={formik.touched.Family && Boolean(formik.errors.Family)}
+                          helperText={formik.touched.Family && formik.errors.Family}
+                      />
 
-                        <TextField
-                            fullWidth
-                            id="Mobile"
-                            name="Mobile"
-                            label="Mobile"
-                            value={formik.values.Mobile}
-                            onChange={formik.handleChange}
-                            error={formik.touched.Mobile && Boolean(formik.errors.Mobile)}
-                            helperText={formik.touched.Mobile && formik.errors.Mobile}
-                        />
+                      <TextField
+                          fullWidth
+                          id="Mobile"
+                          name="Mobile"
+                          label="Mobile"
+                          value={formik.values.Mobile}
+                          onChange={formik.handleChange}
+                          error={formik.touched.Mobile && Boolean(formik.errors.Mobile)}
+                          helperText={formik.touched.Mobile && formik.errors.Mobile}
+                      />
 
-                        <TextField
-                            fullWidth
-                            id="WhatsApp"
-                            name="WhatsApp"
-                            label="WhatsApp"
-                            value={formik.values.WhatsApp}
-                            onChange={formik.handleChange}
-                            error={formik.touched.WhatsApp && Boolean(formik.errors.WhatsApp)}
-                            helperText={formik.touched.WhatsApp && formik.errors.WhatsApp}
-                        />
+                      <TextField
+                          fullWidth
+                          id="WhatsApp"
+                          name="WhatsApp"
+                          label="WhatsApp"
+                          value={formik.values.WhatsApp}
+                          onChange={formik.handleChange}
+                          error={formik.touched.WhatsApp && Boolean(formik.errors.WhatsApp)}
+                          helperText={formik.touched.WhatsApp && formik.errors.WhatsApp}
+                      />
 
-                        <TextField
-                            fullWidth
-                            id="Telegram"
-                            name="Telegram"
-                            label="Telegram"
-                            value={formik.values.Telegram}
-                            onChange={formik.handleChange}
-                            error={formik.touched.Telegram && Boolean(formik.errors.Telegram)}
-                            helperText={formik.touched.Telegram && formik.errors.Telegram}
-                        />
+                      <TextField
+                          fullWidth
+                          id="Telegram"
+                          name="Telegram"
+                          label="Telegram"
+                          value={formik.values.Telegram}
+                          onChange={formik.handleChange}
+                          error={formik.touched.Telegram && Boolean(formik.errors.Telegram)}
+                          helperText={formik.touched.Telegram && formik.errors.Telegram}
+                      />
 
-                        <TextField
-                            fullWidth
-                            id="Gmail"
-                            name="Gmail"
-                            label="Email"
-                            value={formik.values.Gmail}
-                            onChange={formik.handleChange}
-                            error={formik.touched.Gmail && Boolean(formik.errors.Gmail)}
-                            helperText={formik.touched.Gmail && formik.errors.Gmail}
-                        />
+                      <TextField
+                          fullWidth
+                          id="Gmail"
+                          name="Gmail"
+                          label="Email"
+                          value={formik.values.Gmail}
+                          onChange={formik.handleChange}
+                          error={formik.touched.Gmail && Boolean(formik.errors.Gmail)}
+                          helperText={formik.touched.Gmail && formik.errors.Gmail}
+                      />
 
-                        <TextField
-                            fullWidth
-                            id="Address"
-                            name="Address"
-                            label="Address"
-                            value={formik.values.Address}
-                            onChange={formik.handleChange}
-                            error={formik.touched.Address && Boolean(formik.errors.Address)}
-                            helperText={formik.touched.Address && formik.errors.Address}
-                        />
+                      <TextField
+                          fullWidth
+                          id="Address"
+                          name="Address"
+                          label="Address"
+                          value={formik.values.Address}
+                          onChange={formik.handleChange}
+                          error={formik.touched.Address && Boolean(formik.errors.Address)}
+                          helperText={formik.touched.Address && formik.errors.Address}
+                      />
 
-                        <TextField
-                            fullWidth
-                            id="Birthday"
-                            name="Birthday"
-                            label="Birthday"
-                            value={formik.values.Birthday}
-                            onChange={formik.handleChange}
-                            error={formik.touched.Birthday && Boolean(formik.errors.Birthday)}
-                            helperText={formik.touched.Birthday && formik.errors.Birthday}
-                        />
+                      <TextField
+                          fullWidth
+                          id="Birthday"
+                          name="Birthday"
+                          label="Birthday"
+                          value={formik.values.Birthday}
+                          onChange={formik.handleChange}
+                          error={formik.touched.Birthday && Boolean(formik.errors.Birthday)}
+                          helperText={formik.touched.Birthday && formik.errors.Birthday}
+                      />
 
-                        {/* <TextField
-                            fullWidth
-                            id="UserName"
-                            name="UserName"
-                            label="UserName"
-                            value={formik.values.UserName}
-                            onChange={formik.handleChange}
-                            error={formik.touched.UserName && Boolean(formik.errors.UserName)}
-                            helperText={formik.touched.UserName && formik.errors.UserName}
-                        />
+                      {/* <TextField
+                          fullWidth
+                          id="UserName"
+                          name="UserName"
+                          label="UserName"
+                          value={formik.values.UserName}
+                          onChange={formik.handleChange}
+                          error={formik.touched.UserName && Boolean(formik.errors.UserName)}
+                          helperText={formik.touched.UserName && formik.errors.UserName}
+                      />
 
-                        <TextField
-                            fullWidth
-                            id="Password"
-                            name="Password"
-                            label="Password"
-                            type={showPassword ? "text" : "password"} 
-                            value={formik.values.Password}
-                            onChange={formik.handleChange}
-                            error={formik.touched.Password && Boolean(formik.errors.Password)}
-                            helperText={formik.touched.Password && formik.errors.Password}
-                            InputProps={{ // <-- This is where the toggle button is added.
-                                endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={handleClickShowPassword}
-                                    onMouseDown={handleMouseDownPassword}
-                                    >
-                                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                                    </IconButton>
-                                </InputAdornment>
-                                )
-                            }}
-                        /> */}
+                      <TextField
+                          fullWidth
+                          id="Password"
+                          name="Password"
+                          label="Password"
+                          type={showPassword ? "text" : "password"} 
+                          value={formik.values.Password}
+                          onChange={formik.handleChange}
+                          error={formik.touched.Password && Boolean(formik.errors.Password)}
+                          helperText={formik.touched.Password && formik.errors.Password}
+                          InputProps={{ // <-- This is where the toggle button is added.
+                              endAdornment: (
+                              <InputAdornment position="end">
+                                  <IconButton
+                                  aria-label="toggle password visibility"
+                                  onClick={handleClickShowPassword}
+                                  onMouseDown={handleMouseDownPassword}
+                                  >
+                                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                                  </IconButton>
+                              </InputAdornment>
+                              )
+                          }}
+                      /> */}
 
-                        <TextField
-                            fullWidth
-                            id="Description"
-                            name="Description"
-                            label="Description"
-                            value={formik.values.Description}
-                            onChange={formik.handleChange}
-                            error={formik.touched.Description && Boolean(formik.errors.Description)}
-                            helperText={formik.touched.Description && formik.errors.Description}
-                        />
+                      <TextField
+                          fullWidth
+                          id="Description"
+                          name="Description"
+                          label="Description"
+                          value={formik.values.Description}
+                          onChange={formik.handleChange}
+                          error={formik.touched.Description && Boolean(formik.errors.Description)}
+                          helperText={formik.touched.Description && formik.errors.Description}
+                      />
 
-                        <Button color="primary" variant="contained" fullWidth type="submit">
-                            Submit
-                        </Button>
-                    </form>
-                </div>
-              </Scrollbar>
+                      <Button color="primary" variant="contained" fullWidth type="submit">
+                          Submit
+                      </Button>
+                  </form>
+              </div>
+          </Scrollbar>
+
           </Container>
+        )}
+
         </Page>
       );
 

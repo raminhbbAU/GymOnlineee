@@ -11,48 +11,49 @@ import Page from '../../components/Page';
 import Label from '../../components/Label';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
-import { UserListHead, UserListToolbar } from '../../components/_dashboard/user';
-import StudentMoreMenu from './studentMoreMenu'
+import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user';
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import API from "../../api/student";
+import API from "../../api/course";
 import {getFromStorage} from "../../storage/localstorage.js";
-
 
 // -------------------------------Header--------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'gmail', label: 'Gmail', alignRight: false },
-  { id: 'mobile', label: 'Mobile', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'courseName', label: 'Course Name', alignRight: false },
+  { id: 'trainerName', label: 'Trainer Name', alignRight: false },
+  { id: 'studentName', label: 'Student Name', alignRight: false },
+  { id: 'enrolDate', label: 'Enrol Date', alignRight: false },
+  { id: 'session', label: 'Session', alignRight: false },
+  { id: 'Status', label: 'Present', alignRight: false },
+
 ];
 
 
 
 
 
-export default function Student() {
+export default function Enrolment() {
 
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
-  const [orderBy, setOrderBy] = useState('name');
+  const [orderBy, setOrderBy] = useState('courseName');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [studentList, setStudentList] = useState([]);
+  const [courseList, setCourseList] = useState([]);
   const [refreshDataset,setRefreshDataset] = useState(false);
 
   let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
 
   useEffect( () => {
 
-    API.getStudentInfoByGymID(
+    API.getCourseByGymID(
       Prk_Gym_AutoID
     ).then((result) => {
       console.log(result);
-      setStudentList(result.data.data)
+      setCourseList(result.data.data)
     }).catch((error) => {
       console.log(error.response);
     })
@@ -68,7 +69,7 @@ export default function Student() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = studentList.map((n) => n.name);
+      const newSelecteds = courseList.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -106,26 +107,28 @@ export default function Student() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - studentList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - courseList.length) : 0;
 
-  const filteredItems = applySortFilter(studentList, getComparator(order, orderBy), filterName);
+  const filteredItems = applySortFilter(courseList, getComparator(order, orderBy), filterName);
 
   const isUserNotFound = filteredItems.length === 0;
 
+
+
   return (
-    <Page title="Students | GymOnlineee">
+    <Page title="Enrolment | GymOnlineee">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Student List
+            Active Enrolment Status
           </Typography>
           <Button
             variant="contained"
             component={RouterLink}
-            to="/gym/newstudent"
+            to="/gym/enrollNewStudent"
             startIcon={<Icon icon={plusFill} />}          
           >
-            New Student
+            New Enrolment
           </Button>
         </Stack>
 
@@ -143,7 +146,7 @@ export default function Student() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={studentList.length}
+                  rowCount={courseList.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
@@ -152,13 +155,13 @@ export default function Student() {
                   {filteredItems
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { Prk_Student_AutoID,Str_Name,Str_Family,Str_Gmail,Str_Mobile,Bit_Active,avatarUrl } = row;
-                      const isItemSelected = selected.indexOf(Str_Name) !== -1;
+                      const { Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Str_StartDate,Str_EndDate,Int_CourseType,Bit_Active } = row;
+                      const isItemSelected = selected.indexOf(Str_CourseName) !== -1;
 
                       return (
                         <TableRow
                           hover
-                          key={Prk_Student_AutoID}
+                          key={Prk_Course}
                           tabIndex={-1}
                           role="checkbox"
                           selected={isItemSelected}
@@ -167,19 +170,29 @@ export default function Student() {
                           <TableCell padding="checkbox">
                             <Checkbox
                               checked={isItemSelected}
-                              onChange={(event) => handleClick(event, Str_Name)}
+                              onChange={(event) => handleClick(event, Str_CourseName)}
                             />
                           </TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar alt={Str_Name + ' ' + Str_Family} src={avatarUrl} />
                               <Typography variant="subtitle2" noWrap>
-                              {Str_Name + ' ' + Str_Family}
+                              {Str_CourseName}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{Str_Gmail}</TableCell>
-                          <TableCell align="left">{Str_Mobile}</TableCell>
+                          <TableCell align="left">{Str_TrainerName + ' ' + Str_TrainerFamily}</TableCell>
+                          <TableCell align="left">{Str_StartDate}</TableCell>
+                          <TableCell align="left">{Str_EndDate}</TableCell>
+
+                          <TableCell align="left">
+                            <Label
+                              variant="ghost"
+                              color= {(Int_CourseType==1) ? 'success' : 'error'}
+                            >
+                              {(Int_CourseType==1) ? 'Gym' : 'Online'}
+                            </Label>
+                          </TableCell>
+
                           <TableCell align="left">
                             <Label
                               variant="ghost"
@@ -190,7 +203,7 @@ export default function Student() {
                           </TableCell>
 
                           <TableCell align="right">
-                            <StudentMoreMenu studentID={Prk_Student_AutoID} />
+                            <UserMoreMenu />
                           </TableCell>
                         </TableRow>
                       );
@@ -217,7 +230,7 @@ export default function Student() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={studentList.length}
+            count={courseList.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

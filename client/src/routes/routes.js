@@ -37,7 +37,13 @@ export default function Router() {
         { path: 'Course', element: <Course /> },
         { path: 'NewCourse', element: <NewCourse /> },
         { path: 'Student', element: <Student /> },
-        { path: 'NewStudent', element: <NewStudent /> },
+        { 
+          path: 'NewStudent', 
+          element: <NewStudent />,
+          children: [
+            { path: ':studentID', element: <NewStudent /> },
+          ]
+        },
 
       ]
     }

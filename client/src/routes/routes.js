@@ -16,6 +16,7 @@ import NewCourse from '../pages/course/courseform';
 import Student from '../pages/student/student';
 import NewStudent from '../pages/student/studentform';
 import Enrolment from '../pages/enrolment/enrolment';
+import NewEnrolment from '../pages/enrolment/enrolmentform';
 import NotFound from '../pages/page404/page404';
 import Login from '../pages/login/login';
 import Signup from '../pages/signup/signup';
@@ -52,6 +53,13 @@ export default function Router() {
           ]
         },
         { path: 'Enrolment', element: <Enrolment /> },
+        { 
+          path: 'NewEnrolment', 
+          element: <NewEnrolment />,
+          children: [
+            { path: ':enrolmentID', element: <NewEnrolment /> },
+          ]
+        },
         { 
           path: 'EnrolmentByCourse', 
           element: <Enrolment />,

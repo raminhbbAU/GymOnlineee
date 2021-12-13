@@ -53,6 +53,22 @@ const editStudentInfo =  async(studentID,Name,Family,Mobile,WhatsApp,Telegram,Gm
     return res;
 }
 
+const newStudentCourseEnrollment =  async(Course,Student,RegisteredSession,ValidUntillTo) => {
+   
+    let token = getFromStorage('JWT_Token') 
+
+    let res = await axios.post(apiPath + 'studentinfo/newStudentCourseEnrollment',
+    {
+        Course,
+        Student,
+        RegisteredSession,
+        ValidUntillTo,
+        token
+    });
+
+    return res;
+}
+
 const getStudentInfoByGymID =  async(gymID) => {
    
     let token = getFromStorage('JWT_Token') 
@@ -108,4 +124,4 @@ const getStudentEnrolledCourses =  async(studentID) => {
     return res;
 }
 
-export default {registerNewStudent,editStudentInfo,getStudentInfoByGymID,getStudentInfoByStudentID,getStudentEnrolledCourses};
+export default {registerNewStudent,editStudentInfo,newStudentCourseEnrollment,getStudentInfoByGymID,getStudentInfoByStudentID,getStudentEnrolledCourses};

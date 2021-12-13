@@ -13,7 +13,7 @@ import Scrollbar from '../../components/Scrollbar';
 
 // utils / API
 import API_Course from "../../api/course";
-import API_Trainer from "../../api/trainer";
+import API_Student from "../../api/student";
 import {getFromStorage} from "../../storage/localstorage.js";
 
 
@@ -21,60 +21,60 @@ export default function EnrolmentForm ({courseID,studentID}) {
 
     const [editMode, setEditMode] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [trainerList, setTrainerList] = useState([]);
+    const [courseName, setCourseName] = useState('');
     const [courseList, setCourseList] = useState([]);
     const [studentlist, setStudentlist] = useState([]);
 
     
     const navigate = useNavigate();
     let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
-    let { studentvCourseID } = useParams();
+    let { enrolmentID } = useParams();
 
 
     useEffect( () => {
 
-        // if (courseID)
-        // {
-        //     setEditMode(true);
+        if (enrolmentID)
+        {
+            setEditMode(true);
 
-        //     API_Course.getCourseInfoByID(
-        //         courseID
-        //       ).then((result) => {
+            API_Course.getCourseInfoByID(
+                courseID
+              ).then((result) => {
                               
-        //         setCourseName(result.data.data.Str_CourseName)
-        //         formik.setFieldValue('CourseName',result.data.data.Str_CourseName);
-        //         formik.setFieldValue('CourseDescription',result.data.data.Str_CourseDescription);
-        //         formik.setFieldValue('StartDate',result.data.data.Str_StartDate);
-        //         formik.setFieldValue('EndDate',result.data.data.Str_EndDate);
-        //         formik.setFieldValue('TrainerPercent',result.data.data.Int_TrainerPercent);
-        //         formik.setFieldValue('CourseType',result.data.data.Int_CourseType);
-        //         formik.setFieldValue('PerSessionCost',result.data.data.Int_PerSessionCost);
-        //         formik.setFieldValue('Trainer',result.data.data.Frk_Trainer);
+                // setCourseName(result.data.data.Str_CourseName)
+                // formik.setFieldValue('CourseName',result.data.data.Str_CourseName);
+                // formik.setFieldValue('CourseDescription',result.data.data.Str_CourseDescription);
+                // formik.setFieldValue('StartDate',result.data.data.Str_StartDate);
+                // formik.setFieldValue('EndDate',result.data.data.Str_EndDate);
+                // formik.setFieldValue('TrainerPercent',result.data.data.Int_TrainerPercent);
+                // formik.setFieldValue('CourseType',result.data.data.Int_CourseType);
+                // formik.setFieldValue('PerSessionCost',result.data.data.Int_PerSessionCost);
+                // formik.setFieldValue('Trainer',result.data.data.Frk_Trainer);
           
-        //         loadTrainerList();
+                loadCourseList();
 
-        //       }).catch((error) => {
-        //         console.log(error.response);
-        //       })
-        // }
-        // else
-        // {
-        //     loadTrainerList();
+              }).catch((error) => {
+                console.log(error.response);
+              })
+        }
+        else
+        {
+          loadCourseList();
             
-        // }       
+        }       
 
       },[])
 
 
     const loadCourseList = () => {
     
-
-      API_Trainer.getTrainerByGymID(
+      API_Course.getCourseByGymID(
         Prk_Gym_AutoID
       ).then((result) => {
-            
-        setTrainerList(result.data.data)
-        setIsLoading(true);           
+        
+        console.log(result.data.data);
+        setCourseList(result.data.data)
+        loadStudentList();           
 
       }).catch((error) => {
         console.log(error.response);
@@ -84,12 +84,12 @@ export default function EnrolmentForm ({courseID,studentID}) {
 
     const loadStudentList = () => {
     
-
-        API_Trainer.getTrainerByGymID(
+        API_Student.getStudentInfoByGymID(
           Prk_Gym_AutoID
         ).then((result) => {
-              
-          setTrainerList(result.data.data)
+          
+          console.log(result.data.data);
+          setStudentlist(result.data.data)
           setIsLoading(true);           
   
         }).catch((error) => {
@@ -105,9 +105,10 @@ export default function EnrolmentForm ({courseID,studentID}) {
             RegisteredSession:0,
             ValidUntillTo:'',
         }, 
-        validationSchema: courseRegisterSchema,
+        //validationSchema: courseRegisterSchema,
         onSubmit: (values) => {
             handleSubmit(values);
+
         },
     });
 
@@ -116,7 +117,7 @@ export default function EnrolmentForm ({courseID,studentID}) {
 
         if (editMode)
         {
-              API_Course.editCourse(
+            API_Student.editCourse(
                 courseID,
                 values.CourseName,
                 values.CourseDescription,
@@ -135,20 +136,14 @@ export default function EnrolmentForm ({courseID,studentID}) {
         }
         else
         {
-              API_Course.registerNewCourse(
-                Prk_Gym_AutoID,
-                values.CourseName,
-                values.CourseDescription,
-                values.Trainer,
-                true,//values.Active,
-                values.StartDate,
-                values.EndDate,
-                values.TrainerPercent,
-                values.CourseType,
-                values.PerSessionCost
+              API_Student.newStudentCourseEnrollment(
+                values.Course,
+                values.Student,
+                values.RegisteredSession,
+                values.ValidUntillTo,
               ).then((result) => {
                 console.log(result);
-                navigate("/gym/course");
+                navigate("/gym/enrolment");
               }).catch((error) => {
                 console.log(error.response);
               })
@@ -159,14 +154,14 @@ export default function EnrolmentForm ({courseID,studentID}) {
 
 
     return (
-        <Page title="New Course | GymOnlineee">
+        <Page title="New Enrolment | GymOnlineee">
 
         {isLoading && (
                        <Container>
             
                        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                          <Typography variant="h4" gutterBottom>
-                         {editMode ? `Edit Course [${courseName}]` : 'Add New Course'}
+                         {editMode ? `Edit Enrolment [${courseName}]` : 'New Enrolment'}
                          </Typography>
                        </Stack>
            
@@ -174,109 +169,68 @@ export default function EnrolmentForm ({courseID,studentID}) {
                            <div>
                                <form onSubmit={formik.handleSubmit}>
            
-                                   <TextField
-                                       fullWidth
-                                       id="CourseName"
-                                       name="CourseName"
-                                       label="Name"
-                                       value={formik.values.CourseName}
-                                       onChange={formik.handleChange}
-                                       error={formik.touched.CourseName && Boolean(formik.errors.CourseName)}
-                                       helperText={formik.touched.CourseName && formik.errors.CourseName}
-                                       margin="normal"
-                                   />
-           
-                                   <TextField
-                                       fullWidth
-                                       id="CourseDescription"
-                                       name="CourseDescription"
-                                       label="Description"
-                                       value={formik.values.CourseDescription}
-                                       onChange={formik.handleChange}
-                                       error={formik.touched.CourseDescription && Boolean(formik.errors.CourseDescription)}
-                                       helperText={formik.touched.CourseDescription && formik.errors.CourseDescription}
-                                       margin="normal"
-                                   />
-           
-                                   <TextField
-                                       fullWidth
-                                       id="StartDate"
-                                       name="StartDate"
-                                       label="Start Date"
-                                       value={formik.values.StartDate}
-                                       onChange={formik.handleChange}
-                                       error={formik.touched.StartDate && Boolean(formik.errors.StartDate)}
-                                       helperText={formik.touched.StartDate && formik.errors.StartDate}
-                                       margin="normal"
-                                   />
-           
-                                   <TextField
-                                       fullWidth
-                                       id="EndDate"
-                                       name="EndDate"
-                                       label="End Date"
-                                       value={formik.values.EndDate}
-                                       onChange={formik.handleChange}
-                                       error={formik.touched.EndDate && Boolean(formik.errors.EndDate)}
-                                       helperText={formik.touched.EndDate && formik.errors.EndDate}
-                                       margin="normal"
-                                   />
-           
-                                   <TextField
-                                       fullWidth
-                                       id="TrainerPercent"
-                                       name="TrainerPercent"
-                                       label="Trainer Percent"
-                                       value={formik.values.TrainerPercent}
-                                       onChange={formik.handleChange}
-                                       error={formik.touched.TrainerPercent && Boolean(formik.errors.TrainerPercent)}
-                                       helperText={formik.touched.TrainerPercent && formik.errors.TrainerPercent}
-                                       margin="normal"
-                                   />
-           
-                                   <TextField
-                                       fullWidth
-                                       id="CourseType"
-                                       name="CourseType"
-                                       label="Course Type"
-                                       value={formik.values.CourseType}
-                                       onChange={formik.handleChange}
-                                       error={formik.touched.CourseType && Boolean(formik.errors.CourseType)}
-                                       helperText={formik.touched.CourseType && formik.errors.CourseType}
-                                       margin="normal"
-                                   />
-           
-                                   <TextField
-                                       fullWidth
-                                       id="PerSessionCost"
-                                       name="PerSessionCost"
-                                       label="PerSession Cost"
-                                       value={formik.values.PerSessionCost}
-                                       onChange={formik.handleChange}
-                                       error={formik.touched.PerSessionCost && Boolean(formik.errors.PerSessionCost)}
-                                       helperText={formik.touched.PerSessionCost && formik.errors.PerSessionCost}
-                                       margin="normal"
-                                   />
-
                                   <TextField
                                     fullWidth
-                                    id="Trainer"
-                                    name="Trainer"
+                                    id="Course"
+                                    name="Course"
                                     select
-                                    label="Trainer"
-                                    value={formik.values.Trainer}
+                                    label="Course"
+                                    value={formik.values.Course}
                                     onChange={formik.handleChange}
-                                    error={formik.touched.Trainer && Boolean(formik.errors.Trainer)}
-                                    helperText={formik.touched.Trainer && formik.errors.Trainer}
+                                    error={formik.touched.Course && Boolean(formik.errors.Course)}
+                                    helperText={formik.touched.Course && formik.errors.Course}
                                     margin="normal"
                                   >
-                                    {trainerList.map((trainer) => (
-                                      <MenuItem key={trainer.Prk_Trainer} value={trainer.Prk_Trainer}>
-                                        {trainer.Str_TrainerName + ' ' + trainer.Str_TrainerFamily}
+                                    {courseList.map((course) => (
+                                      <MenuItem key={course.Prk_Course} value={course.Prk_Course}>
+                                        {course.Str_CourseName}
                                       </MenuItem>
                                     ))}
                                   </TextField>
            
+                                  <TextField
+                                    fullWidth
+                                    id="Student"
+                                    name="Student"
+                                    select
+                                    label="Student"
+                                    value={formik.values.Student}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.Student && Boolean(formik.errors.Student)}
+                                    helperText={formik.touched.Student && formik.errors.Student}
+                                    margin="normal"
+                                  >
+                                    {studentlist.map((student) => (
+                                      <MenuItem key={student.Prk_Student_AutoID} value={student.Prk_Student_AutoID}>
+                                        {student.Str_Name + ' ' + student.Str_Family}
+                                      </MenuItem>
+                                    ))}
+                                  </TextField>
+           
+                                   <TextField
+                                       fullWidth
+                                       id="RegisteredSession"
+                                       name="RegisteredSession"
+                                       label="Registered Session"
+                                       value={formik.values.RegisteredSession}
+                                       onChange={formik.handleChange}
+                                       error={formik.touched.RegisteredSession && Boolean(formik.errors.RegisteredSession)}
+                                       helperText={formik.touched.RegisteredSession && formik.errors.RegisteredSession}
+                                       margin="normal"
+                                   />
+           
+                                   <TextField
+                                       fullWidth
+                                       id="ValidUntillTo"
+                                       name="ValidUntillTo"
+                                       label="Valid Untill To"
+                                       value={formik.values.ValidUntillTo}
+                                       onChange={formik.handleChange}
+                                       error={formik.touched.ValidUntillTo && Boolean(formik.errors.ValidUntillTo)}
+                                       helperText={formik.touched.ValidUntillTo && formik.errors.ValidUntillTo}
+                                       margin="normal"
+                                   />
+                                               
                                    <Button color="primary" variant="contained" fullWidth type="submit" margin="normal">
                                        Submit
                                    </Button>

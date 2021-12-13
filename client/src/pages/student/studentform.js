@@ -121,6 +121,8 @@ export default function StudentForm () {
                 values.Gmail,
                 values.Address,
                 values.Birthday,
+                values.Gmail, //default username
+                values.Mobile, //default passowrd
                 values.Description,
               ).then((result) => {
                 console.log(result);              

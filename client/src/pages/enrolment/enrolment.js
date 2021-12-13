@@ -158,7 +158,7 @@ export default function Enrolment() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="/gym/enrollNewStudent"
+            to="/gym/NewEnrolment"
             startIcon={<Icon icon={plusFill} />}          
           >
             New Enrolment

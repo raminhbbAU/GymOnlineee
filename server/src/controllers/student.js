@@ -81,16 +81,18 @@ router.get('/getFinancialStatment',authToken,async(req,res,next) =>{
     res.send('the getFinancialStatment API called');
 })
 
-router.post('/registerStudentCourse',authToken,async(req,res,next) =>{
+router.post('/newStudentCourseEnrollment',authToken,async(req,res,next) =>{
 
     // Get user input
-    const {Course,Student} = req.body;
+    const {Course,Student,RegisteredSession,ValidUntillTo} = req.body;
+
+    console.log(req.body);
 
     // check if user already exist
     const oldStudentCourse = await models.studentvcourse.findOne({
         where:{
             Frk_Course:Course,
-            Frk_Student:Student
+            Frk_Student:Student,
         }
     });
 
@@ -100,12 +102,14 @@ router.post('/registerStudentCourse',authToken,async(req,res,next) =>{
             data: "Student is already a member of this course.",
           });
      }  
-    
+  
 
     models.studentvcourse
       .create({
         Frk_Course: Course,
-        Frk_Student: Student,
+        Frk_student: Student,
+        Int_RegisteredSession:RegisteredSession,
+        Str_ValidUntillTo:ValidUntillTo,
         Str_RegisterDate: getDate(),
         Str_RegisterTime: getTime()
       })
@@ -124,6 +128,8 @@ router.post('/registerStudentCourse',authToken,async(req,res,next) =>{
       });
 
 })
+
+
 
 router.get('/getStudentEnrolledCourses',authToken,async(req,res,next) =>{
     

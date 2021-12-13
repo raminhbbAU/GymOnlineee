@@ -2,6 +2,7 @@ import { useState,useEffect } from "react";
 import { useFormik} from 'formik';
 import {studentRegisterSchema} from '../../utils/yup.validation';
 import { useNavigate,useParams } from 'react-router-dom';
+import { replace } from "lodash";
 
 // material
 import {TextField,Button,InputAdornment,IconButton,Stack,Container,Typography} from '@mui/material';
@@ -15,7 +16,7 @@ import Scrollbar from '../../components/Scrollbar';
 // utils / API
 import API from "../../api/student";
 import {getFromStorage} from "../../storage/localstorage.js";
-import { replace } from "lodash";
+
 
 
 export default function StudentForm () {
@@ -28,10 +29,6 @@ export default function StudentForm () {
     let { studentID } = useParams();
     let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
 
-    if (studentID)
-    {
-        studentID = replace(studentID,":","");
-    }
 
 
     useEffect( () => {
@@ -161,6 +158,7 @@ export default function StudentForm () {
                           onChange={formik.handleChange}
                           error={formik.touched.Name && Boolean(formik.errors.Name)}
                           helperText={formik.touched.Name && formik.errors.Name}
+                          margin="normal"
                       />
 
                       <TextField
@@ -172,6 +170,7 @@ export default function StudentForm () {
                           onChange={formik.handleChange}
                           error={formik.touched.Family && Boolean(formik.errors.Family)}
                           helperText={formik.touched.Family && formik.errors.Family}
+                          margin="normal"
                       />
 
                       <TextField
@@ -183,6 +182,7 @@ export default function StudentForm () {
                           onChange={formik.handleChange}
                           error={formik.touched.Mobile && Boolean(formik.errors.Mobile)}
                           helperText={formik.touched.Mobile && formik.errors.Mobile}
+                          margin="normal"
                       />
 
                       <TextField
@@ -194,6 +194,7 @@ export default function StudentForm () {
                           onChange={formik.handleChange}
                           error={formik.touched.WhatsApp && Boolean(formik.errors.WhatsApp)}
                           helperText={formik.touched.WhatsApp && formik.errors.WhatsApp}
+                          margin="normal"
                       />
 
                       <TextField
@@ -205,6 +206,7 @@ export default function StudentForm () {
                           onChange={formik.handleChange}
                           error={formik.touched.Telegram && Boolean(formik.errors.Telegram)}
                           helperText={formik.touched.Telegram && formik.errors.Telegram}
+                          margin="normal"
                       />
 
                       <TextField
@@ -216,6 +218,7 @@ export default function StudentForm () {
                           onChange={formik.handleChange}
                           error={formik.touched.Gmail && Boolean(formik.errors.Gmail)}
                           helperText={formik.touched.Gmail && formik.errors.Gmail}
+                          margin="normal"
                       />
 
                       <TextField
@@ -227,6 +230,7 @@ export default function StudentForm () {
                           onChange={formik.handleChange}
                           error={formik.touched.Address && Boolean(formik.errors.Address)}
                           helperText={formik.touched.Address && formik.errors.Address}
+                          margin="normal"
                       />
 
                       <TextField
@@ -238,6 +242,7 @@ export default function StudentForm () {
                           onChange={formik.handleChange}
                           error={formik.touched.Birthday && Boolean(formik.errors.Birthday)}
                           helperText={formik.touched.Birthday && formik.errors.Birthday}
+                          margin="normal"
                       />
 
                       {/* <TextField
@@ -285,9 +290,10 @@ export default function StudentForm () {
                           onChange={formik.handleChange}
                           error={formik.touched.Description && Boolean(formik.errors.Description)}
                           helperText={formik.touched.Description && formik.errors.Description}
+                          margin="normal"
                       />
 
-                      <Button color="primary" variant="contained" fullWidth type="submit">
+                      <Button color="primary" variant="contained" fullWidth type="submit"  margin="normal">
                           Submit
                       </Button>
                   </form>

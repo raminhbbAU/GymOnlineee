@@ -61,7 +61,7 @@ export default function GymForm () {
             
             <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
               <Typography variant="h4" gutterBottom>
-                Update Gym Info
+                Update Gym
               </Typography>
             </Stack>
 
@@ -78,6 +78,7 @@ export default function GymForm () {
                             onChange={formik.handleChange}
                             error={formik.touched.Str_GymName && Boolean(formik.errors.Str_GymName)}
                             helperText={formik.touched.Str_GymName && formik.errors.Str_GymName}
+                            margin="normal"
                         />
 
                         <TextField
@@ -89,6 +90,7 @@ export default function GymForm () {
                             onChange={formik.handleChange}
                             error={formik.touched.Str_OwnerTitle && Boolean(formik.errors.Str_OwnerTitle)}
                             helperText={formik.touched.Str_OwnerTitle && formik.errors.Str_OwnerTitle}
+                            margin="normal"
                         />
 
                         <TextField
@@ -100,6 +102,7 @@ export default function GymForm () {
                             onChange={formik.handleChange}
                             error={formik.touched.Str_Tel && Boolean(formik.errors.Str_Tel)}
                             helperText={formik.touched.Str_Tel && formik.errors.Str_Tel}
+                            margin="normal"
                         />
 
                         <TextField
@@ -111,6 +114,7 @@ export default function GymForm () {
                             onChange={formik.handleChange}
                             error={formik.touched.Str_Mobile && Boolean(formik.errors.Str_Mobile)}
                             helperText={formik.touched.Str_Mobile && formik.errors.Str_Mobile}
+                            margin="normal"
                         />
                         
                         <TextField
@@ -122,6 +126,7 @@ export default function GymForm () {
                             onChange={formik.handleChange}
                             error={formik.touched.Str_Gmail && Boolean(formik.errors.Str_Gmail)}
                             helperText={formik.touched.Str_Gmail && formik.errors.Str_Gmail}
+                            margin="normal"
                         />
 
 
@@ -134,6 +139,7 @@ export default function GymForm () {
                             onChange={formik.handleChange}
                             error={formik.touched.Str_Address && Boolean(formik.errors.Str_Address)}
                             helperText={formik.touched.Str_Address && formik.errors.Str_Address}
+                            margin="normal"
                         />
 
                         <TextField
@@ -145,6 +151,7 @@ export default function GymForm () {
                             onChange={formik.handleChange}
                             error={formik.touched.Str_UserName && Boolean(formik.errors.Str_UserName)}
                             helperText={formik.touched.Str_UserName && formik.errors.Str_UserName}
+                            margin="normal"
                         />
 
                         <TextField
@@ -157,6 +164,7 @@ export default function GymForm () {
                             onChange={formik.handleChange}
                             error={formik.touched.Str_Password && Boolean(formik.errors.Str_Password)}
                             helperText={formik.touched.Str_Password && formik.errors.Str_Password}
+                            margin="normal"
                             InputProps={{ // <-- This is where the toggle button is added.
                                 endAdornment: (
                                 <InputAdornment position="end">
@@ -181,10 +189,11 @@ export default function GymForm () {
                             onChange={formik.handleChange}
                             error={formik.touched.Str_Description && Boolean(formik.errors.Str_Description)}
                             helperText={formik.touched.Str_Description && formik.errors.Str_Description}
+                            margin="normal"
                         />
 
                         <Button color="primary" variant="contained" fullWidth type="submit">
-                            Edit
+                            Edit Gym
                         </Button>
                     </form>
                 </div>

@@ -84,6 +84,7 @@ export default function TrainerForm () {
                             onChange={formik.handleChange}
                             error={formik.touched.TrainerName && Boolean(formik.errors.TrainerName)}
                             helperText={formik.touched.TrainerName && formik.errors.TrainerName}
+                            margin="normal"
                         />
 
                         <TextField
@@ -95,6 +96,7 @@ export default function TrainerForm () {
                             onChange={formik.handleChange}
                             error={formik.touched.TrainerFamily && Boolean(formik.errors.TrainerFamily)}
                             helperText={formik.touched.TrainerFamily && formik.errors.TrainerFamily}
+                            margin="normal"
                         />
 
                         <TextField
@@ -106,6 +108,7 @@ export default function TrainerForm () {
                             onChange={formik.handleChange}
                             error={formik.touched.Mobile && Boolean(formik.errors.Mobile)}
                             helperText={formik.touched.Mobile && formik.errors.Mobile}
+                            margin="normal"
                         />
 
                         <TextField
@@ -117,6 +120,7 @@ export default function TrainerForm () {
                             onChange={formik.handleChange}
                             error={formik.touched.WhatsApp && Boolean(formik.errors.WhatsApp)}
                             helperText={formik.touched.WhatsApp && formik.errors.WhatsApp}
+                            margin="normal"
                         />
 
                         <TextField
@@ -128,6 +132,7 @@ export default function TrainerForm () {
                             onChange={formik.handleChange}
                             error={formik.touched.Gmail && Boolean(formik.errors.Gmail)}
                             helperText={formik.touched.Gmail && formik.errors.Gmail}
+                            margin="normal"
                         />
 
                         <Button color="primary" variant="contained" fullWidth type="submit">

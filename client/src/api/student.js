@@ -90,4 +90,22 @@ const getStudentInfoByStudentID =  async(gymID,studentID) => {
     return res;
 }
 
-export default {registerNewStudent,editStudentInfo,getStudentInfoByGymID,getStudentInfoByStudentID};
+const getStudentEnrolledCourses =  async(studentID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    console.log(token);
+
+    let res = await axios.get(apiPath + 'student/getStudentEnrolledCourses',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            studentID: studentID,
+        }
+    });
+
+    return res;
+}
+
+export default {registerNewStudent,editStudentInfo,getStudentInfoByGymID,getStudentInfoByStudentID,getStudentEnrolledCourses};

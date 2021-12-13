@@ -17,54 +17,56 @@ import API_Trainer from "../../api/trainer";
 import {getFromStorage} from "../../storage/localstorage.js";
 
 
-export default function CourseForm () {
+export default function EnrolmentForm ({courseID,studentID}) {
 
     const [editMode, setEditMode] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [courseName, setCourseName] = useState('');
     const [trainerList, setTrainerList] = useState([]);
+    const [courseList, setCourseList] = useState([]);
+    const [studentlist, setStudentlist] = useState([]);
 
+    
     const navigate = useNavigate();
     let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
-    let { courseID } = useParams();
+    let { studentvCourseID } = useParams();
 
 
     useEffect( () => {
 
-        if (courseID)
-        {
-            setEditMode(true);
+        // if (courseID)
+        // {
+        //     setEditMode(true);
 
-            API_Course.getCourseInfoByID(
-                courseID
-              ).then((result) => {
+        //     API_Course.getCourseInfoByID(
+        //         courseID
+        //       ).then((result) => {
                               
-                setCourseName(result.data.data.Str_CourseName)
-                formik.setFieldValue('CourseName',result.data.data.Str_CourseName);
-                formik.setFieldValue('CourseDescription',result.data.data.Str_CourseDescription);
-                formik.setFieldValue('StartDate',result.data.data.Str_StartDate);
-                formik.setFieldValue('EndDate',result.data.data.Str_EndDate);
-                formik.setFieldValue('TrainerPercent',result.data.data.Int_TrainerPercent);
-                formik.setFieldValue('CourseType',result.data.data.Int_CourseType);
-                formik.setFieldValue('PerSessionCost',result.data.data.Int_PerSessionCost);
-                formik.setFieldValue('Trainer',result.data.data.Frk_Trainer);
+        //         setCourseName(result.data.data.Str_CourseName)
+        //         formik.setFieldValue('CourseName',result.data.data.Str_CourseName);
+        //         formik.setFieldValue('CourseDescription',result.data.data.Str_CourseDescription);
+        //         formik.setFieldValue('StartDate',result.data.data.Str_StartDate);
+        //         formik.setFieldValue('EndDate',result.data.data.Str_EndDate);
+        //         formik.setFieldValue('TrainerPercent',result.data.data.Int_TrainerPercent);
+        //         formik.setFieldValue('CourseType',result.data.data.Int_CourseType);
+        //         formik.setFieldValue('PerSessionCost',result.data.data.Int_PerSessionCost);
+        //         formik.setFieldValue('Trainer',result.data.data.Frk_Trainer);
           
-                loadTrainerList();
+        //         loadTrainerList();
 
-              }).catch((error) => {
-                console.log(error.response);
-              })
-        }
-        else
-        {
-            loadTrainerList();
+        //       }).catch((error) => {
+        //         console.log(error.response);
+        //       })
+        // }
+        // else
+        // {
+        //     loadTrainerList();
             
-        }       
+        // }       
 
       },[])
 
 
-    const loadTrainerList = () => {
+    const loadCourseList = () => {
     
 
       API_Trainer.getTrainerByGymID(
@@ -80,16 +82,28 @@ export default function CourseForm () {
 
     }
 
+    const loadStudentList = () => {
+    
+
+        API_Trainer.getTrainerByGymID(
+          Prk_Gym_AutoID
+        ).then((result) => {
+              
+          setTrainerList(result.data.data)
+          setIsLoading(true);           
+  
+        }).catch((error) => {
+          console.log(error.response);
+        })
+  
+      }
+
     const formik = useFormik({
         initialValues: {
-            CourseName:'' ,
-            CourseDescription:'',
-            StartDate:'',
-            EndDate:'',
-            TrainerPercent:0,
-            CourseType:1,
-            PerSessionCost:0,
-            Trainer:0,
+            Course:'' ,
+            Student:'',
+            RegisteredSession:0,
+            ValidUntillTo:'',
         }, 
         validationSchema: courseRegisterSchema,
         onSubmit: (values) => {

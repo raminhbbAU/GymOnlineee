@@ -59,7 +59,8 @@ const courseRegisterSchema = yup.object({
     EndDate: dateValidator,
     TrainerPercent:percentageValidator,
     CourseType:yup.number('the course type is invalid').min(1,'the course type is invalid').max(2,'the course type is invalid'),
-    PerSessionCost:yup.number('the Per session cost is invalid').min(1,'the Per session cost is invalid').max(999999999,'the Per session cost is invalid')
+    PerSessionCost:yup.number('the Per session cost is invalid').min(1,'the Per session cost is invalid').max(999999999,'the Per session cost is invalid'),
+    Trainer:yup.number().required('The Trainer is required.').min(1)
 })
 
 

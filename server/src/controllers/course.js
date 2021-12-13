@@ -60,26 +60,17 @@ router.post("/registerNewCourse", authToken,yupValidator(courseRegisterSchema), 
     });
 });
 
-router.put("/edit", authToken, async (req, res, next) => {
+router.put("/editCourse", authToken, async (req, res, next) => {
+  
   // Get user input
-  const {
-    id,
-    CourseName,
-    CourseDescription,
-    Gym,
-    Trainer,
-    Active,
-    StartDate,
-    EndDate,
-    TrainerPercent,
-    CourseType,
-    PerSessionCost,
-  } = req.body;
+  const {courseID,CourseName,CourseDescription,trainerID,StartDate,EndDate,TrainerPercent,CourseType,PerSessionCost} = req.body;
+
+  console.log(req.body);
 
   // check if course already exist
   const oldCourse = await models.course.findOne({
     where: {
-      Prk_Course: id,
+      Prk_Course: courseID,
     },
   });
 
@@ -96,9 +87,7 @@ router.put("/edit", authToken, async (req, res, next) => {
     .update({
       Str_CourseName: CourseName,
       Str_CourseDescription: CourseDescription,
-      Frk_Gym: Gym,
-      Frk_Trainer: Trainer,
-      Bit_Active: Active,
+      Frk_Trainer: trainerID,
       Str_StartDate: StartDate,
       Str_EndDate: EndDate,
       Int_TrainerPercent: TrainerPercent,
@@ -256,6 +245,44 @@ router.delete("/deleteOffTime", authToken, async (req, res, next) => {
       });
 });
 
+router.get('/getCourseInfoByID',authToken,async(req,res,next) =>{
+
+  // Get user input
+  const { courseID } = req.query;
+
+  if (!courseID) {
+        return res.status(409).json({
+            res: false,
+            data: "courseID is not provided!",
+        });
+  }
+
+  if(isNaN(courseID)){
+    return res.status(409).json({
+      res: false,
+      data: "courseID is not properly provided!",
+  });
+  }
+    
+  //console.log(models.sequelize);
+  const courseList = await models.sequelize.query("SELECT courses.*,trainers.Str_TrainerName,trainers.Str_TrainerFamily FROM courses inner join trainers on Frk_Trainer = Prk_Trainer where courses.Prk_Course=" + courseID + ";");
+
+ if (!courseList[0][0]) {
+   return res.status(409).json({
+     res: false,
+     data: "There is no course related to this specific given course ID.",
+   });
+ }
+ else
+ {
+    res.status(200).json({
+        res: true,
+        data: courseList[0][0],
+     });
+ }
+
+})
+
 router.get("/getCourseByGymID", authToken, async (req, res, next) => {
   
   // Get user input
@@ -294,5 +321,53 @@ router.get("/getCourseByGymID", authToken, async (req, res, next) => {
  }
 
 });
+
+router.get('/getEnrolledCourses',authToken,async(req,res,next) =>{
+    
+  // Get user input
+  const { courseID } = req.query;
+
+  if (!courseID) {
+        return res.status(409).json({
+            res: false,
+            data: "courseID is not provided!",
+        });
+  }
+
+  if(isNaN(courseID)){
+    return res.status(409).json({
+      res: false,
+      data: "courseID is not properly provided!",
+  });
+  }
+  
+  let EnrolledCourseList;
+
+  if (courseID == -1)
+  {
+    EnrolledCourseList = await models.sequelize.query("SELECT Prk_StudentVCourse,Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_family,studentvcourses.Str_RegisterDate,Int_RegisteredSession,0 as Present,0 as Absent, 0 as AcceptableAbsence FROM courses inner join studentvcourses on Frk_Course = Prk_Course inner join students on Frk_student = Prk_Student_AutoID inner join trainers on Frk_Trainer = Prk_Trainer;");
+  }
+  else
+  {
+    EnrolledCourseList = await models.sequelize.query("SELECT Prk_StudentVCourse,Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_family,studentvcourses.Str_RegisterDate,Int_RegisteredSession,0 as Present,0 as Absent, 0 as AcceptableAbsence FROM courses inner join studentvcourses on Frk_Course = Prk_Course inner join students on Frk_student = Prk_Student_AutoID inner join trainers on Frk_Trainer = Prk_Trainer where Prk_Course=" + courseID + ";");
+  }
+  
+
+
+  if (!EnrolledCourseList[0]) {
+    return res.status(409).json({
+      res: false,
+      data: "There is no enrolled course related to this specific course id.",
+    });
+  }
+  else
+  {
+    res.status(200).json({
+        res: true,
+        data: EnrolledCourseList[0],
+      });
+  }
+    
+})
 
 module.exports = router;

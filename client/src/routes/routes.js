@@ -15,6 +15,7 @@ import Course from '../pages/course/course';
 import NewCourse from '../pages/course/courseform';
 import Student from '../pages/student/student';
 import NewStudent from '../pages/student/studentform';
+import Enrolment from '../pages/enrolment/enrolment';
 import NotFound from '../pages/page404/page404';
 import Login from '../pages/login/login';
 import Signup from '../pages/signup/signup';
@@ -35,7 +36,13 @@ export default function Router() {
         { path: 'Trainer', element: <Trainer /> },
         { path: 'NewTrainer', element: <NewTrainer /> },
         { path: 'Course', element: <Course /> },
-        { path: 'NewCourse', element: <NewCourse /> },
+        { 
+          path: 'NewCourse', 
+          element: <NewCourse />,
+          children: [
+            { path: ':courseID', element: <NewCourse /> },
+          ]
+        },
         { path: 'Student', element: <Student /> },
         { 
           path: 'NewStudent', 
@@ -44,7 +51,21 @@ export default function Router() {
             { path: ':studentID', element: <NewStudent /> },
           ]
         },
-
+        { path: 'Enrolment', element: <Enrolment /> },
+        { 
+          path: 'EnrolmentByCourse', 
+          element: <Enrolment />,
+          children: [
+            { path: ':courseID', element: <Enrolment /> },
+          ]
+        },
+        { 
+          path: 'EnrolmentByStudent', 
+          element: <Enrolment />,
+          children: [
+            { path: ':studentID', element: <Enrolment /> },
+          ]
+        },
       ]
     }
     ,

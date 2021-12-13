@@ -1,7 +1,8 @@
 import { Icon } from '@iconify/react';
 import { useState,useEffect } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink,useParams } from 'react-router-dom';
+import { replace } from "lodash";
 
 // material
 import {Card,Table,Stack,Avatar,Button,Checkbox,TableRow,TableBody,TableCell,Container,Typography,TableContainer,TablePagination} from '@mui/material';
@@ -15,7 +16,9 @@ import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_d
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import API from "../../api/course";
+import API_Student from "../../api/student";
+import API_Course from "../../api/course";
+
 import {getFromStorage} from "../../storage/localstorage.js";
 
 // -------------------------------Header--------------------------------
@@ -45,18 +48,48 @@ export default function Enrolment() {
   const [courseList, setCourseList] = useState([]);
   const [refreshDataset,setRefreshDataset] = useState(false);
 
+  console.log(useParams());
+
   let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
+  let { studentID,courseID } = useParams();
+
+
 
   useEffect( () => {
 
-    API.getCourseByGymID(
-      Prk_Gym_AutoID
-    ).then((result) => {
-      console.log(result);
-      setCourseList(result.data.data)
-    }).catch((error) => {
-      console.log(error.response);
-    })
+    if (studentID && !courseID)
+    {
+        API_Student.getStudentEnrolledCourses(
+          studentID
+        ).then((result) => {
+          console.log(result);
+          setCourseList(result.data.data)
+        }).catch((error) => {
+          console.log(error.response);
+        })
+    }
+    else if (!studentID && courseID)
+    {
+        API_Course.getEnrolledCourses(
+          courseID
+        ).then((result) => {
+          console.log(result);
+          setCourseList(result.data.data)
+        }).catch((error) => {
+          console.log(error.response);
+        })
+    }
+    else if (!studentID && !courseID)
+    {
+        API_Course.getEnrolledCourses(
+          -1
+        ).then((result) => {
+          console.log(result);
+          setCourseList(result.data.data)
+        }).catch((error) => {
+          console.log(error.response);
+        })
+    }
 
   },[refreshDataset])
 
@@ -116,11 +149,11 @@ export default function Enrolment() {
 
 
   return (
-    <Page title="Enrolment | GymOnlineee">
+    <Page title="Enrolment List | GymOnlineee">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Active Enrolment Status
+             Enrolment List
           </Typography>
           <Button
             variant="contained"
@@ -155,13 +188,13 @@ export default function Enrolment() {
                   {filteredItems
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Str_StartDate,Str_EndDate,Int_CourseType,Bit_Active } = row;
+                      const { Prk_StudentVCourse,Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_family,Str_RegisterDate,Int_RegisteredSession,Present,Absent,AcceptableAbsence } = row;
                       const isItemSelected = selected.indexOf(Str_CourseName) !== -1;
 
                       return (
                         <TableRow
                           hover
-                          key={Prk_Course}
+                          key={Prk_StudentVCourse}
                           tabIndex={-1}
                           role="checkbox"
                           selected={isItemSelected}
@@ -181,26 +214,22 @@ export default function Enrolment() {
                             </Stack>
                           </TableCell>
                           <TableCell align="left">{Str_TrainerName + ' ' + Str_TrainerFamily}</TableCell>
-                          <TableCell align="left">{Str_StartDate}</TableCell>
-                          <TableCell align="left">{Str_EndDate}</TableCell>
+                          <TableCell align="left">{Str_Name + ' ' + Str_family}</TableCell>
+                          <TableCell align="left">{Str_RegisterDate}</TableCell>
+                          <TableCell align="left">{Int_RegisteredSession}</TableCell>
 
                           <TableCell align="left">
-                            <Label
-                              variant="ghost"
-                              color= {(Int_CourseType==1) ? 'success' : 'error'}
-                            >
-                              {(Int_CourseType==1) ? 'Gym' : 'Online'}
+                            <Label variant="ghost" color='success'>
+                              {Present}
+                            </Label>
+                            <Label variant="ghost" color= 'error'>
+                              {Absent}
+                            </Label>
+                            <Label variant="ghost" color= 'info'>
+                              {AcceptableAbsence}
                             </Label>
                           </TableCell>
 
-                          <TableCell align="left">
-                            <Label
-                              variant="ghost"
-                              color= {Bit_Active ? 'success' : 'error'}
-                            >
-                              {Bit_Active ? 'Active' : 'Disable'}
-                            </Label>
-                          </TableCell>
 
                           <TableCell align="right">
                             <UserMoreMenu />

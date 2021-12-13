@@ -11,7 +11,7 @@ import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/mat
 
 // ----------------------------------------------------------------------
 
-export default function StudentMoreMenu({studentID}) {
+export default function StudentMoreMenu({courseID}) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -42,18 +42,18 @@ export default function StudentMoreMenu({studentID}) {
           <ListItemText primary="Disable/Enable" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
-        <MenuItem component={RouterLink} to={`/gym/NewStudent/${studentID}`} props sx={{ color: 'text.secondary' }}>
+        <MenuItem component={RouterLink} to={`/gym/NewCourse/${courseID}`} props sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />
           </ListItemIcon>
           <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
-        <MenuItem component={RouterLink} to={`/gym/EnrolmentByStudent/${studentID}`} sx={{ color: 'text.secondary' }} >
+        <MenuItem component={RouterLink} to={`/gym/EnrolmentByCourse/${courseID}`} sx={{ color: 'text.secondary' }} >
           <ListItemIcon>
             <Icon icon={listfill} width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Course List" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText primary="Enrolment List" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
       </Menu>

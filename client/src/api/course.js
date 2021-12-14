@@ -83,22 +83,40 @@ const getCourseInfoByID =  async(courseID) => {
     return res;
 }
 
-const getEnrolledCourses =  async(courseID) => {
+const getEnrolledCoursesByCourseID =  async(courseID) => {
    
     let token = getFromStorage('JWT_Token') 
     console.log(token);
 
-    let res = await axios.get(apiPath + 'course/getEnrolledCourses',
+    let res = await axios.get(apiPath + 'course/getEnrolledCoursesByCourseID',
     {
         headers: {
             'x-access-token': token,
         },
         params: {
-            courseID: courseID,
+            courseID,
         }
     });
 
     return res;
 }
 
-export default {registerNewCourse,editCourse,getCourseByGymID,getCourseInfoByID,getEnrolledCourses};
+const getEnrolledCoursesByGymID =  async(gymID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    console.log(token);
+
+    let res = await axios.get(apiPath + 'course/getEnrolledCoursesByGymID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            gymID
+        }
+    });
+
+    return res;
+}
+
+export default {registerNewCourse,editCourse,getCourseByGymID,getCourseInfoByID,getEnrolledCoursesByCourseID,getEnrolledCoursesByGymID};

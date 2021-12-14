@@ -7,7 +7,7 @@ import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 import listfill from '@iconify/icons-eva/list-fill';
 
 // material
-import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText, Divider } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -35,13 +35,6 @@ export default function StudentMoreMenu({studentID}) {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem sx={{ color: 'text.secondary' }} onClick={() => setDisableEnable()}>
-          <ListItemIcon>
-            <Icon icon={trash2Outline} width={24} height={24} />
-          </ListItemIcon>
-          <ListItemText primary="Disable/Enable" primaryTypographyProps={{ variant: 'body2' }} />
-        </MenuItem>
-
         <MenuItem component={RouterLink} to={`/gym/NewStudent/${studentID}`} props sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />
@@ -49,11 +42,29 @@ export default function StudentMoreMenu({studentID}) {
           <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
+        <Divider />
+
         <MenuItem component={RouterLink} to={`/gym/EnrolmentByStudent/${studentID}`} sx={{ color: 'text.secondary' }} >
           <ListItemIcon>
             <Icon icon={listfill} width={24} height={24} />
           </ListItemIcon>
           <ListItemText primary="Course List" primaryTypographyProps={{ variant: 'body2' }} />
+        </MenuItem>
+
+        <MenuItem component={RouterLink} to={`/gym/CheckInByStudent/${studentID}`} sx={{ color: 'text.secondary' }} >
+          <ListItemIcon>
+            <Icon icon={listfill} width={24} height={24} />
+          </ListItemIcon>
+          <ListItemText primary="Check-In List" primaryTypographyProps={{ variant: 'body2' }} />
+        </MenuItem>
+
+        <Divider />
+
+        <MenuItem sx={{ color: 'text.secondary' }} onClick={() => setDisableEnable()}>
+          <ListItemIcon>
+            <Icon icon={trash2Outline} width={24} height={24} />
+          </ListItemIcon>
+          <ListItemText primary="Disable/Enable" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
       </Menu>

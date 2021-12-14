@@ -57,12 +57,61 @@ const newStudentCourseEnrollment =  async(Course,Student,RegisteredSession,Valid
    
     let token = getFromStorage('JWT_Token') 
 
-    let res = await axios.post(apiPath + 'studentinfo/newStudentCourseEnrollment',
+    let res = await axios.post(apiPath + 'student/newStudentCourseEnrollment',
     {
         Course,
         Student,
         RegisteredSession,
         ValidUntillTo,
+        token
+    });
+
+    return res;
+}
+
+const editStudentCourseEnrollment =  async(enrolmentID,Course,Student,RegisteredSession,ValidUntillTo) => {
+   
+    let token = getFromStorage('JWT_Token') 
+
+    let res = await axios.put(apiPath + 'student/editStudentCourseEnrollment',
+    {
+        enrolmentID,
+        Course,
+        Student,
+        RegisteredSession,
+        ValidUntillTo,
+        token
+    });
+
+    return res;
+}
+
+const registerStudentAttendance =  async(StudentVCourse,Date,Status,AbsentReason,TrainerNote) => {
+   
+    let token = getFromStorage('JWT_Token') 
+
+    let res = await axios.post(apiPath + 'student/registerStudentAttendance',
+    {
+        StudentVCourse,
+        Date,
+        Status,
+        AbsentReason,
+        TrainerNote,
+        token
+    });
+
+    return res;
+}
+
+const batchRegisterStudentAttendance =  async(data,date,course) => {
+   
+    let token = getFromStorage('JWT_Token') 
+
+    let res = await axios.post(apiPath + 'student/batchRegisterStudentAttendance',
+    {
+        data,
+        date,
+        course,
         token
     });
 
@@ -124,4 +173,98 @@ const getStudentEnrolledCourses =  async(studentID) => {
     return res;
 }
 
-export default {registerNewStudent,editStudentInfo,newStudentCourseEnrollment,getStudentInfoByGymID,getStudentInfoByStudentID,getStudentEnrolledCourses};
+const getStudentEnrolledCoursesByID =  async(enrolmentID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    console.log(token);
+
+    let res = await axios.get(apiPath + 'student/getStudentEnrolledCoursesByID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            enrolmentID,
+        }
+    });
+
+    return res;
+}
+
+const getStudentEnrolledCoursesByCourseID =  async(courseID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    console.log(token);
+
+    let res = await axios.get(apiPath + 'student/getStudentEnrolledCoursesByCourseID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            courseID,
+        }
+    });
+
+    return res;
+}
+
+const getStudentAttendanceListbyGymID =  async(gymID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    console.log(token);
+
+    let res = await axios.get(apiPath + 'student/getStudentAttendanceListbyGymID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            gymID,
+        }
+    });
+
+    return res;
+}
+
+const getStudentAttendanceListbyStudentID =  async(studentID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    console.log(token);
+
+    let res = await axios.get(apiPath + 'student/getStudentAttendanceListbyStudentID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            studentID,
+        }
+    });
+
+    return res;
+}
+
+const getStudentAttendanceListbyCourseID =  async(courseID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    console.log(token);
+
+    let res = await axios.get(apiPath + 'student/getStudentAttendanceListbyCourseID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            courseID,
+        }
+    });
+
+    return res;
+}
+
+
+export default {registerNewStudent,editStudentInfo,newStudentCourseEnrollment,editStudentCourseEnrollment,
+                registerStudentAttendance,batchRegisterStudentAttendance,getStudentInfoByGymID,getStudentInfoByStudentID,
+                getStudentEnrolledCourses,getStudentEnrolledCoursesByID,getStudentEnrolledCoursesByCourseID,
+                getStudentAttendanceListbyGymID,getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID};

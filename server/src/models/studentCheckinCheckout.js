@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false
         },
+        Frk_Course:{
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
         Str_Date:{
             type: DataTypes.STRING(10),
             allowNull: false

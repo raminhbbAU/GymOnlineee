@@ -322,7 +322,7 @@ router.get("/getCourseByGymID", authToken, async (req, res, next) => {
 
 });
 
-router.get('/getEnrolledCourses',authToken,async(req,res,next) =>{
+router.get('/getEnrolledCoursesByCourseID',authToken,async(req,res,next) =>{
     
   // Get user input
   const { courseID } = req.query;
@@ -341,17 +341,48 @@ router.get('/getEnrolledCourses',authToken,async(req,res,next) =>{
   });
   }
   
-  let EnrolledCourseList;
 
-  if (courseID == -1)
-  {
-    EnrolledCourseList = await models.sequelize.query("SELECT Prk_StudentVCourse,Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_family,studentvcourses.Str_RegisterDate,Int_RegisteredSession,0 as Present,0 as Absent, 0 as AcceptableAbsence FROM courses inner join studentvcourses on Frk_Course = Prk_Course inner join students on Frk_student = Prk_Student_AutoID inner join trainers on Frk_Trainer = Prk_Trainer;");
+  let EnrolledCourseList = await models.sequelize.query("SELECT Prk_StudentVCourse,Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_family,studentvcourses.Str_RegisterDate,Int_RegisteredSession,0 as Present,0 as Absent, 0 as AcceptableAbsence FROM courses inner join studentvcourses on Frk_Course = Prk_Course inner join students on Frk_student = Prk_Student_AutoID inner join trainers on Frk_Trainer = Prk_Trainer where Prk_Course=" + courseID + ";");
+
+  
+
+  if (!EnrolledCourseList[0]) {
+    return res.status(409).json({
+      res: false,
+      data: "There is no enrolled course related to this specific course id.",
+    });
   }
   else
   {
-    EnrolledCourseList = await models.sequelize.query("SELECT Prk_StudentVCourse,Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_family,studentvcourses.Str_RegisterDate,Int_RegisteredSession,0 as Present,0 as Absent, 0 as AcceptableAbsence FROM courses inner join studentvcourses on Frk_Course = Prk_Course inner join students on Frk_student = Prk_Student_AutoID inner join trainers on Frk_Trainer = Prk_Trainer where Prk_Course=" + courseID + ";");
+    res.status(200).json({
+        res: true,
+        data: EnrolledCourseList[0],
+      });
+  }
+    
+})
+
+router.get('/getEnrolledCoursesByGymID',authToken,async(req,res,next) =>{
+    
+  // Get user input
+  const { gymID } = req.query;
+
+  if (!gymID) {
+        return res.status(409).json({
+            res: false,
+            data: "gymID is not provided!",
+        });
+  }
+
+  if(isNaN(gymID)){
+    return res.status(409).json({
+      res: false,
+      data: "gymID is not properly provided!",
+  });
   }
   
+
+  let EnrolledCourseList = await models.sequelize.query("SELECT Prk_StudentVCourse,Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_family,studentvcourses.Str_RegisterDate,Int_RegisteredSession,0 as Present,0 as Absent, 0 as AcceptableAbsence FROM courses inner join studentvcourses on Frk_Course = Prk_Course inner join students on Frk_student = Prk_Student_AutoID inner join trainers on Frk_Trainer = Prk_Trainer where courses.Frk_Gym=" + gymID + ";");
 
 
   if (!EnrolledCourseList[0]) {

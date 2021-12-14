@@ -18,6 +18,8 @@ import NewStudent from '../pages/student/studentform';
 import Enrolment from '../pages/enrolment/enrolment';
 import NewEnrolment from '../pages/enrolment/enrolmentform';
 import NotFound from '../pages/page404/page404';
+import CheckIn from '../pages/checkin/checkIn';
+import NewCheckIn from '../pages/checkin/checkInForm';
 import Login from '../pages/login/login';
 import Signup from '../pages/signup/signup';
 
@@ -72,6 +74,28 @@ export default function Router() {
           element: <Enrolment />,
           children: [
             { path: ':studentID', element: <Enrolment /> },
+          ]
+        },
+        { path: 'CheckIn', element: <CheckIn /> },
+        { 
+          path: 'NewCheckIn', 
+          element: <NewCheckIn />,
+          children: [
+            { path: ':studentCheckInCheckOutId', element: <NewCheckIn /> },
+          ]
+        },
+        { 
+          path: 'CheckInByCourse', 
+          element: <CheckIn />,
+          children: [
+            { path: ':courseID', element: <CheckIn /> },
+          ]
+        },
+        { 
+          path: 'CheckInByStudent', 
+          element: <CheckIn />,
+          children: [
+            { path: ':studentID', element: <CheckIn /> },
           ]
         },
       ]

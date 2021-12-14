@@ -12,7 +12,8 @@ import Page from '../../components/Page';
 import Label from '../../components/Label';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user';
+import { UserListHead, UserListToolbar } from '../../components/_dashboard/user';
+import EnrolmentMoreMenu from './enrolmentMoreMenu';
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
@@ -20,6 +21,7 @@ import API_Student from "../../api/student";
 import API_Course from "../../api/course";
 
 import {getFromStorage} from "../../storage/localstorage.js";
+
 
 // -------------------------------Header--------------------------------
 
@@ -70,7 +72,7 @@ export default function Enrolment() {
     }
     else if (!studentID && courseID)
     {
-        API_Course.getEnrolledCourses(
+        API_Course.getEnrolledCoursesByCourseID(
           courseID
         ).then((result) => {
           console.log(result);
@@ -81,8 +83,8 @@ export default function Enrolment() {
     }
     else if (!studentID && !courseID)
     {
-        API_Course.getEnrolledCourses(
-          -1
+        API_Course.getEnrolledCoursesByGymID(
+          Prk_Gym_AutoID
         ).then((result) => {
           console.log(result);
           setCourseList(result.data.data)
@@ -232,7 +234,7 @@ export default function Enrolment() {
 
 
                           <TableCell align="right">
-                            <UserMoreMenu />
+                            <EnrolmentMoreMenu enrolmentID={Prk_StudentVCourse} />
                           </TableCell>
                         </TableRow>
                       );

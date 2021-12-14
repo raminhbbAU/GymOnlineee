@@ -5,6 +5,9 @@ import { useNavigate,useParams } from 'react-router-dom';
 
 // material
 import {TextField,Button,Stack,Container,Typography,MenuItem} from '@mui/material';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 
 
 // components
@@ -19,9 +22,9 @@ import {getFromStorage} from "../../storage/localstorage.js";
 
 export default function EnrolmentForm ({courseID,studentID}) {
 
-    const [editMode, setEditMode] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
     const [courseName, setCourseName] = useState('');
+    const [editMode, setEditMode] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);   
     const [courseList, setCourseList] = useState([]);
     const [studentlist, setStudentlist] = useState([]);
 
@@ -37,20 +40,16 @@ export default function EnrolmentForm ({courseID,studentID}) {
         {
             setEditMode(true);
 
-            API_Course.getCourseInfoByID(
-                courseID
+            API_Student.getStudentEnrolledCoursesByID(
+                enrolmentID
               ).then((result) => {
                               
-                // setCourseName(result.data.data.Str_CourseName)
-                // formik.setFieldValue('CourseName',result.data.data.Str_CourseName);
-                // formik.setFieldValue('CourseDescription',result.data.data.Str_CourseDescription);
-                // formik.setFieldValue('StartDate',result.data.data.Str_StartDate);
-                // formik.setFieldValue('EndDate',result.data.data.Str_EndDate);
-                // formik.setFieldValue('TrainerPercent',result.data.data.Int_TrainerPercent);
-                // formik.setFieldValue('CourseType',result.data.data.Int_CourseType);
-                // formik.setFieldValue('PerSessionCost',result.data.data.Int_PerSessionCost);
-                // formik.setFieldValue('Trainer',result.data.data.Frk_Trainer);
-          
+                 setCourseName(result.data.data.Str_CourseName)
+                 formik.setFieldValue('Course',result.data.data.Prk_Course);
+                 formik.setFieldValue('Student',result.data.data.Prk_Student_AutoID);
+                 formik.setFieldValue('RegisteredSession',result.data.data.Int_RegisteredSession);
+                 formik.setFieldValue('ValidUntillTo',result.data.data.Str_ValidUntillTo);
+        
                 loadCourseList();
 
               }).catch((error) => {
@@ -117,19 +116,15 @@ export default function EnrolmentForm ({courseID,studentID}) {
 
         if (editMode)
         {
-            API_Student.editCourse(
-                courseID,
-                values.CourseName,
-                values.CourseDescription,
-                values.Trainer,
-                values.StartDate,
-                values.EndDate,
-                values.TrainerPercent,
-                values.CourseType,
-                values.PerSessionCost
+            API_Student.editStudentCourseEnrollment(
+                enrolmentID,
+                values.Course,
+                values.Student,
+                values.RegisteredSession,
+                values.ValidUntillTo,
               ).then((result) => {
                 console.log(result);
-                navigate("/gym/course");
+                navigate("/gym/enrolment");
               }).catch((error) => {
                 console.log(error.response);
               })
@@ -152,6 +147,9 @@ export default function EnrolmentForm ({courseID,studentID}) {
 
     }
 
+    const handleValidUntillToChange = (newValue) => {
+      formik.setFieldValue("ValidUntillTo", newValue.toISOString().split('T')[0]);
+    };
 
     return (
         <Page title="New Enrolment | GymOnlineee">
@@ -219,7 +217,7 @@ export default function EnrolmentForm ({courseID,studentID}) {
                                        margin="normal"
                                    />
            
-                                   <TextField
+                                   {/* <TextField
                                        fullWidth
                                        id="ValidUntillTo"
                                        name="ValidUntillTo"
@@ -229,11 +227,28 @@ export default function EnrolmentForm ({courseID,studentID}) {
                                        error={formik.touched.ValidUntillTo && Boolean(formik.errors.ValidUntillTo)}
                                        helperText={formik.touched.ValidUntillTo && formik.errors.ValidUntillTo}
                                        margin="normal"
-                                   />
-                                               
-                                   <Button color="primary" variant="contained" fullWidth type="submit" margin="normal">
+                                   /> */}
+
+                                  <LocalizationProvider dateAdapter={AdapterDateFns} margin="normal">
+                                      <DesktopDatePicker
+                                                fullWidth
+                                                id="ValidUntillTo"
+                                                name="ValidUntillTo"
+                                                label="Valid Untill To"
+                                                inputFormat="MM/dd/yyyy"
+                                                value={formik.values.ValidUntillTo}
+                                                onChange={handleValidUntillToChange}
+                                                error={formik.touched.ValidUntillTo && Boolean(formik.errors.ValidUntillTo)}
+                                                helperText={formik.touched.ValidUntillTo && formik.errors.ValidUntillTo}
+                                                renderInput={(params) => <TextField {...params} />}
+                                                margin="normal"
+                                      />                                    
+                                  </LocalizationProvider>
+ 
+                                                                           
+                                  <Button color="primary" variant="contained" fullWidth type="submit" margin="normal">
                                        Submit
-                                   </Button>
+                                  </Button>
                                </form>
                            </div>
                          </Scrollbar>

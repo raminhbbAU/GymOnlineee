@@ -38,10 +38,6 @@ router.post('/registerNewBill',authToken,async(req,res,next) =>{
 
 })
 
-router.get('/getBillList',authToken,async(req,res,next) =>{
-    res.send('the getBillList API called');
-})
-
 router.post('/registerNewPayment',authToken,async(req,res,next) =>{
   
     // Get user input
@@ -73,9 +69,59 @@ router.post('/registerNewPayment',authToken,async(req,res,next) =>{
 
 })
 
-router.get('/getPaymentList',authToken,async(req,res,next) =>{
+router.get('/getPaymentListByGymID',authToken,async(req,res,next) =>{
     res.send('the getPaymentList API called');
 })
+
+router.get('/getPaymentListByStudentID',authToken,async(req,res,next) =>{
+  res.send('the getPaymentList API called');
+})
+
+router.get('/getBillListByGymID',authToken,async(req,res,next) =>{
+  
+  // Get user input
+  const { gymID } = req.query;
+
+  if (!gymID) {
+    return res.status(409).json({
+        res: false,
+        data: "gymID is not provided!",
+    });
+  }
+
+  if(isNaN(gymID)){
+    return res.status(409).json({
+      res: false,
+      data: "gymID is not properly provided!",
+  });
+  }
+
+
+  const studentRegisteredCourseList = await models.sequelize.query("SELECT Prk_StudentVCourse,Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_family,studentvcourses.Str_RegisterDate,Int_RegisteredSession,Str_ValidUntillTo,0 as Present,0 as Absent, 0 as AcceptableAbsence FROM courses inner join studentvcourses on Frk_Course = Prk_Course inner join students on Frk_student = Prk_Student_AutoID inner join trainers on Frk_Trainer = Prk_Trainer where students.Prk_Student_AutoID=" + studentID + ";");
+
+
+  if (!studentRegisteredCourseList[0]) {
+    return res.status(409).json({
+      res: false,
+      data: "There is no registered course related to this specific student.",
+    });
+  }
+  else
+  {
+    res.status(200).json({
+        res: true,
+        data: studentRegisteredCourseList[0],
+      });
+  }
+
+
+})
+
+router.get('/getBillListByStudentID',authToken,async(req,res,next) =>{
+  res.send('the getPaymentList API called');
+})
+
+
 
 router.get('/getFinancialStatment',authToken,async(req,res,next) =>{
     res.send('the getFinancialStatment API called');
@@ -95,36 +141,81 @@ router.post('/newStudentCourseEnrollment',authToken,async(req,res,next) =>{
         }
     });
 
-     if (oldStudentCourse) {
+    if (oldStudentCourse) {
         return res.status(409).json({
             res: false,
             data: "Student is already a member of this course.",
           });
      }  
   
+    const courseInfo = await models.course.findOne({
+      where: {
+        Prk_Course: Course,
+      },
+    }); 
 
-    models.studentvcourse
-      .create({
+    if (!courseInfo) {
+      return res.status(409).json({
+          res: false,
+          data: "course info is not avilable at this time maybe it has been deleted before!",
+        });
+   }  
+
+
+
+   // start Transaction
+   let newCourse; 
+   const transaction = await models.sequelize.transaction();
+
+   try {
+
+      //console.log("insert new studentvcourse");
+
+      newCourse = await models.studentvcourse.create({
         Frk_Course: Course,
         Frk_student: Student,
         Int_RegisteredSession:RegisteredSession,
         Str_ValidUntillTo:ValidUntillTo,
         Str_RegisterDate: getDate(),
         Str_RegisterTime: getTime()
-      })
-      .then((course) => {
-        res.status(200).json({
-          res: true,
-          data: course,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        return res.status(500).json({
-          res: false,
-          data: "something wrong happend during registering new student's course. Please try again a bit later!",
-        });
+      }, { transaction});
+
+      newCourse = newCourse.dataValues;
+      // console.log(newCourse);
+      // console.log("generate new studentbill");
+
+      await models.studentbill.create({
+        Frk_Student: Student,
+        Frk_StudentCourse: newCourse.Prk_StudentVCourse,
+        Frk_Diet: 0,
+        Int_BillType:1, //bill for course
+        Str_Title:'AutoGenerate bill for [' + courseInfo.Str_CourseName + ']',
+        Int_Amount:RegisteredSession * courseInfo.Int_PerSessionCost,
+        Str_GenerateDate: getDate(),
+        Str_GenerateTime: getTime(),
+        Bit_Active: true,
+      }, { transaction});
+
+      await transaction.commit();     
+
+  } catch (err) {
+
+      await transaction.rollback();
+
+      console.log(err);
+      return res.status(500).json({
+        res: false,
+        data: "something wrong happend during registering new student's course. Please try again a bit later!",
       });
+
+  }
+
+  res.status(200).json({
+    res: true,
+    data: newCourse,
+  });
+    
+  
 
 })
 
@@ -146,26 +237,102 @@ router.put('/editStudentCourseEnrollment',authToken,async(req,res,next) =>{
               data: "The specific enrolment doesn't exist! it must've deleted before.",
             });
   }
-  else
-  {
-          oldStudentCourse.update({
-            Frk_Course: Course,
-            Frk_student: Student,
-            Int_RegisteredSession:RegisteredSession,
-            Str_ValidUntillTo:ValidUntillTo,
-          }).then( (updatedrecord) => {
-              res.status(200).json({
-                  res: true,
-                  data: updatedrecord,
-                });
-          }).catch( (error) => {
-                  console.log(error);
-                  return res.status(500).json({
-                      res: false,
-                      data: "something wrong happend during editing enrolment. Please try again a bit later!",
-                  });
-          })
+
+  const courseInfo = await models.course.findOne({
+    where: {
+      Prk_Course: Course,
+    },
+  }); 
+
+  if (!courseInfo) {
+    return res.status(409).json({
+        res: false,
+        data: "course info is not avilable at this time maybe it has been deleted before!",
+      });
+ }  
+
+  const oldStudentCourseBill = await models.studentbill.findOne({
+    where:{
+      Frk_StudentCourse:enrolmentID,
+      Bit_Active: true,
+    }
+  });
+
+
+   // start Transaction
+   let updatedrecord;
+   const transaction = await models.sequelize.transaction();
+
+   try {
+
+      //console.log("insert new studentvcourse");
+
+      updatedrecord = await oldStudentCourse.update({
+        Frk_Course: Course,
+        Frk_student: Student,
+        Int_RegisteredSession:RegisteredSession,
+        Str_ValidUntillTo:ValidUntillTo,
+      }, { transaction});
+
+      if (oldStudentCourseBill)
+      {
+        await oldStudentCourseBill.update({
+          Bit_Active: false,
+          Str_Title: oldStudentCourseBill.Str_Title + ' - update casue of course modification'
+        }, { transaction});
+      }
+
+      await models.studentbill.create({
+        Frk_Student: Student,
+        Frk_StudentCourse: enrolmentID,
+        Frk_Diet: 0,
+        Int_BillType:1, //bill for course
+        Str_Title:'AutoGenerate bill for [' + courseInfo.Str_CourseName + ']',
+        Int_Amount:RegisteredSession * courseInfo.Int_PerSessionCost,
+        Str_GenerateDate: getDate(),
+        Str_GenerateTime: getTime(),
+        Bit_Active:true,
+      }, { transaction});
+
+      await transaction.commit();     
+
+  } catch (err) {
+
+      await transaction.rollback();
+
+      console.log(err);
+      return res.status(500).json({
+        res: false,
+        data: "something wrong happend during editing enrolment. Please try again a bit later!",
+      });
+
   }
+
+  return res.status(200).json({
+    res: true,
+    data: updatedrecord,
+  });
+
+
+
+          // oldStudentCourse.update({
+          //   Frk_Course: Course,
+          //   Frk_student: Student,
+          //   Int_RegisteredSession:RegisteredSession,
+          //   Str_ValidUntillTo:ValidUntillTo,
+          // }).then( (updatedrecord) => {
+          //     res.status(200).json({
+          //         res: true,
+          //         data: updatedrecord,
+          //       });
+          // }).catch( (error) => {
+          //         console.log(error);
+          //         return res.status(500).json({
+          //             res: false,
+          //             data: "something wrong happend during editing enrolment. Please try again a bit later!",
+          //         });
+          // })
+  
 
 })
 

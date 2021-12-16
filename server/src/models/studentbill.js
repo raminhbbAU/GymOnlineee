@@ -39,6 +39,10 @@ module.exports = (sequelize, DataTypes) => {
         Str_GenerateTime:{
             type: DataTypes.STRING(10),
             allowNull: false
+        },
+        Bit_Active: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
         }
     },
     {

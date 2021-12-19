@@ -118,14 +118,54 @@ router.get('/getBillListByGymID',authToken,async(req,res,next) =>{
 })
 
 router.get('/getBillListByStudentID',authToken,async(req,res,next) =>{
-  res.send('the getPaymentList API called');
+  
+  
+
+})
+
+
+router.get('/getFinancialStatmentByStudentID',authToken,async(req,res,next) =>{
+ 
+  // Get user input
+  const { studentID } = req.query;
+
+  if (!studentID) {
+        return res.status(409).json({
+            res: false,
+            data: "studentID is not provided!",
+        });
+  }
+
+  if(isNaN(studentID)){
+    return res.status(409).json({
+      res: false,
+      data: "studentID is not properly provided!",
+  });
+  }
+    
+  //console.log(models.sequelize);
+  const studentBalance = await models.sequelize.query("select * from (select 1 as logType, Int_BillType as Status, Prk_StudentBill as AutoID,Str_Title,0 as deposits,Int_Amount as Withdrawals,Str_GenerateDate,Str_GenerateTime,Frk_Student,Bit_Active from studentbills UNION  select 2 as logType, Int_PayType as Status, Prk_StudentPayment as AutoID,'Payment by ' + case Int_PayType when 1 then 'cash' when 2 then 'card-transfer' else 'online payment' end as Str_Title,Int_Amount as deposits,0 as Withdrawals,Str_GenerateDate,Str_GenerateTime,Frk_Student, Bit_Active from studentpayments) as t where t.Frk_Student =" + studentID + " order by t.Str_GenerateDate desc,t.Str_GenerateTime desc;");
+
+
+  if (!studentBalance[0]) {
+    return res.status(409).json({
+      res: false,
+      data: "There is no financial activity for given student.",
+    });
+  }
+  else
+  {
+    res.status(200).json({
+        res: true,
+        data: studentBalance[0],
+      });
+  }
+    
+
 })
 
 
 
-router.get('/getFinancialStatment',authToken,async(req,res,next) =>{
-    res.send('the getFinancialStatment API called');
-})
 
 router.post('/newStudentCourseEnrollment',authToken,async(req,res,next) =>{
 

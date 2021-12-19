@@ -27,6 +27,18 @@ module.exports = (sequelize, DataTypes) => {
         Str_TraceNumber:{
             type: DataTypes.STRING(100),
             allowNull: false
+        },
+        Str_GenerateDate:{
+            type: DataTypes.STRING(10),
+            allowNull: false
+        },
+        Str_GenerateTime:{
+            type: DataTypes.STRING(10),
+            allowNull: false
+        },
+        Bit_Active: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
         }
     },
     {

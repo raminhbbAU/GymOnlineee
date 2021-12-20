@@ -281,9 +281,45 @@ const getFinancialStudentBalanceByID =  async(studentID) => {
     return res;
 }
 
+const getBillListByStudentID =  async(studentID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    console.log(token);
+
+    let res = await axios.get(apiPath + 'student/getBillListByStudentID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            studentID,
+        }
+    });
+
+    return res;
+}
+
+const getBillListByGymID =  async(gymID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    console.log(token);
+
+    let res = await axios.get(apiPath + 'student/getBillListByGymID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            gymID,
+        }
+    });
+
+    return res;
+}
+
 
 export default {registerNewStudent,editStudentInfo,newStudentCourseEnrollment,editStudentCourseEnrollment,
                 registerStudentAttendance,batchRegisterStudentAttendance,getStudentInfoByGymID,getStudentInfoByStudentID,
                 getStudentEnrolledCourses,getStudentEnrolledCoursesByID,getStudentEnrolledCoursesByCourseID,
                 getStudentAttendanceListbyGymID,getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID,
-                getFinancialStudentBalanceByID};
+                getFinancialStudentBalanceByID,getBillListByStudentID,getBillListByGymID};

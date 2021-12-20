@@ -21,6 +21,8 @@ import NotFound from '../pages/page404/page404';
 import CheckIn from '../pages/checkin/checkIn';
 import NewCheckIn from '../pages/checkin/checkInForm';
 import StudentBalance from '../pages/balance/studentbalance';
+import StudentBill from '../pages/bill/bill';
+
 import Login from '../pages/login/login';
 import Signup from '../pages/signup/signup';
 
@@ -104,6 +106,14 @@ export default function Router() {
           element: <StudentBalance />,
           children: [
             { path: ':studentID', element: <StudentBalance /> },
+          ]
+        },
+        { path: 'Bill', element: <StudentBill /> },
+        { 
+          path: 'BillByStudent', 
+          element: <StudentBill />,
+          children: [
+            { path: ':studentID', element: <StudentBill /> },
           ]
         },
       ]

@@ -47,6 +47,17 @@ const sidebarConfig = [
     path: '/gym/CheckIn',
     icon: getIcon(pieChart2Fill)
   }
+  ,
+  {
+    title: 'Bills',
+    path: '/gym/Bill',
+    icon: getIcon(pieChart2Fill)
+  },
+  {
+    title: 'Payment',
+    path: '/gym/Payment',
+    icon: getIcon(pieChart2Fill)
+  }
 ];
 
 export default sidebarConfig;

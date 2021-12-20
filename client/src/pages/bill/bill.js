@@ -2,6 +2,7 @@ import { Icon } from '@iconify/react';
 import { useState,useEffect } from 'react';
 import arrowrightfill from '@iconify/icons-eva/arrow-right-fill';
 import arrowleftfill from '@iconify/icons-eva/arrow-left-fill';
+import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink,useParams } from 'react-router-dom';
 
 // material
@@ -24,18 +25,18 @@ import {getFromStorage} from "../../storage/localstorage.js";
 // -------------------------------Header--------------------------------
 
 const TABLE_HEAD = [
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'source', label: 'Source', alignRight: false },
   { id: 'title', label: 'Title', alignRight: false },
+  { id: 'studentName', label: 'Name', alignRight: false },
   { id: 'datetime', label: 'Date/Time', alignRight: false },
-  { id: 'deposits', label: 'Deposit', alignRight: false },
-  { id: 'withdrawals', label: 'Withdrawals', alignRight: false },
+  { id: 'amount', label: 'Amount', alignRight: false },
 ];
 
 
 
 
 
-export default function StudentBalance() {
+export default function StudentBill() {
 
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -51,14 +52,31 @@ export default function StudentBalance() {
 
   useEffect( () => {
 
-    API.getFinancialStudentBalanceByID(
-      studentID
-    ).then((result) => {
-      console.log(result);
-      setdataList(result.data.data)
-    }).catch((error) => {
-      console.log(error.response);
-    })
+    if (!studentID){
+
+        API.getBillListByGymID(
+            Prk_Gym_AutoID
+          ).then((result) => {
+            console.log(result);
+            setdataList(result.data.data)
+          }).catch((error) => {
+            console.log(error.response);
+          })
+
+    }
+    else
+    {
+
+        API.getBillListByStudentID(
+            studentID
+          ).then((result) => {
+            console.log(result);
+            setdataList(result.data.data)
+          }).catch((error) => {
+            console.log(error.response);
+          })
+
+    }
 
   },[refreshDataset])
 
@@ -116,12 +134,21 @@ export default function StudentBalance() {
   const isUserNotFound = filteredItems.length === 0;
 
   return (
-    <Page title="Student Balance | GymOnlineee">
+    <Page title="Bills | GymOnlineee">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Student Balance
+            Student Bills
           </Typography>
+          <Button
+            variant="contained"
+            component={RouterLink}
+            to="/gym/NewBill"
+            startIcon={<Icon icon={plusFill} />} 
+            disabled         
+          >
+            New Bill
+          </Button>
         </Stack>
 
         <Card>
@@ -148,23 +175,24 @@ export default function StudentBalance() {
                   {filteredItems
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { logType,Int_BillType,AutoID,Str_Title,deposits,Withdrawals,Str_GenerateDate,Str_GenerateTime,Frk_Student,Bit_Active } = row;
+                      const { Int_BillType, Prk_StudentBill,Str_Title,Int_Amount,Str_GenerateDate,Str_GenerateTime,Frk_Student,Bit_Active,Str_Name,Str_Family } = row;
                       const isItemSelected = selected.indexOf(Str_Title) !== -1;
 
                       return (
                         <TableRow
                           hover
-                          key={AutoID}
+                          key={Prk_StudentBill}
                           tabIndex={-1}
                           role="checkbox"
                           selected={isItemSelected}
                           aria-checked={isItemSelected}
                         >
                           <TableCell align="left">
-                            {( logType == 1
-                               ?  <Icon icon={arrowleftfill} width={40} height={40}  color="#ff0000"  />
-                               :  <Icon icon={arrowrightfill} width={40} height={40} color="#00FF00"  />
+                            {( Int_BillType == 1
+                               ?  <Label variant="ghost" color= {'info'}>{'Course'}</Label>
+                               :  <Label variant="ghost" color= {'success'}>{'Course'}</Label>
                             )}
+
                           </TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
@@ -175,11 +203,15 @@ export default function StudentBalance() {
                           </TableCell>
                           <TableCell align="left">
                             <Typography variant="subtitle2" noWrap>
-                              {Str_GenerateDate + ' ' + Str_GenerateTime}
+                              {Str_Name + ' ' + Str_Family}
                             </Typography>                              
                           </TableCell>
-                          <TableCell align="left">{deposits}</TableCell>
-                          <TableCell align="left">{Withdrawals}</TableCell>
+                          <TableCell align="left">
+                            <Typography variant="subtitle2" noWrap>
+                                {Str_GenerateDate + ' ' + Str_GenerateTime}
+                            </Typography>                              
+                          </TableCell>
+                          <TableCell align="left">{Int_Amount}</TableCell>
                           <TableCell align="left">
                             {(Bit_Active==false &&
                                   <Label variant="ghost" color= {Bit_Active ? 'success' : 'error'}>
@@ -189,7 +221,7 @@ export default function StudentBalance() {
                           </TableCell>
 
                           {/* <TableCell align="right">
-                            <StudentMoreMenu studentID={AutoID} />
+                            <StudentMoreMenu studentID={Prk_StudentBill} />
                           </TableCell> */}
                         </TableRow>
                       );

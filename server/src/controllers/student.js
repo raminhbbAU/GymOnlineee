@@ -19,7 +19,8 @@ router.post('/registerNewBill',authToken,async(req,res,next) =>{
       Str_Title: Title,
       Int_Amount: Amount,
       Str_GenerateDate:getDate(),
-      Str_GenerateTime:getTime()
+      Str_GenerateTime:getTime(),
+      Bit_Active: true
     })
     .then((course) => {
       res.status(200).json({
@@ -38,6 +39,127 @@ router.post('/registerNewBill',authToken,async(req,res,next) =>{
 
 })
 
+router.put('/deactivateStudentBill',authToken,async(req,res,next) =>{
+  
+  // Get user input
+const { ID } = req.body;
+
+   // check if user already exist
+  const oldBill = await models.studentbill.findOne({
+      where:{
+        Prk_StudentBill:ID
+      }
+  });
+
+  if (!oldBill) {
+      return res.status(409).json({
+          res: false,
+          data: "The specific bill doesn't exist! it must've deleted before.",
+        });
+  }
+
+  oldBill
+  .update({
+    Bit_Active: false,
+  })
+  .then((updatedrecord) => {
+    res.status(200).json({
+      res: true,
+      data: updatedrecord,
+    });
+  })
+  .catch((error) => {
+    console.log(error);
+    return res.status(500).json({
+      res: false,
+      data: "something wrong happend during deactivating bill. Please try again a bit later!",
+    });
+  });
+
+})
+
+router.get('/getBillListByGymID',authToken,async(req,res,next) =>{
+  
+  // Get user input
+  const { gymID } = req.query;
+
+  if (!gymID) {
+        return res.status(409).json({
+            res: false,
+            data: "gymID is not provided!",
+        });
+  }
+
+  if(isNaN(gymID)){
+    return res.status(409).json({
+      res: false,
+      data: "gymID is not properly provided!",
+  });
+  }
+    
+  //console.log(models.sequelize);
+  const gymBills = await models.sequelize.query("select Int_BillType, Prk_StudentBill,Str_Title,Int_Amount,Str_GenerateDate,Str_GenerateTime,Frk_Student,studentbills.Bit_Active,Str_Name,Str_Family from studentbills inner join students on studentbills.Frk_Student = students.Prk_Student_AutoID where students.Frk_gym=" + gymID + ";");
+
+
+  if (!gymBills[0]) {
+    return res.status(409).json({
+      res: false,
+      data: "There is no bill for students in this given gym.",
+    });
+  }
+  else
+  {
+    res.status(200).json({
+        res: true,
+        data: gymBills[0],
+      });
+  }
+
+})
+
+router.get('/getBillListByStudentID',authToken,async(req,res,next) =>{
+
+// Get user input
+const { studentID } = req.query;
+
+if (!studentID) {
+    return res.status(409).json({
+        res: false,
+        data: "studentID is not provided!",
+    });
+}
+
+if(isNaN(studentID)){
+return res.status(409).json({
+  res: false,
+  data: "studentID is not properly provided!",
+});
+}
+
+//console.log(models.sequelize);
+const studentBills = await models.sequelize.query("select Int_BillType, Prk_StudentBill,Str_Title,Int_Amount,Str_GenerateDate,Str_GenerateTime,Frk_Student,studentbills.Bit_Active,Str_Name,Str_Family from studentbills inner join students on studentbills.Frk_Student = students.Prk_Student_AutoID where Frk_Student=" + studentID + ";");
+
+
+if (!studentBills[0]) {
+return res.status(409).json({
+  res: false,
+  data: "There is no bill for this given student.",
+});
+}
+else
+{
+res.status(200).json({
+    res: true,
+    data: studentBills[0],
+  });
+}
+
+})
+
+
+
+
+
 router.post('/registerNewPayment',authToken,async(req,res,next) =>{
   
     // Get user input
@@ -50,7 +172,10 @@ router.post('/registerNewPayment',authToken,async(req,res,next) =>{
       Int_Amount: Amount,
       Int_PayType: PayType,
       Frk_OnlinePaymentDetail: OnlinePaymentDetail,
-      Str_TraceNumber: TraceNumber
+      Str_TraceNumber: TraceNumber,
+      Str_GenerateDate:getDate(),
+      Str_GenerateTime:getTime(),
+      Bit_Active: true
     })
     .then((course) => {
       res.status(200).json({
@@ -69,24 +194,55 @@ router.post('/registerNewPayment',authToken,async(req,res,next) =>{
 
 })
 
+router.put('/deactivateStudentPayment',authToken,async(req,res,next) =>{
+  
+  // Get user input
+const { ID } = req.body;
+
+   // check if user already exist
+  const oldPayment = await models.studentpayment.findOne({
+      where:{
+        Prk_StudentPayment:ID
+      }
+  });
+
+  if (!oldPayment) {
+      return res.status(409).json({
+          res: false,
+          data: "The specific payment doesn't exist! it must've deleted before.",
+        });
+  }
+
+  oldPayment
+  .update({
+    Bit_Active: false,
+  })
+  .then((updatedrecord) => {
+    res.status(200).json({
+      res: true,
+      data: updatedrecord,
+    });
+  })
+  .catch((error) => {
+    console.log(error);
+    return res.status(500).json({
+      res: false,
+      data: "something wrong happend during deactivating payment. Please try again a bit later!",
+    });
+  });
+
+})
+
 router.get('/getPaymentListByGymID',authToken,async(req,res,next) =>{
-    res.send('the getPaymentList API called');
-})
-
-router.get('/getPaymentListByStudentID',authToken,async(req,res,next) =>{
-  res.send('the getPaymentList API called');
-})
-
-router.get('/getBillListByGymID',authToken,async(req,res,next) =>{
   
   // Get user input
   const { gymID } = req.query;
 
   if (!gymID) {
-    return res.status(409).json({
-        res: false,
-        data: "gymID is not provided!",
-    });
+        return res.status(409).json({
+            res: false,
+            data: "gymID is not provided!",
+        });
   }
 
   if(isNaN(gymID)){
@@ -95,36 +251,67 @@ router.get('/getBillListByGymID',authToken,async(req,res,next) =>{
       data: "gymID is not properly provided!",
   });
   }
+    
+  //console.log(models.sequelize);
+  const gymPayment = await models.sequelize.query("select Int_PayType, Prk_StudentPayment,Frk_gym,Frk_Student, case Int_PayType when 1 then 'cash' when 2 then 'card-transfer' else 'online payment' end as Str_Title,Int_Amount,Str_GenerateDate,Str_GenerateTime, studentpayments.Bit_Active,Str_Name,Str_Family from studentpayments inner join students on studentpayments.Frk_Student = students.Prk_Student_AutoID where Frk_gym=" + gymID + ";");
 
 
-  const studentRegisteredCourseList = await models.sequelize.query("SELECT Prk_StudentVCourse,Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_family,studentvcourses.Str_RegisterDate,Int_RegisteredSession,Str_ValidUntillTo,0 as Present,0 as Absent, 0 as AcceptableAbsence FROM courses inner join studentvcourses on Frk_Course = Prk_Course inner join students on Frk_student = Prk_Student_AutoID inner join trainers on Frk_Trainer = Prk_Trainer where students.Prk_Student_AutoID=" + studentID + ";");
-
-
-  if (!studentRegisteredCourseList[0]) {
+  if (!gymPayment[0]) {
     return res.status(409).json({
       res: false,
-      data: "There is no registered course related to this specific student.",
+      data: "There is no bill for students in this given gym.",
     });
   }
   else
   {
     res.status(200).json({
         res: true,
-        data: studentRegisteredCourseList[0],
+        data: gymPayment[0],
       });
   }
 
+})
+
+router.get('/getPaymentListByStudentID',authToken,async(req,res,next) =>{
+
+// Get user input
+const { studentID } = req.query;
+
+if (!studentID) {
+      return res.status(409).json({
+          res: false,
+          data: "studentID is not provided!",
+      });
+}
+
+if(isNaN(studentID)){
+  return res.status(409).json({
+    res: false,
+    data: "studentID is not properly provided!",
+});
+}
+  
+//console.log(models.sequelize);
+const studentPayments = await models.sequelize.query("select Int_PayType, Prk_StudentPayment,Frk_gym,Frk_Student, case Int_PayType when 1 then 'cash' when 2 then 'card-transfer' else 'online payment' end as Str_Title,Int_Amount,Str_GenerateDate,Str_GenerateTime, studentpayments.Bit_Active,Str_Name,Str_Family from studentpayments inner join students on studentpayments.Frk_Student = students.Prk_Student_AutoID where Frk_Student=" + studentID + ";");
+
+
+if (!studentPayments[0]) {
+  return res.status(409).json({
+    res: false,
+    data: "There is no bill for this given student.",
+  });
+}
+else
+{
+  res.status(200).json({
+      res: true,
+      data: studentPayments[0],
+    });
+}
 
 })
 
-router.get('/getBillListByStudentID',authToken,async(req,res,next) =>{
-  
-  
-
-})
-
-
-router.get('/getFinancialStatmentByStudentID',authToken,async(req,res,next) =>{
+router.get('/getFinancialStudentBalanceByID',authToken,async(req,res,next) =>{
  
   // Get user input
   const { studentID } = req.query;
@@ -144,7 +331,7 @@ router.get('/getFinancialStatmentByStudentID',authToken,async(req,res,next) =>{
   }
     
   //console.log(models.sequelize);
-  const studentBalance = await models.sequelize.query("select * from (select 1 as logType, Int_BillType as Status, Prk_StudentBill as AutoID,Str_Title,0 as deposits,Int_Amount as Withdrawals,Str_GenerateDate,Str_GenerateTime,Frk_Student,Bit_Active from studentbills UNION  select 2 as logType, Int_PayType as Status, Prk_StudentPayment as AutoID,'Payment by ' + case Int_PayType when 1 then 'cash' when 2 then 'card-transfer' else 'online payment' end as Str_Title,Int_Amount as deposits,0 as Withdrawals,Str_GenerateDate,Str_GenerateTime,Frk_Student, Bit_Active from studentpayments) as t where t.Frk_Student =" + studentID + " order by t.Str_GenerateDate desc,t.Str_GenerateTime desc;");
+  const studentBalance = await models.sequelize.query("select * from (select 1 as logType, Int_BillType as Status, Prk_StudentBill as AutoID,Str_Title,0 as deposits,Int_Amount as Withdrawals,Str_GenerateDate,Str_GenerateTime,Frk_Student,Bit_Active from studentbills UNION  select 2 as logType, Int_PayType as Status, Prk_StudentPayment as AutoID, case Int_PayType when 1 then 'cash' when 2 then 'card-transfer' else 'online payment' end as Str_Title,Int_Amount as deposits,0 as Withdrawals,Str_GenerateDate,Str_GenerateTime,Frk_Student, Bit_Active from studentpayments) as t where t.Frk_Student =" + studentID + " order by t.Str_GenerateDate desc,t.Str_GenerateTime desc;");
 
 
   if (!studentBalance[0]) {
@@ -163,6 +350,8 @@ router.get('/getFinancialStatmentByStudentID',authToken,async(req,res,next) =>{
     
 
 })
+
+
 
 
 
@@ -229,7 +418,7 @@ router.post('/newStudentCourseEnrollment',authToken,async(req,res,next) =>{
         Frk_StudentCourse: newCourse.Prk_StudentVCourse,
         Frk_Diet: 0,
         Int_BillType:1, //bill for course
-        Str_Title:'AutoGenerate bill for [' + courseInfo.Str_CourseName + ']',
+        Str_Title:'[' + courseInfo.Str_CourseName + '] bill',
         Int_Amount:RegisteredSession * courseInfo.Int_PerSessionCost,
         Str_GenerateDate: getDate(),
         Str_GenerateTime: getTime(),
@@ -318,7 +507,7 @@ router.put('/editStudentCourseEnrollment',authToken,async(req,res,next) =>{
       {
         await oldStudentCourseBill.update({
           Bit_Active: false,
-          Str_Title: oldStudentCourseBill.Str_Title + ' - update casue of course modification'
+          Str_Title: oldStudentCourseBill.Str_Title + ' - delete by modification'
         }, { transaction});
       }
 
@@ -327,7 +516,7 @@ router.put('/editStudentCourseEnrollment',authToken,async(req,res,next) =>{
         Frk_StudentCourse: enrolmentID,
         Frk_Diet: 0,
         Int_BillType:1, //bill for course
-        Str_Title:'AutoGenerate bill for [' + courseInfo.Str_CourseName + ']',
+        Str_Title:'[' + courseInfo.Str_CourseName + '] bill',
         Int_Amount:RegisteredSession * courseInfo.Int_PerSessionCost,
         Str_GenerateDate: getDate(),
         Str_GenerateTime: getTime(),
@@ -493,6 +682,11 @@ router.get('/getStudentEnrolledCoursesByCourseID',authToken,async(req,res,next) 
     
 })
 
+
+
+
+
+
 router.post('/registerStudentHealthParameters',authToken,async(req,res,next) =>{
       
         // Get user input
@@ -526,6 +720,10 @@ router.post('/registerStudentHealthParameters',authToken,async(req,res,next) =>{
 router.get('/getStudentHealthParameters',authToken,async(req,res,next) =>{
     res.send('the getStudentHealthParameters API called');
 })
+
+
+
+
 
 router.post('/registerStudentAttendance',authToken,async(req,res,next) =>{
     

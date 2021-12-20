@@ -263,8 +263,27 @@ const getStudentAttendanceListbyCourseID =  async(courseID) => {
     return res;
 }
 
+const getFinancialStudentBalanceByID =  async(studentID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    console.log(token);
+
+    let res = await axios.get(apiPath + 'student/getFinancialStudentBalanceByID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            studentID,
+        }
+    });
+
+    return res;
+}
+
 
 export default {registerNewStudent,editStudentInfo,newStudentCourseEnrollment,editStudentCourseEnrollment,
                 registerStudentAttendance,batchRegisterStudentAttendance,getStudentInfoByGymID,getStudentInfoByStudentID,
                 getStudentEnrolledCourses,getStudentEnrolledCoursesByID,getStudentEnrolledCoursesByCourseID,
-                getStudentAttendanceListbyGymID,getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID};
+                getStudentAttendanceListbyGymID,getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID,
+                getFinancialStudentBalanceByID};

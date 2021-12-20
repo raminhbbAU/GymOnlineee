@@ -60,6 +60,15 @@ export default function StudentMoreMenu({studentID}) {
 
         <Divider />
 
+        <MenuItem component={RouterLink} to={`/gym/StudentBalance/${studentID}`} sx={{ color: 'text.secondary' }} >
+          <ListItemIcon>
+            <Icon icon={listfill} width={24} height={24} />
+          </ListItemIcon>
+          <ListItemText primary="Student Balance" primaryTypographyProps={{ variant: 'body2' }} />
+        </MenuItem>
+
+        <Divider />
+
         <MenuItem sx={{ color: 'text.secondary' }} onClick={() => setDisableEnable()}>
           <ListItemIcon>
             <Icon icon={trash2Outline} width={24} height={24} />

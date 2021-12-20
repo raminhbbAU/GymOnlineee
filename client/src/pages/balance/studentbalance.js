@@ -1,7 +1,8 @@
 import { Icon } from '@iconify/react';
 import { useState,useEffect } from 'react';
-import plusFill from '@iconify/icons-eva/plus-fill';
-import { Link as RouterLink } from 'react-router-dom';
+import arrowrightfill from '@iconify/icons-eva/arrow-right-fill';
+import arrowleftfill from '@iconify/icons-eva/arrow-left-fill';
+import { Link as RouterLink,useParams } from 'react-router-dom';
 
 // material
 import {Card,Table,Stack,Avatar,Button,Checkbox,TableRow,TableBody,TableCell,Container,Typography,TableContainer,TablePagination} from '@mui/material';
@@ -12,7 +13,7 @@ import Label from '../../components/Label';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import { UserListHead, UserListToolbar } from '../../components/_dashboard/user';
-import StudentMoreMenu from './studentMoreMenu'
+// import StudentMoreMenu from './studentMoreMenu'
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
@@ -23,6 +24,7 @@ import {getFromStorage} from "../../storage/localstorage.js";
 // -------------------------------Header--------------------------------
 
 const TABLE_HEAD = [
+  { id: 'status', label: 'Status', alignRight: false },
   { id: 'title', label: 'Title', alignRight: false },
   { id: 'datetime', label: 'Date/Time', alignRight: false },
   { id: 'deposits', label: 'Deposit', alignRight: false },
@@ -33,7 +35,7 @@ const TABLE_HEAD = [
 
 
 
-export default function Balance() {
+export default function StudentBalance() {
 
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -41,18 +43,19 @@ export default function Balance() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [studentList, setStudentList] = useState([]);
+  const [dataList, setdataList] = useState([]);
   const [refreshDataset,setRefreshDataset] = useState(false);
 
   let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
+  let { studentID } = useParams();
 
   useEffect( () => {
 
-    API.getStudentInfoByGymID(
-      Prk_Gym_AutoID
+    API.getFinancialStudentBalanceByID(
+      studentID
     ).then((result) => {
       console.log(result);
-      setStudentList(result.data.data)
+      setdataList(result.data.data)
     }).catch((error) => {
       console.log(error.response);
     })
@@ -68,7 +71,7 @@ export default function Balance() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = studentList.map((n) => n.name);
+      const newSelecteds = dataList.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -106,9 +109,9 @@ export default function Balance() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - studentList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataList.length) : 0;
 
-  const filteredItems = applySortFilter(studentList, getComparator(order, orderBy), filterName);
+  const filteredItems = applySortFilter(dataList, getComparator(order, orderBy), filterName);
 
   const isUserNotFound = filteredItems.length === 0;
 
@@ -117,16 +120,8 @@ export default function Balance() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Student List
+            Student Balance
           </Typography>
-          <Button
-            variant="contained"
-            component={RouterLink}
-            to="/gym/newstudent"
-            startIcon={<Icon icon={plusFill} />}          
-          >
-            New Student
-          </Button>
         </Stack>
 
         <Card>
@@ -143,8 +138,9 @@ export default function Balance() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={studentList.length}
+                  rowCount={dataList.length}
                   numSelected={selected.length}
+                  selectioncolumn={false}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
@@ -152,46 +148,49 @@ export default function Balance() {
                   {filteredItems
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { Prk_Student_AutoID,Str_Name,Str_Family,Str_Gmail,Str_Mobile,Bit_Active,avatarUrl } = row;
-                      const isItemSelected = selected.indexOf(Str_Name) !== -1;
+                      const { logType,Int_BillType,AutoID,Str_Title,deposits,Withdrawals,Str_GenerateDate,Str_GenerateTime,Frk_Student,Bit_Active } = row;
+                      const isItemSelected = selected.indexOf(Str_Title) !== -1;
 
                       return (
                         <TableRow
                           hover
-                          key={Prk_Student_AutoID}
+                          key={AutoID}
                           tabIndex={-1}
                           role="checkbox"
                           selected={isItemSelected}
                           aria-checked={isItemSelected}
                         >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={isItemSelected}
-                              onChange={(event) => handleClick(event, Str_Name)}
-                            />
+                          <TableCell align="left">
+                            {( logType == 1
+                               ?  <Icon icon={arrowleftfill} width={40} height={40}  color="#ff0000"  />
+                               :  <Icon icon={arrowrightfill} width={40} height={40} color="#00FF00"  />
+                            )}
                           </TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar alt={Str_Name + ' ' + Str_Family} src={avatarUrl} />
                               <Typography variant="subtitle2" noWrap>
-                              {Str_Name + ' ' + Str_Family}
+                                {Str_Title}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{Str_Gmail}</TableCell>
-                          <TableCell align="left">{Str_Mobile}</TableCell>
                           <TableCell align="left">
-                            <Label
-                              variant="ghost"
-                              color= {Bit_Active ? 'success' : 'error'}
-                            >
-                              {Bit_Active ? 'Active' : 'Disable'}
-                            </Label>
+                            <Typography variant="subtitle2" noWrap>
+                              {Str_GenerateDate + ' ' + Str_GenerateTime}
+                            </Typography>                              
+                          </TableCell>
+                          <TableCell align="left">{deposits}</TableCell>
+                          <TableCell align="left">{Withdrawals}</TableCell>
+                          <TableCell align="left">
+                            {(Bit_Active==false &&
+                                  <Label variant="ghost" color= {Bit_Active ? 'success' : 'error'}>
+                                      {Bit_Active ? '' : 'Deleted'}
+                                  </Label>
+                              )}
                           </TableCell>
 
-                          <TableCell align="right">
-                            <StudentMoreMenu studentID={Prk_Student_AutoID} />
-                          </TableCell>
+                          {/* <TableCell align="right">
+                            <StudentMoreMenu studentID={AutoID} />
+                          </TableCell> */}
                         </TableRow>
                       );
                     })}
@@ -217,7 +216,7 @@ export default function Balance() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={studentList.length}
+            count={dataList.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

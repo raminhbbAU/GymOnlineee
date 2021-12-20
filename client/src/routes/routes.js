@@ -20,6 +20,7 @@ import NewEnrolment from '../pages/enrolment/enrolmentform';
 import NotFound from '../pages/page404/page404';
 import CheckIn from '../pages/checkin/checkIn';
 import NewCheckIn from '../pages/checkin/checkInForm';
+import StudentBalance from '../pages/balance/studentbalance';
 import Login from '../pages/login/login';
 import Signup from '../pages/signup/signup';
 
@@ -96,6 +97,13 @@ export default function Router() {
           element: <CheckIn />,
           children: [
             { path: ':studentID', element: <CheckIn /> },
+          ]
+        },
+        { 
+          path: 'StudentBalance', 
+          element: <StudentBalance />,
+          children: [
+            { path: ':studentID', element: <StudentBalance /> },
           ]
         },
       ]

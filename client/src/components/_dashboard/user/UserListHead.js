@@ -21,6 +21,7 @@ export default function UserListHead({
   rowCount,
   headLabel,
   numSelected,
+  selectioncolumn=true,
   onRequestSort,
   onSelectAllClick
 }) {
@@ -31,13 +32,15 @@ export default function UserListHead({
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-          />
-        </TableCell>
+        {( selectioncolumn &&
+          <TableCell padding="checkbox">
+            <Checkbox
+              indeterminate={numSelected > 0 && numSelected < rowCount}
+              checked={rowCount > 0 && numSelected === rowCount}
+              onChange={onSelectAllClick}
+            />
+          </TableCell>
+        )}
         {headLabel.map((headCell) => (
           <TableCell
             key={headCell.id}

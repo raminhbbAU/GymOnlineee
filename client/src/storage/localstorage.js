@@ -18,7 +18,26 @@ const setToStorage = (name,data) => {
 }
 
 const getFromStorage = (name) => {
-    return ls.get(name);
+    let res = ls.get(name);
+    
+    if (name === "isAuth" || name === "JWT_Token" || name === "logininfo") 
+    {
+        if (res == null)
+        {
+
+            let curPath = window.location.href
+
+            if (curPath.endsWith("/login")!=true)
+            {
+                curPath = curPath.replace(window.location.pathname,"/login")
+                console.log(curPath);
+                window.location.href = curPath;
+            }
+           
+        }
+    }
+
+    return res
 }
 
 const removeFromStorage = (name) => {

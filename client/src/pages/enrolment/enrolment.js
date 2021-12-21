@@ -17,9 +17,7 @@ import EnrolmentMoreMenu from './enrolmentMoreMenu';
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import API_Student from "../../api/student";
-import API_Course from "../../api/course";
-
+import {apiStudent,apiCourse} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 
 
@@ -61,7 +59,7 @@ export default function Enrolment() {
 
     if (studentID && !courseID)
     {
-        API_Student.getStudentEnrolledCourses(
+        apiStudent.getStudentEnrolledCourses(
           studentID
         ).then((result) => {
           console.log(result);
@@ -72,7 +70,7 @@ export default function Enrolment() {
     }
     else if (!studentID && courseID)
     {
-        API_Course.getEnrolledCoursesByCourseID(
+        apiCourse.getEnrolledCoursesByCourseID(
           courseID
         ).then((result) => {
           console.log(result);
@@ -83,7 +81,7 @@ export default function Enrolment() {
     }
     else if (!studentID && !courseID)
     {
-        API_Course.getEnrolledCoursesByGymID(
+        apiCourse.getEnrolledCoursesByGymID(
           Prk_Gym_AutoID
         ).then((result) => {
           console.log(result);

@@ -12,7 +12,7 @@ import { useTheme } from '@mui/material/styles';
 import Scrollbar from '../../components/Scrollbar';
 
 // utils / API
-import API_Student from "../../api/student";
+import {apiStudent} from "../../api";
 import {delay} from "../../utils/utility"
 
 export default function CheckInBatchDialog({open,handleClose,courseName,courseId}) {
@@ -42,7 +42,7 @@ export default function CheckInBatchDialog({open,handleClose,courseName,courseId
 
     useEffect( () => {
 
-        API_Student.getStudentEnrolledCoursesByCourseID(
+        apiStudent.getStudentEnrolledCoursesByCourseID(
                 courseId
               ).then((result) => { 
                  setStudentList(result.data.data);
@@ -70,7 +70,7 @@ export default function CheckInBatchDialog({open,handleClose,courseName,courseId
 
     const handleSubmit = () => {
 
-        API_Student.batchRegisterStudentAttendance(
+        apiStudent.batchRegisterStudentAttendance(
             dataset,
             curDate,
             courseId

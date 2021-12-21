@@ -17,7 +17,7 @@ import CheckInMoreMenu from './checkInMoreMenu';
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import API_Student from "../../api/student";
+import {apiStudent} from "../../api";
 
 import {getFromStorage} from "../../storage/localstorage.js";
 
@@ -57,7 +57,7 @@ export default function Enrolment() {
 
     if (studentID && !courseID)
     {
-        API_Student.getStudentAttendanceListbyStudentID(
+        apiStudent.getStudentAttendanceListbyStudentID(
           studentID
         ).then((result) => {
           console.log(result);
@@ -68,7 +68,7 @@ export default function Enrolment() {
     }
     else if (!studentID && courseID)
     {
-        API_Student.getStudentAttendanceListbyCourseID(
+        apiStudent.getStudentAttendanceListbyCourseID(
           courseID
         ).then((result) => {
           console.log(result);
@@ -79,7 +79,7 @@ export default function Enrolment() {
     }
     else if (!studentID && !courseID)
     {
-        API_Student.getStudentAttendanceListbyGymID(
+        apiStudent.getStudentAttendanceListbyGymID(
           Prk_Gym_AutoID
         ).then((result) => {
           console.log(result);

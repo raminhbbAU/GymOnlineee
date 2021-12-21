@@ -24,9 +24,7 @@ import loginback from "../../assests/images/loginback.jpg";
 
 import Copyright from "../../components/copyright.js"
 import {setToStorage} from "../../storage/localstorage.js";
-import API from "../../api/auth";
-
-
+import {apiAuth} from "../../api";
 
 const theme = createTheme();
 
@@ -36,10 +34,11 @@ export default function SignInSide() {
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
+
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    API.gymLogin(
+    apiAuth.gymLogin(
         data.get('username'),
         data.get('password'),
         data.get('userType')

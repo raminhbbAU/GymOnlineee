@@ -13,7 +13,7 @@ import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 
 // utils / API
-import API from "../../api/gym";
+import {apiGym} from "../../api";
 import {getFromStorage,setToStorage} from "../../storage/localstorage.js";
 
 export default function GymForm () {
@@ -32,7 +32,7 @@ export default function GymForm () {
         validationSchema: gymRegisterSchema,
         onSubmit: (values) => {
             
-            API.editGym(
+            apiGym.editGym(
                 values.Prk_Gym_AutoID,
                 values.Str_GymName,
                 values.Str_OwnerTitle,

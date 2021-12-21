@@ -15,8 +15,7 @@ import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 
 // utils / API
-import API_Course from "../../api/course";
-import API_Student from "../../api/student";
+import {apiStudent,apiCourse} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 
 
@@ -40,7 +39,7 @@ export default function EnrolmentForm ({courseID,studentID}) {
         {
             setEditMode(true);
 
-            API_Student.getStudentEnrolledCoursesByID(
+            apiStudent.getStudentEnrolledCoursesByID(
                 enrolmentID
               ).then((result) => {
                               
@@ -67,7 +66,7 @@ export default function EnrolmentForm ({courseID,studentID}) {
 
     const loadCourseList = () => {
     
-      API_Course.getCourseByGymID(
+      apiCourse.getCourseByGymID(
         Prk_Gym_AutoID
       ).then((result) => {
         
@@ -83,7 +82,7 @@ export default function EnrolmentForm ({courseID,studentID}) {
 
     const loadStudentList = () => {
     
-        API_Student.getStudentInfoByGymID(
+        apiStudent.getStudentInfoByGymID(
           Prk_Gym_AutoID
         ).then((result) => {
           
@@ -116,7 +115,7 @@ export default function EnrolmentForm ({courseID,studentID}) {
 
         if (editMode)
         {
-            API_Student.editStudentCourseEnrollment(
+            apiStudent.editStudentCourseEnrollment(
                 enrolmentID,
                 values.Course,
                 values.Student,
@@ -131,7 +130,7 @@ export default function EnrolmentForm ({courseID,studentID}) {
         }
         else
         {
-              API_Student.newStudentCourseEnrollment(
+              apiStudent.newStudentCourseEnrollment(
                 values.Course,
                 values.Student,
                 values.RegisteredSession,

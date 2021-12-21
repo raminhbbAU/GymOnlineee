@@ -19,7 +19,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import Copyright from "../../components/copyright.js"
-import API from "../../api/auth";
+import {apiAuth} from "../../api";
 import {setToStorage}  from "../../storage/localstorage.js";
 
 
@@ -34,7 +34,7 @@ export default function SignUp() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-      API.registerNewGym(
+      apiAuth.registerNewGym(
         data.get('gymname'),
         data.get('mobile'),
         data.get('gmail'),

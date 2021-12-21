@@ -17,7 +17,7 @@ import { UserListHead, UserListToolbar } from '../../components/_dashboard/user'
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import API from "../../api/student";
+import {apiStudent} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 
 
@@ -51,7 +51,7 @@ export default function StudentBalance() {
 
   useEffect( () => {
 
-    API.getFinancialStudentBalanceByID(
+    apiStudent.getFinancialStudentBalanceByID(
       studentID
     ).then((result) => {
       console.log(result);

@@ -13,7 +13,7 @@ import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 
 // utils / API
-import API from "../../api/trainer";
+import {apiTrainer} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 
 export default function TrainerForm () {
@@ -40,7 +40,7 @@ export default function TrainerForm () {
 
             console.log(values);
 
-            API.registerNewTrainer(
+            apiTrainer.registerNewTrainer(
                 Prk_Gym_AutoID,
                 values.TrainerName,
                 values.TrainerFamily,

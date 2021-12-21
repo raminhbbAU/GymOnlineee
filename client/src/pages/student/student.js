@@ -16,7 +16,7 @@ import StudentMoreMenu from './studentMoreMenu'
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import API from "../../api/student";
+import {apiStudent} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 
 
@@ -48,7 +48,7 @@ export default function Student() {
 
   useEffect( () => {
 
-    API.getStudentInfoByGymID(
+    apiStudent.getStudentInfoByGymID(
       Prk_Gym_AutoID
     ).then((result) => {
       console.log(result);

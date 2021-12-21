@@ -12,8 +12,7 @@ import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 
 // utils / API
-import API_Course from "../../api/course";
-import API_Trainer from "../../api/trainer";
+import {apiCourse,apiTrainer} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 
 
@@ -35,7 +34,7 @@ export default function CourseForm () {
         {
             setEditMode(true);
 
-            API_Course.getCourseInfoByID(
+            apiCourse.getCourseInfoByID(
                 courseID
               ).then((result) => {
                               
@@ -67,7 +66,7 @@ export default function CourseForm () {
     const loadTrainerList = () => {
     
 
-      API_Trainer.getTrainerByGymID(
+      apiTrainer.getTrainerByGymID(
         Prk_Gym_AutoID
       ).then((result) => {
             
@@ -102,7 +101,7 @@ export default function CourseForm () {
 
         if (editMode)
         {
-              API_Course.editCourse(
+              apiCourse.editCourse(
                 courseID,
                 values.CourseName,
                 values.CourseDescription,
@@ -121,7 +120,7 @@ export default function CourseForm () {
         }
         else
         {
-              API_Course.registerNewCourse(
+            apiCourse.registerNewCourse(
                 Prk_Gym_AutoID,
                 values.CourseName,
                 values.CourseDescription,

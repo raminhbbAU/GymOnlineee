@@ -15,7 +15,7 @@ import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_d
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import API from "../../api/trainer";
+import {apiTrainer} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 
 // -------------------------------Header--------------------------------
@@ -46,7 +46,7 @@ export default function Trainer() {
 
   useEffect( () => {
 
-    API.getTrainerByGymID(
+    apiTrainer.getTrainerByGymID(
       Prk_Gym_AutoID
     ).then((result) => {
       console.log(result);

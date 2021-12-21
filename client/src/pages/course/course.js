@@ -16,7 +16,7 @@ import CourseMoreMenu from './courseMoreMenu'
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import API from "../../api/course";
+import {apiCourse} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 
 // -------------------------------Header--------------------------------
@@ -49,7 +49,7 @@ export default function Trainer() {
 
   useEffect( () => {
 
-    API.getCourseByGymID(
+    apiCourse.getCourseByGymID(
       Prk_Gym_AutoID
     ).then((result) => {
       console.log(result);

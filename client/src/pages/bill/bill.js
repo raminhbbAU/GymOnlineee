@@ -18,7 +18,7 @@ import { UserListHead, UserListToolbar } from '../../components/_dashboard/user'
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import API from "../../api/student";
+import {apiStudent} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 
 
@@ -54,7 +54,7 @@ export default function StudentBill() {
 
     if (!studentID){
 
-        API.getBillListByGymID(
+      apiStudent.getBillListByGymID(
             Prk_Gym_AutoID
           ).then((result) => {
             console.log(result);
@@ -67,7 +67,7 @@ export default function StudentBill() {
     else
     {
 
-        API.getBillListByStudentID(
+      apiStudent.getBillListByStudentID(
             studentID
           ).then((result) => {
             console.log(result);

@@ -24,6 +24,7 @@ import loginback from "../../assests/images/loginback.jpg";
 
 import Copyright from "../../components/copyright.js"
 import {setToStorage} from "../../storage/localstorage.js";
+import sucessNotify from "../../utils/toast.notification";
 import {apiAuth} from "../../api";
 
 const theme = createTheme();
@@ -38,6 +39,9 @@ export default function SignInSide() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
+    sucessNotify();
+
+
     apiAuth.gymLogin(
         data.get('username'),
         data.get('password'),
@@ -49,6 +53,7 @@ export default function SignInSide() {
           setToStorage('JWT_Token',result.data.token);
           setToStorage('logininfo', JSON.stringify(result.data.data));
           navigate("/gym/dashboard");
+
         }
       }
     }).catch((error) => {

@@ -14,7 +14,7 @@ import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 
 // utils / API
-import API from "../../api/student";
+import {apiStudent} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 
 
@@ -37,7 +37,7 @@ export default function StudentForm () {
         {
             setEditMode(true);
 
-            API.getStudentInfoByStudentID(
+            apiStudent.getStudentInfoByStudentID(
                 Prk_Gym_AutoID,
                 studentID
               ).then((result) => {
@@ -91,7 +91,7 @@ export default function StudentForm () {
 
         if (editMode)
         {
-            API.editStudentInfo(
+            apiStudent.editStudentInfo(
                 studentID,
                 values.Name,
                 values.Family,
@@ -111,7 +111,7 @@ export default function StudentForm () {
         }
         else
         {
-            API.registerNewStudent(
+            apiStudent.registerNewStudent(
                 Prk_Gym_AutoID,
                 values.Name,
                 values.Family,

@@ -6,6 +6,7 @@ import Router from './routes/routes';
 // theme
 import ThemeConfig from './theme';
 import GlobalStyles from './theme/globalStyles';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
     <ThemeConfig>
       <GlobalStyles />
       <Router />
+      <Toaster />
     </ThemeConfig>
     
   );

@@ -22,6 +22,7 @@ import CheckIn from '../pages/checkin/checkIn';
 import NewCheckIn from '../pages/checkin/checkInForm';
 import StudentBalance from '../pages/balance/studentbalance';
 import StudentBill from '../pages/bill/bill';
+import StudentPayment from '../pages/payment/payment';
 
 import Login from '../pages/login/login';
 import Signup from '../pages/signup/signup';
@@ -114,6 +115,14 @@ export default function Router() {
           element: <StudentBill />,
           children: [
             { path: ':studentID', element: <StudentBill /> },
+          ]
+        },
+        { path: 'Payment', element: <StudentPayment /> },
+        { 
+          path: 'PaymentByStudent', 
+          element: <StudentPayment />,
+          children: [
+            { path: ':studentID', element: <StudentPayment /> },
           ]
         },
       ]

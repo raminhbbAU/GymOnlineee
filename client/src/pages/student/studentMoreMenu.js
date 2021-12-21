@@ -64,7 +64,21 @@ export default function StudentMoreMenu({studentID}) {
           <ListItemIcon>
             <Icon icon={listfill} width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Student Balance" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText primary="Financial Balance" primaryTypographyProps={{ variant: 'body2' }} />
+        </MenuItem>
+
+        <MenuItem component={RouterLink} to={`/gym/BillByStudent/${studentID}`} sx={{ color: 'text.secondary' }} >
+          <ListItemIcon>
+            <Icon icon={listfill} width={24} height={24} />
+          </ListItemIcon>
+          <ListItemText primary="Bills" primaryTypographyProps={{ variant: 'body2' }} />
+        </MenuItem>
+
+        <MenuItem component={RouterLink} to={`/gym/PaymentByStudent/${studentID}`} sx={{ color: 'text.secondary' }} >
+          <ListItemIcon>
+            <Icon icon={listfill} width={24} height={24} />
+          </ListItemIcon>
+          <ListItemText primary="Payment" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
         <Divider />

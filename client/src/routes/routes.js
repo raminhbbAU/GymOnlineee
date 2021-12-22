@@ -32,6 +32,8 @@ import Signup from '../pages/signup/signup';
 
 export default function Router() {
 
+  console.log(window.location.href);
+
   const isAuth = getFromStorage('isAuth') || false;
   const myRoute = isAuth ? [
     {
@@ -136,7 +138,9 @@ export default function Router() {
         { path: '*', element: <Navigate to="/404" /> }
       ]
     },
-    { path: '*', element: <Navigate to="/404" replace /> }
+    { path: '*', element: <StudentPayment /> },
+    { path: '/', element: <Navigate to="/gym/Dashboard" replace /> },
+    { path: '', element: <Navigate to="/gym/Dashboard" replace /> }
   ] : 
   [
     {path: '/',element: <Login />},

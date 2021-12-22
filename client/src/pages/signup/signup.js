@@ -19,9 +19,9 @@ import RadioGroup from "@mui/material/RadioGroup";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import Copyright from "../../components/copyright.js"
-import {apiAuth} from "../../api";
+import {registerNewGym} from "../../api";
 import {setToStorage}  from "../../storage/localstorage.js";
-
+import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 
 const theme = createTheme();
 
@@ -34,7 +34,7 @@ export default function SignUp() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-      apiAuth.registerNewGym(
+      registerNewGym(
         data.get('gymname'),
         data.get('mobile'),
         data.get('gmail'),
@@ -50,6 +50,7 @@ export default function SignUp() {
           }
         }).catch((error) => {
           console.log(error.response);
+          errorNotifyByErrorObject(error);
         })
 
   };

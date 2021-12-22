@@ -17,9 +17,9 @@ import { UserListHead, UserListToolbar } from '../../components/_dashboard/user'
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import {apiStudent} from "../../api";
+import {getFinancialStudentBalanceByID} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
-
+import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 
 // -------------------------------Header--------------------------------
 
@@ -51,13 +51,14 @@ export default function StudentBalance() {
 
   useEffect( () => {
 
-    apiStudent.getFinancialStudentBalanceByID(
+    getFinancialStudentBalanceByID(
       studentID
     ).then((result) => {
       console.log(result);
       setdataList(result.data.data)
     }).catch((error) => {
       console.log(error.response);
+      errorNotifyByErrorObject(error);
     })
 
   },[refreshDataset])

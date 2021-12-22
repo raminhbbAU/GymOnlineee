@@ -355,7 +355,7 @@ const getPaymentListByGymID =  async(gymID) => {
 
 
 
-export default {registerNewStudent,editStudentInfo,newStudentCourseEnrollment,editStudentCourseEnrollment,
+export {registerNewStudent,editStudentInfo,newStudentCourseEnrollment,editStudentCourseEnrollment,
                 registerStudentAttendance,batchRegisterStudentAttendance,getStudentInfoByGymID,getStudentInfoByStudentID,
                 getStudentEnrolledCourses,getStudentEnrolledCoursesByID,getStudentEnrolledCoursesByCourseID,
                 getStudentAttendanceListbyGymID,getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID,

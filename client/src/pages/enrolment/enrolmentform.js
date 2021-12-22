@@ -15,9 +15,9 @@ import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 
 // utils / API
-import {apiStudent,apiCourse} from "../../api";
+import {getStudentEnrolledCoursesByID,getCourseByGymID,getStudentInfoByGymID,editStudentCourseEnrollment,newStudentCourseEnrollment} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
-
+import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 
 export default function EnrolmentForm ({courseID,studentID}) {
 
@@ -39,7 +39,7 @@ export default function EnrolmentForm ({courseID,studentID}) {
         {
             setEditMode(true);
 
-            apiStudent.getStudentEnrolledCoursesByID(
+            getStudentEnrolledCoursesByID(
                 enrolmentID
               ).then((result) => {
                               
@@ -53,6 +53,7 @@ export default function EnrolmentForm ({courseID,studentID}) {
 
               }).catch((error) => {
                 console.log(error.response);
+                errorNotifyByErrorObject(error);
               })
         }
         else
@@ -66,7 +67,7 @@ export default function EnrolmentForm ({courseID,studentID}) {
 
     const loadCourseList = () => {
     
-      apiCourse.getCourseByGymID(
+      getCourseByGymID(
         Prk_Gym_AutoID
       ).then((result) => {
         
@@ -76,13 +77,14 @@ export default function EnrolmentForm ({courseID,studentID}) {
 
       }).catch((error) => {
         console.log(error.response);
+        errorNotifyByErrorObject(error);
       })
 
     }
 
     const loadStudentList = () => {
     
-        apiStudent.getStudentInfoByGymID(
+        getStudentInfoByGymID(
           Prk_Gym_AutoID
         ).then((result) => {
           
@@ -92,6 +94,7 @@ export default function EnrolmentForm ({courseID,studentID}) {
   
         }).catch((error) => {
           console.log(error.response);
+          errorNotifyByErrorObject(error);
         })
   
       }
@@ -115,7 +118,7 @@ export default function EnrolmentForm ({courseID,studentID}) {
 
         if (editMode)
         {
-            apiStudent.editStudentCourseEnrollment(
+            editStudentCourseEnrollment(
                 enrolmentID,
                 values.Course,
                 values.Student,
@@ -126,11 +129,12 @@ export default function EnrolmentForm ({courseID,studentID}) {
                 navigate("/gym/enrolment");
               }).catch((error) => {
                 console.log(error.response);
+                errorNotifyByErrorObject(error);
               })
         }
         else
         {
-              apiStudent.newStudentCourseEnrollment(
+              newStudentCourseEnrollment(
                 values.Course,
                 values.Student,
                 values.RegisteredSession,
@@ -140,6 +144,7 @@ export default function EnrolmentForm ({courseID,studentID}) {
                 navigate("/gym/enrolment");
               }).catch((error) => {
                 console.log(error.response);
+                errorNotifyByErrorObject(error);
               })
         }
 

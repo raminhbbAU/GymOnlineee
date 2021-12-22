@@ -15,8 +15,9 @@ import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_d
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import {apiTrainer} from "../../api";
+import {getTrainerByGymID} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
+import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 
 // -------------------------------Header--------------------------------
 
@@ -46,13 +47,14 @@ export default function Trainer() {
 
   useEffect( () => {
 
-    apiTrainer.getTrainerByGymID(
+    getTrainerByGymID(
       Prk_Gym_AutoID
     ).then((result) => {
       console.log(result);
       setTrainerList(result.data.data)
     }).catch((error) => {
       console.log(error.response);
+      errorNotifyByErrorObject(error);
     })
 
   },[refreshDataset])

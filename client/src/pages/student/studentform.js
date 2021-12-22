@@ -14,9 +14,9 @@ import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 
 // utils / API
-import {apiStudent} from "../../api";
+import {getStudentInfoByStudentID,editStudentInfo,registerNewStudent} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
-
+import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 
 
 export default function StudentForm () {
@@ -37,7 +37,7 @@ export default function StudentForm () {
         {
             setEditMode(true);
 
-            apiStudent.getStudentInfoByStudentID(
+            getStudentInfoByStudentID(
                 Prk_Gym_AutoID,
                 studentID
               ).then((result) => {
@@ -57,6 +57,7 @@ export default function StudentForm () {
 
               }).catch((error) => {
                 console.log(error.response);
+                errorNotifyByErrorObject(error);
               })
         }
         else
@@ -91,7 +92,7 @@ export default function StudentForm () {
 
         if (editMode)
         {
-            apiStudent.editStudentInfo(
+            editStudentInfo(
                 studentID,
                 values.Name,
                 values.Family,
@@ -107,11 +108,12 @@ export default function StudentForm () {
                 navigate("/gym/student");
               }).catch((error) => {
                 console.log(error.response);
+                errorNotifyByErrorObject(error);
               })
         }
         else
         {
-            apiStudent.registerNewStudent(
+            registerNewStudent(
                 Prk_Gym_AutoID,
                 values.Name,
                 values.Family,
@@ -129,6 +131,7 @@ export default function StudentForm () {
                 navigate("/gym/student");
               }).catch((error) => {
                 console.log(error.response);
+                errorNotifyByErrorObject(error);
               })
         }
 

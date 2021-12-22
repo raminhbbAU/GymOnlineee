@@ -17,9 +17,9 @@ import EnrolmentMoreMenu from './enrolmentMoreMenu';
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import {apiStudent,apiCourse} from "../../api";
+import {getStudentEnrolledCourses,getEnrolledCoursesByCourseID,getEnrolledCoursesByGymID} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
-
+import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 
 // -------------------------------Header--------------------------------
 
@@ -59,35 +59,38 @@ export default function Enrolment() {
 
     if (studentID && !courseID)
     {
-        apiStudent.getStudentEnrolledCourses(
+        getStudentEnrolledCourses(
           studentID
         ).then((result) => {
           console.log(result);
           setCourseList(result.data.data)
         }).catch((error) => {
           console.log(error.response);
+          errorNotifyByErrorObject(error);
         })
     }
     else if (!studentID && courseID)
     {
-        apiCourse.getEnrolledCoursesByCourseID(
+        getEnrolledCoursesByCourseID(
           courseID
         ).then((result) => {
           console.log(result);
           setCourseList(result.data.data)
         }).catch((error) => {
           console.log(error.response);
+          errorNotifyByErrorObject(error);
         })
     }
     else if (!studentID && !courseID)
     {
-        apiCourse.getEnrolledCoursesByGymID(
+        getEnrolledCoursesByGymID(
           Prk_Gym_AutoID
         ).then((result) => {
           console.log(result);
           setCourseList(result.data.data)
         }).catch((error) => {
           console.log(error.response);
+          errorNotifyByErrorObject(error);
         })
     }
 

@@ -12,8 +12,9 @@ import { useTheme } from '@mui/material/styles';
 import Scrollbar from '../../components/Scrollbar';
 
 // utils / API
-import {apiStudent} from "../../api";
+import {getStudentEnrolledCoursesByCourseID,batchRegisterStudentAttendance} from "../../api";
 import {delay} from "../../utils/utility"
+import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 
 export default function CheckInBatchDialog({open,handleClose,courseName,courseId}) {
 
@@ -42,13 +43,14 @@ export default function CheckInBatchDialog({open,handleClose,courseName,courseId
 
     useEffect( () => {
 
-        apiStudent.getStudentEnrolledCoursesByCourseID(
+        getStudentEnrolledCoursesByCourseID(
                 courseId
               ).then((result) => { 
                  setStudentList(result.data.data);
                  dataSetPreperation(result.data.data);
               }).catch((error) => {
                 console.log(error.response);
+                errorNotifyByErrorObject(error);
               })   
       },[])
 
@@ -70,7 +72,7 @@ export default function CheckInBatchDialog({open,handleClose,courseName,courseId
 
     const handleSubmit = () => {
 
-        apiStudent.batchRegisterStudentAttendance(
+        batchRegisterStudentAttendance(
             dataset,
             curDate,
             courseId
@@ -79,6 +81,7 @@ export default function CheckInBatchDialog({open,handleClose,courseName,courseId
             handleClose();
           }).catch((error) => {
             console.log(error.response);
+            errorNotifyByErrorObject(error);
           })   
 
     }

@@ -44,4 +44,4 @@ const getTrainerByGymID =  async(gymID) => {
 }
 
 
-export default {getTrainerByGymID,registerNewTrainer};
+export {getTrainerByGymID,registerNewTrainer};

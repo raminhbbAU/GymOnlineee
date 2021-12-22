@@ -13,8 +13,9 @@ import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 
 // utils / API
-import {apiTrainer} from "../../api";
+import {registerNewTrainer} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
+import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 
 export default function TrainerForm () {
 
@@ -40,7 +41,7 @@ export default function TrainerForm () {
 
             console.log(values);
 
-            apiTrainer.registerNewTrainer(
+            registerNewTrainer(
                 Prk_Gym_AutoID,
                 values.TrainerName,
                 values.TrainerFamily,
@@ -55,6 +56,7 @@ export default function TrainerForm () {
                 navigate("/gym/trainer");
               }).catch((error) => {
                 console.log(error.response);
+                errorNotifyByErrorObject(error);
               })
 
         },

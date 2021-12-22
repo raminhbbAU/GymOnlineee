@@ -17,8 +17,8 @@ import CheckInMoreMenu from './checkInMoreMenu';
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import {apiStudent} from "../../api";
-
+import {getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID,getStudentAttendanceListbyGymID} from "../../api";
+import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 import {getFromStorage} from "../../storage/localstorage.js";
 
 
@@ -57,35 +57,38 @@ export default function Enrolment() {
 
     if (studentID && !courseID)
     {
-        apiStudent.getStudentAttendanceListbyStudentID(
+        getStudentAttendanceListbyStudentID(
           studentID
         ).then((result) => {
           console.log(result);
           setCheckInList(result.data.data)
         }).catch((error) => {
           console.log(error.response);
+          errorNotifyByErrorObject(error);
         })
     }
     else if (!studentID && courseID)
     {
-        apiStudent.getStudentAttendanceListbyCourseID(
+        getStudentAttendanceListbyCourseID(
           courseID
         ).then((result) => {
           console.log(result);
           setCheckInList(result.data.data)
         }).catch((error) => {
           console.log(error.response);
+          errorNotifyByErrorObject(error);
         })
     }
     else if (!studentID && !courseID)
     {
-        apiStudent.getStudentAttendanceListbyGymID(
+        getStudentAttendanceListbyGymID(
           Prk_Gym_AutoID
         ).then((result) => {
           console.log(result);
           setCheckInList(result.data.data)
         }).catch((error) => {
           console.log(error.response);
+          errorNotifyByErrorObject(error);
         })
     }
 

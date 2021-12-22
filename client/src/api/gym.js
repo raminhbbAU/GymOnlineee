@@ -27,4 +27,4 @@ const editGym =  async(GymID,GymName,OwnerTitle,Address,Tel,Gmail,Mobile,UserNam
 }
 
 
-export default {editGym};
+export  {editGym};

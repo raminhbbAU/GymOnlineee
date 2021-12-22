@@ -1,6 +1,6 @@
 import axios from "axios";
-
 import apiPath from "../constants/api.config";
+
 
 const gymLogin = async(userName,password) => {
    
@@ -25,7 +25,7 @@ const trainerLogin =  async(userName,password) => {
 
 }
 
-const athleteLogin =  async(userName,password) => {
+const studentLogin =  async(userName,password) => {
 
     await axios.post(apiPath + 'student/login',{
         UserName:userName,
@@ -53,4 +53,4 @@ const registerNewGym =  async(gymname,mobile,gmail,password) => {
 }
 
 
-export default {gymLogin,trainerLogin,athleteLogin,registerNewGym};
+export {gymLogin, trainerLogin, studentLogin, registerNewGym}

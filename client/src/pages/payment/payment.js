@@ -16,9 +16,9 @@ import { UserListHead, UserListToolbar } from '../../components/_dashboard/user'
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import {apiStudent} from "../../api";
+import {getPaymentListByGymID,getPaymentListByStudentID} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
-
+import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 
 // -------------------------------Header--------------------------------
 
@@ -51,26 +51,28 @@ export default function StudentPayment() {
 
     if (!studentID){
 
-        apiStudent.getPaymentListByGymID(
+        getPaymentListByGymID(
             Prk_Gym_AutoID
           ).then((result) => {
             console.log(result);
             setdataList(result.data.data)
           }).catch((error) => {
             console.log(error.response);
+            errorNotifyByErrorObject(error);
           })
 
     }
     else
     {
 
-        apiStudent.getPaymentListByStudentID(
+        getPaymentListByStudentID(
             studentID
           ).then((result) => {
             console.log(result);
             setdataList(result.data.data)
           }).catch((error) => {
             console.log(error.response);
+            errorNotifyByErrorObject(error);
           })
 
     }

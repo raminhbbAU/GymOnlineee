@@ -13,8 +13,9 @@ import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 
 // utils / API
-import {apiGym} from "../../api";
+import {editGym} from "../../api";
 import {getFromStorage,setToStorage} from "../../storage/localstorage.js";
+import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 
 export default function GymForm () {
 
@@ -32,7 +33,7 @@ export default function GymForm () {
         validationSchema: gymRegisterSchema,
         onSubmit: (values) => {
             
-            apiGym.editGym(
+            editGym(
                 values.Prk_Gym_AutoID,
                 values.Str_GymName,
                 values.Str_OwnerTitle,
@@ -49,6 +50,7 @@ export default function GymForm () {
                 setToStorage('logininfo', JSON.stringify(result.data.data));
               }).catch((error) => {
                 console.log(error.response);
+                errorNotifyByErrorObject(error);
               })
 
         },

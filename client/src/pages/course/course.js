@@ -16,8 +16,9 @@ import CourseMoreMenu from './courseMoreMenu'
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import {apiCourse} from "../../api";
+import {getCourseByGymID} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
+import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 
 // -------------------------------Header--------------------------------
 
@@ -49,13 +50,14 @@ export default function Trainer() {
 
   useEffect( () => {
 
-    apiCourse.getCourseByGymID(
+    getCourseByGymID(
       Prk_Gym_AutoID
     ).then((result) => {
       console.log(result);
       setCourseList(result.data.data)
     }).catch((error) => {
       console.log(error.response);
+      errorNotifyByErrorObject(error);
     })
 
   },[refreshDataset])

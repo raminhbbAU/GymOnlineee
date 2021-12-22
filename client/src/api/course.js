@@ -119,4 +119,4 @@ const getEnrolledCoursesByGymID =  async(gymID) => {
     return res;
 }
 
-export default {registerNewCourse,editCourse,getCourseByGymID,getCourseInfoByID,getEnrolledCoursesByCourseID,getEnrolledCoursesByGymID};
+export {registerNewCourse,editCourse,getCourseByGymID,getCourseInfoByID,getEnrolledCoursesByCourseID,getEnrolledCoursesByGymID};

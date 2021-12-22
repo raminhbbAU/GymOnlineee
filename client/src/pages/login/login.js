@@ -24,8 +24,8 @@ import loginback from "../../assests/images/loginback.jpg";
 
 import Copyright from "../../components/copyright.js"
 import {setToStorage} from "../../storage/localstorage.js";
-import sucessNotify from "../../utils/toast.notification";
-import {apiAuth} from "../../api";
+import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
+import {gymLogin} from "../../api";
 
 const theme = createTheme();
 
@@ -39,10 +39,8 @@ export default function SignInSide() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    sucessNotify();
 
-
-    apiAuth.gymLogin(
+    gymLogin(
         data.get('username'),
         data.get('password'),
         data.get('userType')
@@ -52,12 +50,13 @@ export default function SignInSide() {
           setToStorage('isAuth',result.data.auth);
           setToStorage('JWT_Token',result.data.token);
           setToStorage('logininfo', JSON.stringify(result.data.data));
+          sucessNotify("Welcome to your profile!");
           navigate("/gym/dashboard");
-
         }
       }
     }).catch((error) => {
       console.log(error);
+      errorNotifyByErrorObject(error);    
     })
 
   };

@@ -12,9 +12,9 @@ import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 
 // utils / API
-import {apiCourse,apiTrainer} from "../../api";
+import {getCourseInfoByID,getTrainerByGymID,editCourse,registerNewCourse} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
-
+import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 
 export default function CourseForm () {
 
@@ -34,7 +34,7 @@ export default function CourseForm () {
         {
             setEditMode(true);
 
-            apiCourse.getCourseInfoByID(
+            getCourseInfoByID(
                 courseID
               ).then((result) => {
                               
@@ -52,6 +52,7 @@ export default function CourseForm () {
 
               }).catch((error) => {
                 console.log(error.response);
+                errorNotifyByErrorObject(error);
               })
         }
         else
@@ -66,7 +67,7 @@ export default function CourseForm () {
     const loadTrainerList = () => {
     
 
-      apiTrainer.getTrainerByGymID(
+      getTrainerByGymID(
         Prk_Gym_AutoID
       ).then((result) => {
             
@@ -75,6 +76,7 @@ export default function CourseForm () {
 
       }).catch((error) => {
         console.log(error.response);
+        errorNotifyByErrorObject(error);
       })
 
     }
@@ -101,7 +103,7 @@ export default function CourseForm () {
 
         if (editMode)
         {
-              apiCourse.editCourse(
+              editCourse(
                 courseID,
                 values.CourseName,
                 values.CourseDescription,
@@ -116,11 +118,12 @@ export default function CourseForm () {
                 navigate("/gym/course");
               }).catch((error) => {
                 console.log(error.response);
+                errorNotifyByErrorObject(error);
               })
         }
         else
         {
-            apiCourse.registerNewCourse(
+            registerNewCourse(
                 Prk_Gym_AutoID,
                 values.CourseName,
                 values.CourseDescription,
@@ -136,6 +139,7 @@ export default function CourseForm () {
                 navigate("/gym/course");
               }).catch((error) => {
                 console.log(error.response);
+                errorNotifyByErrorObject(error);
               })
         }
 

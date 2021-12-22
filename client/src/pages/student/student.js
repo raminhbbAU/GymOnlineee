@@ -16,9 +16,9 @@ import StudentMoreMenu from './studentMoreMenu'
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import {apiStudent} from "../../api";
+import {getStudentInfoByGymID} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
-
+import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 
 // -------------------------------Header--------------------------------
 
@@ -48,13 +48,14 @@ export default function Student() {
 
   useEffect( () => {
 
-    apiStudent.getStudentInfoByGymID(
+    getStudentInfoByGymID(
       Prk_Gym_AutoID
     ).then((result) => {
       console.log(result);
       setStudentList(result.data.data)
     }).catch((error) => {
       console.log(error.response);
+      errorNotifyByErrorObject(error);
     })
 
   },[refreshDataset])

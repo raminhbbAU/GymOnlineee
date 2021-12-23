@@ -45,7 +45,12 @@ export default function Scrollbar({ children, sx, ...other }) {
     navigator.userAgent
   );
 
-  if (isMobile) {
+  
+  console.log(navigator.userAgent);
+  console.log(sx);
+  console.log(isMobile);
+
+  if (isMobile || 1==1) {
     return (
       <Box sx={{ overflowX: 'auto', ...sx }} {...other}>
         {children}
@@ -53,9 +58,10 @@ export default function Scrollbar({ children, sx, ...other }) {
     );
   }
 
+
   return (
     <RootStyle>
-      <SimpleBarStyle timeout={500} clickOnTrack={false} sx={sx} {...other}>
+      <SimpleBarStyle timeout={500} clickOnTrack={false} sx={{ overflowX: 'auto', ...sx }} {...other}>
         {children}
       </SimpleBarStyle>
     </RootStyle>

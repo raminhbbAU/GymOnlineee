@@ -138,7 +138,7 @@ export default function Student() {
           />
 
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
+            <TableContainer sx={{ minWidth: 800}} >
               <Table>
                 <UserListHead
                   order={order}

@@ -40,7 +40,7 @@ export default function Trainer() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [trainerList, setTrainerList] = useState([]);
+  const [dataList, setdataList] = useState([]);
   const [refreshDataset,setRefreshDataset] = useState(false);
 
   let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
@@ -51,7 +51,7 @@ export default function Trainer() {
       Prk_Gym_AutoID
     ).then((result) => {
       console.log(result);
-      setTrainerList(result.data.data)
+      setdataList(result.data.data)
     }).catch((error) => {
       console.log(error.response);
       errorNotifyByErrorObject(error);
@@ -68,7 +68,7 @@ export default function Trainer() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = trainerList.map((n) => n.name);
+      const newSelecteds = dataList.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -106,9 +106,9 @@ export default function Trainer() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - trainerList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataList.length) : 0;
 
-  const filteredItems = applySortFilter(trainerList, getComparator(order, orderBy), filterName);
+  const filteredItems = applySortFilter(dataList, getComparator(order, orderBy), filterName,"Str_TrainerName");
 
   const isUserNotFound = filteredItems.length === 0;
 
@@ -143,7 +143,7 @@ export default function Trainer() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={trainerList.length}
+                  rowCount={dataList.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
@@ -217,7 +217,7 @@ export default function Trainer() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={trainerList.length}
+            count={dataList.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

@@ -17,7 +17,7 @@ const getComparator = (order, orderBy) => {
       : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-const applySortFilter = (array, comparator, query) => {
+const applySortFilter = (array, comparator, query,filterby) => {
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
       const order = comparator(a[0], b[0]);
@@ -25,7 +25,7 @@ const applySortFilter = (array, comparator, query) => {
       return a[1] - b[1];
     });
     if (query) {
-      return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+      return filter(array, (_user) => _user[filterby].toLowerCase().indexOf(query.toLowerCase()) !== -1);
     }
     return stabilizedThis.map((el) => el[0]);
 }

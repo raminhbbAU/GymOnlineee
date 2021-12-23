@@ -32,8 +32,6 @@ import Signup from '../pages/signup/signup';
 
 export default function Router() {
 
-  console.log(window.location.href);
-
   const isAuth = getFromStorage('isAuth') || false;
   const myRoute = isAuth ? [
     {

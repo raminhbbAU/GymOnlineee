@@ -111,7 +111,7 @@ export default function Trainer() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - courseList.length) : 0;
 
-  const filteredItems = applySortFilter(courseList, getComparator(order, orderBy), filterName);
+  const filteredItems = applySortFilter(courseList, getComparator(order, orderBy), filterName,"Str_CourseName");
 
   const isUserNotFound = filteredItems.length === 0;
 

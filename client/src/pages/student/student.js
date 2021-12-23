@@ -109,7 +109,7 @@ export default function Student() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - studentList.length) : 0;
 
-  const filteredItems = applySortFilter(studentList, getComparator(order, orderBy), filterName);
+  const filteredItems = applySortFilter(studentList, getComparator(order, orderBy), filterName,"Str_Name");
 
   const isUserNotFound = filteredItems.length === 0;
 

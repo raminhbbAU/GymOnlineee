@@ -131,7 +131,7 @@ export default function StudentBill() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataList.length) : 0;
 
-  const filteredItems = applySortFilter(dataList, getComparator(order, orderBy), filterName);
+  const filteredItems = applySortFilter(dataList, getComparator(order, orderBy), filterName,"Str_Name");
 
   const isUserNotFound = filteredItems.length === 0;
 

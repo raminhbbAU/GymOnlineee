@@ -145,7 +145,7 @@ export default function Enrolment() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - courseList.length) : 0;
 
-  const filteredItems = applySortFilter(courseList, getComparator(order, orderBy), filterName);
+  const filteredItems = applySortFilter(courseList, getComparator(order, orderBy), filterName,studentID ? "Str_CourseName" : "Str_Name");
 
   const isUserNotFound = filteredItems.length === 0;
 

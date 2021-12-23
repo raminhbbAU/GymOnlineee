@@ -5,7 +5,9 @@ import { useNavigate,useParams } from 'react-router-dom';
 
 // material
 import {TextField,Button,Stack,Container,Typography,MenuItem} from '@mui/material';
-
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 
 // components
 import Page from '../../components/Page';
@@ -98,6 +100,9 @@ export default function CourseForm () {
         },
     });
 
+    const handleDateChange = (filedName,newValue) => {
+      formik.setFieldValue(filedName, newValue.toISOString().split('T')[0]);
+    };
 
     const handleSubmit = (values) => {
 
@@ -187,29 +192,42 @@ export default function CourseForm () {
                                        margin="normal"
                                    />
            
-                                   <TextField
-                                       fullWidth
-                                       id="StartDate"
-                                       name="StartDate"
-                                       label="Start Date"
-                                       value={formik.values.StartDate}
-                                       onChange={formik.handleChange}
-                                       error={formik.touched.StartDate && Boolean(formik.errors.StartDate)}
-                                       helperText={formik.touched.StartDate && formik.errors.StartDate}
-                                       margin="normal"
-                                   />
-           
-                                   <TextField
-                                       fullWidth
-                                       id="EndDate"
-                                       name="EndDate"
-                                       label="End Date"
-                                       value={formik.values.EndDate}
-                                       onChange={formik.handleChange}
-                                       error={formik.touched.EndDate && Boolean(formik.errors.EndDate)}
-                                       helperText={formik.touched.EndDate && formik.errors.EndDate}
-                                       margin="normal"
-                                   />
+                                   <Stack sx={{ flexDirection: 'column',margin: 5px }}>
+                                   
+                                      <LocalizationProvider dateAdapter={AdapterDateFns} margin="normal">
+                                          <DesktopDatePicker
+                                                    fullWidth
+                                                    id="StartDate"
+                                                    name="StartDate"
+                                                    label="Start Date"
+                                                    inputFormat="MM/dd/yyyy"
+                                                    value={formik.values.StartDate}
+                                                    onChange={(value) => handleDateChange('StartDate',value)}
+                                                    error={formik.touched.StartDate && Boolean(formik.errors.StartDate)}
+                                                    helperText={formik.touched.StartDate && formik.errors.StartDate}
+                                                    renderInput={(params) => <TextField {...params} />}
+                                                    margin="normal"
+                                          />                                    
+                                      </LocalizationProvider>
+
+                                      <LocalizationProvider dateAdapter={AdapterDateFns} margin="normal">
+                                          <DesktopDatePicker
+                                                    fullWidth
+                                                    id="EndDate"
+                                                    name="EndDate"
+                                                    label="End Date"
+                                                    inputFormat="MM/dd/yyyy"
+                                                    value={formik.values.EndDate}
+                                                    onChange={(value) => handleDateChange('EndDate',value)}
+                                                    error={formik.touched.EndDate && Boolean(formik.errors.EndDate)}
+                                                    helperText={formik.touched.EndDate && formik.errors.EndDate}
+                                                    renderInput={(params) => <TextField {...params} />}
+                                                    margin="normal"
+                                          />                                    
+                                      </LocalizationProvider>
+
+                                   </Stack>
+
            
                                    <TextField
                                        fullWidth

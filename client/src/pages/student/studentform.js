@@ -8,6 +8,9 @@ import { replace } from "lodash";
 import {TextField,Button,InputAdornment,IconButton,Stack,Container,Typography} from '@mui/material';
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 
 // components
 import Page from '../../components/Page';
@@ -88,6 +91,10 @@ export default function StudentForm () {
     });
 
 
+    const handleDateChange = (filedName,newValue) => {
+        formik.setFieldValue(filedName, newValue.toISOString().split('T')[0]);
+      };
+  
     const handleSubmit = (values) => {
 
         if (editMode)
@@ -238,17 +245,21 @@ export default function StudentForm () {
                           margin="normal"
                       />
 
-                      <TextField
-                          fullWidth
-                          id="Birthday"
-                          name="Birthday"
-                          label="Birthday"
-                          value={formik.values.Birthday}
-                          onChange={formik.handleChange}
-                          error={formik.touched.Birthday && Boolean(formik.errors.Birthday)}
-                          helperText={formik.touched.Birthday && formik.errors.Birthday}
-                          margin="normal"
-                      />
+                      <LocalizationProvider dateAdapter={AdapterDateFns} margin="normal">
+                            <DesktopDatePicker
+                                        fullWidth
+                                        id="Birthday"
+                                        name="Birthday"
+                                        label="Birthday"
+                                        inputFormat="MM/dd/yyyy"
+                                        value={formik.values.Birthday}
+                                        onChange={(value) => handleDateChange('Birthday',value)}
+                                        error={formik.touched.Birthday && Boolean(formik.errors.Birthday)}
+                                        helperText={formik.touched.Birthday && formik.errors.Birthday}
+                                        renderInput={(params) => <TextField {...params} />}
+                                        margin="normal"
+                            />                                    
+                      </LocalizationProvider>
 
                       {/* <TextField
                           fullWidth

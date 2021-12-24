@@ -192,7 +192,7 @@ export default function CourseForm () {
                                        margin="normal"
                                    />
            
-                                   <Stack sx={{ flexDirection: 'column',margin: 5px }}>
+                                   <Stack sx={{ flexDirection: 'column' }} margin="normal">
                                    
                                       <LocalizationProvider dateAdapter={AdapterDateFns} margin="normal">
                                           <DesktopDatePicker

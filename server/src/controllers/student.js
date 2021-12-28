@@ -163,7 +163,7 @@ res.status(200).json({
 router.post('/registerNewPayment',authToken,async(req,res,next) =>{
   
     // Get user input
-  const {Student,Amount,PayType,OnlinePaymentDetail,TraceNumber} = req.body;
+  const {Student,Amount,PayType,OnlinePaymentDetail,TraceNumber,Date} = req.body;
 
   
   models.studentpayment
@@ -173,7 +173,7 @@ router.post('/registerNewPayment',authToken,async(req,res,next) =>{
       Int_PayType: PayType,
       Frk_OnlinePaymentDetail: OnlinePaymentDetail,
       Str_TraceNumber: TraceNumber,
-      Str_GenerateDate:getDate(),
+      Str_GenerateDate:date || getDate(),
       Str_GenerateTime:getTime(),
       Bit_Active: true
     })

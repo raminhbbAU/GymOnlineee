@@ -142,9 +142,8 @@ export default function StudentPayment() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="/gym/NewBill"
-            startIcon={<Icon icon={plusFill} />} 
-            disabled         
+            to="/gym/newpayment"
+            startIcon={<Icon icon={plusFill} />}    
           >
             New Payment
           </Button>

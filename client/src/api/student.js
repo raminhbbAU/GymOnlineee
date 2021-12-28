@@ -53,71 +53,6 @@ const editStudentInfo =  async(studentID,Name,Family,Mobile,WhatsApp,Telegram,Gm
     return res;
 }
 
-const newStudentCourseEnrollment =  async(Course,Student,RegisteredSession,ValidUntillTo) => {
-   
-    let token = getFromStorage('JWT_Token') 
-
-    let res = await axios.post(apiPath + 'student/newStudentCourseEnrollment',
-    {
-        Course,
-        Student,
-        RegisteredSession,
-        ValidUntillTo,
-        token
-    });
-
-    return res;
-}
-
-const editStudentCourseEnrollment =  async(enrolmentID,Course,Student,RegisteredSession,ValidUntillTo) => {
-   
-    let token = getFromStorage('JWT_Token') 
-
-    let res = await axios.put(apiPath + 'student/editStudentCourseEnrollment',
-    {
-        enrolmentID,
-        Course,
-        Student,
-        RegisteredSession,
-        ValidUntillTo,
-        token
-    });
-
-    return res;
-}
-
-const registerStudentAttendance =  async(StudentVCourse,Date,Status,AbsentReason,TrainerNote) => {
-   
-    let token = getFromStorage('JWT_Token') 
-
-    let res = await axios.post(apiPath + 'student/registerStudentAttendance',
-    {
-        StudentVCourse,
-        Date,
-        Status,
-        AbsentReason,
-        TrainerNote,
-        token
-    });
-
-    return res;
-}
-
-const batchRegisterStudentAttendance =  async(data,date,course) => {
-   
-    let token = getFromStorage('JWT_Token') 
-
-    let res = await axios.post(apiPath + 'student/batchRegisterStudentAttendance',
-    {
-        data,
-        date,
-        course,
-        token
-    });
-
-    return res;
-}
-
 const getStudentInfoByGymID =  async(gymID) => {
    
     let token = getFromStorage('JWT_Token') 
@@ -150,6 +85,45 @@ const getStudentInfoByStudentID =  async(gymID,studentID) => {
             gymID: gymID,
             studentID: studentID,
         }
+    });
+
+    return res;
+}
+
+
+
+
+
+
+
+const newStudentCourseEnrollment =  async(Course,Student,RegisteredSession,ValidUntillTo) => {
+   
+    let token = getFromStorage('JWT_Token') 
+
+    let res = await axios.post(apiPath + 'student/newStudentCourseEnrollment',
+    {
+        Course,
+        Student,
+        RegisteredSession,
+        ValidUntillTo,
+        token
+    });
+
+    return res;
+}
+
+const editStudentCourseEnrollment =  async(enrolmentID,Course,Student,RegisteredSession,ValidUntillTo) => {
+   
+    let token = getFromStorage('JWT_Token') 
+
+    let res = await axios.put(apiPath + 'student/editStudentCourseEnrollment',
+    {
+        enrolmentID,
+        Course,
+        Student,
+        RegisteredSession,
+        ValidUntillTo,
+        token
     });
 
     return res;
@@ -209,6 +183,44 @@ const getStudentEnrolledCoursesByCourseID =  async(courseID) => {
     return res;
 }
 
+
+
+
+
+
+
+const registerStudentAttendance =  async(StudentVCourse,Date,Status,AbsentReason,TrainerNote) => {
+   
+    let token = getFromStorage('JWT_Token') 
+
+    let res = await axios.post(apiPath + 'student/registerStudentAttendance',
+    {
+        StudentVCourse,
+        Date,
+        Status,
+        AbsentReason,
+        TrainerNote,
+        token
+    });
+
+    return res;
+}
+
+const batchRegisterStudentAttendance =  async(data,date,course) => {
+   
+    let token = getFromStorage('JWT_Token') 
+
+    let res = await axios.post(apiPath + 'student/batchRegisterStudentAttendance',
+    {
+        data,
+        date,
+        course,
+        token
+    });
+
+    return res;
+}
+
 const getStudentAttendanceListbyGymID =  async(gymID) => {
    
     let token = getFromStorage('JWT_Token') 
@@ -258,6 +270,28 @@ const getStudentAttendanceListbyCourseID =  async(courseID) => {
         params: {
             courseID,
         }
+    });
+
+    return res;
+}
+
+
+
+
+
+const registerNewPayment =  async(Student,Amount,PayType,OnlinePaymentDetail,TraceNumber,Date) => {
+   
+    let token = getFromStorage('JWT_Token') 
+
+    let res = await axios.post(apiPath + 'student/registerNewPayment',
+    {
+        Student,
+        Amount,
+        PayType,
+        OnlinePaymentDetail,
+        TraceNumber,
+        Date,
+        token
     });
 
     return res;
@@ -360,4 +394,4 @@ export {registerNewStudent,editStudentInfo,newStudentCourseEnrollment,editStuden
                 getStudentEnrolledCourses,getStudentEnrolledCoursesByID,getStudentEnrolledCoursesByCourseID,
                 getStudentAttendanceListbyGymID,getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID,
                 getFinancialStudentBalanceByID,getBillListByStudentID,getBillListByGymID,getPaymentListByStudentID,
-                getPaymentListByGymID};
+                getPaymentListByGymID,registerNewPayment};

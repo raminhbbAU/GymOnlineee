@@ -6,5 +6,5 @@ export {registerNewStudent,editStudentInfo,newStudentCourseEnrollment,editStuden
         getStudentEnrolledCourses,getStudentEnrolledCoursesByID,getStudentEnrolledCoursesByCourseID,
         getStudentAttendanceListbyGymID,getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID,
         getFinancialStudentBalanceByID,getBillListByStudentID,getBillListByGymID,getPaymentListByStudentID,
-        getPaymentListByGymID} from './student';
+        getPaymentListByGymID,registerNewPayment} from './student';
 export {getTrainerByGymID,registerNewTrainer} from './trainer';

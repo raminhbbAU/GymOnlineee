@@ -173,7 +173,7 @@ router.post('/registerNewPayment',authToken,async(req,res,next) =>{
       Int_PayType: PayType,
       Frk_OnlinePaymentDetail: OnlinePaymentDetail,
       Str_TraceNumber: TraceNumber,
-      Str_GenerateDate:date || getDate(),
+      Str_GenerateDate:Date || getDate(),
       Str_GenerateTime:getTime(),
       Bit_Active: true
     })

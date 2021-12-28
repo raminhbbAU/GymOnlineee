@@ -86,7 +86,7 @@ export default function Router() {
           path: 'NewCheckIn', 
           element: <NewCheckIn />,
           children: [
-            { path: ':studentCheckInCheckOutId', element: <NewCheckIn /> },
+            { path: ':studentCheckInCheckOutId', element: <NewCheckIn/> },
           ]
         },
         { 

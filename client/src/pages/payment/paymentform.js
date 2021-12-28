@@ -73,7 +73,7 @@ export default function PaymentForm () {
 
     const loadPayType = () => {
 
-        let data = [{id:1,name:'Cash'},{d:2,name:'Card-Transfer'},{d:3,name:'Online'}]
+        let data = [{id:1,name:'Cash'},{id:2,name:'Card-Transfer'},{id:3,name:'Online'}]
         setPayTypeList(data);
 
     }
@@ -97,11 +97,12 @@ export default function PaymentForm () {
 
     const handleSubmit = (values) => {
 
+
         registerNewPayment(
             values.Student,
             values.Amount,
             values.PayType,
-            '', //OnlinePaymentDetail
+            0, //OnlinePaymentDetail
             values.TraceNumber,
             values.Date
           ).then((result) => {

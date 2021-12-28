@@ -56,7 +56,7 @@ const editStudentInfo =  async(studentID,Name,Family,Mobile,WhatsApp,Telegram,Gm
 const getStudentInfoByGymID =  async(gymID) => {
    
     let token = getFromStorage('JWT_Token') 
-    console.log(token);
+    
 
     let res = await axios.get(apiPath + 'studentinfo/getStudentInfoByGymID',
     {
@@ -74,7 +74,7 @@ const getStudentInfoByGymID =  async(gymID) => {
 const getStudentInfoByStudentID =  async(gymID,studentID) => {
    
     let token = getFromStorage('JWT_Token') 
-    console.log(token);
+    
 
     let res = await axios.get(apiPath + 'studentinfo/getStudentInfoByStudentID',
     {
@@ -132,7 +132,7 @@ const editStudentCourseEnrollment =  async(enrolmentID,Course,Student,Registered
 const getStudentEnrolledCourses =  async(studentID) => {
    
     let token = getFromStorage('JWT_Token') 
-    console.log(token);
+    
 
     let res = await axios.get(apiPath + 'student/getStudentEnrolledCourses',
     {
@@ -150,7 +150,7 @@ const getStudentEnrolledCourses =  async(studentID) => {
 const getStudentEnrolledCoursesByID =  async(enrolmentID) => {
    
     let token = getFromStorage('JWT_Token') 
-    console.log(token);
+    
 
     let res = await axios.get(apiPath + 'student/getStudentEnrolledCoursesByID',
     {
@@ -168,7 +168,7 @@ const getStudentEnrolledCoursesByID =  async(enrolmentID) => {
 const getStudentEnrolledCoursesByCourseID =  async(courseID) => {
    
     let token = getFromStorage('JWT_Token') 
-    console.log(token);
+    
 
     let res = await axios.get(apiPath + 'student/getStudentEnrolledCoursesByCourseID',
     {
@@ -224,7 +224,7 @@ const batchRegisterStudentAttendance =  async(data,date,course) => {
 const getStudentAttendanceListbyGymID =  async(gymID) => {
    
     let token = getFromStorage('JWT_Token') 
-    console.log(token);
+    
 
     let res = await axios.get(apiPath + 'student/getStudentAttendanceListbyGymID',
     {
@@ -242,7 +242,7 @@ const getStudentAttendanceListbyGymID =  async(gymID) => {
 const getStudentAttendanceListbyStudentID =  async(studentID) => {
    
     let token = getFromStorage('JWT_Token') 
-    console.log(token);
+    
 
     let res = await axios.get(apiPath + 'student/getStudentAttendanceListbyStudentID',
     {
@@ -260,7 +260,7 @@ const getStudentAttendanceListbyStudentID =  async(studentID) => {
 const getStudentAttendanceListbyCourseID =  async(courseID) => {
    
     let token = getFromStorage('JWT_Token') 
-    console.log(token);
+    
 
     let res = await axios.get(apiPath + 'student/getStudentAttendanceListbyCourseID',
     {
@@ -300,7 +300,7 @@ const registerNewPayment =  async(Student,Amount,PayType,OnlinePaymentDetail,Tra
 const getFinancialStudentBalanceByID =  async(studentID) => {
    
     let token = getFromStorage('JWT_Token') 
-    console.log(token);
+    
 
     let res = await axios.get(apiPath + 'student/getFinancialStudentBalanceByID',
     {
@@ -318,7 +318,7 @@ const getFinancialStudentBalanceByID =  async(studentID) => {
 const getBillListByStudentID =  async(studentID) => {
    
     let token = getFromStorage('JWT_Token') 
-    console.log(token);
+    
 
     let res = await axios.get(apiPath + 'student/getBillListByStudentID',
     {
@@ -336,7 +336,7 @@ const getBillListByStudentID =  async(studentID) => {
 const getBillListByGymID =  async(gymID) => {
    
     let token = getFromStorage('JWT_Token') 
-    console.log(token);
+    
 
     let res = await axios.get(apiPath + 'student/getBillListByGymID',
     {
@@ -354,7 +354,7 @@ const getBillListByGymID =  async(gymID) => {
 const getPaymentListByStudentID =  async(studentID) => {
    
     let token = getFromStorage('JWT_Token') 
-    console.log(token);
+    
 
     let res = await axios.get(apiPath + 'student/getPaymentListByStudentID',
     {
@@ -372,7 +372,7 @@ const getPaymentListByStudentID =  async(studentID) => {
 const getPaymentListByGymID =  async(gymID) => {
    
     let token = getFromStorage('JWT_Token') 
-    console.log(token);
+    
 
     let res = await axios.get(apiPath + 'student/getPaymentListByGymID',
     {

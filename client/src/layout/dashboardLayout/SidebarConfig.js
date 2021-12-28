@@ -23,19 +23,9 @@ const sidebarConfig = [
     icon: getIcon(peopleFill)
   },
   {
-    title: 'Trainer',
-    path: '/gym/trainer',
-    icon: getIcon(shoppingBagFill)
-  },
-  {
-    title: 'Course',
-    path: '/gym/course',
-    icon: getIcon(fileTextFill)
-  },
-  {
-    title: 'Student',
-    path: '/gym/student',
-    icon: getIcon(lockFill)
+    title: 'divider',
+    path: '',
+    icon:{}
   },
   {
     title: 'Enrolment',
@@ -57,6 +47,26 @@ const sidebarConfig = [
     title: 'Payment',
     path: '/gym/Payment',
     icon: getIcon(pieChart2Fill)
+  },
+  {
+    title: 'divider',
+    path: '',
+    icon:{}
+  },
+  {
+    title: 'Trainer',
+    path: '/gym/trainer',
+    icon: getIcon(shoppingBagFill)
+  },
+  {
+    title: 'Course',
+    path: '/gym/course',
+    icon: getIcon(fileTextFill)
+  },
+  {
+    title: 'Student',
+    path: '/gym/student',
+    icon: getIcon(lockFill)
   }
 ];
 

@@ -6,7 +6,7 @@ import arrowIosForwardFill from '@iconify/icons-eva/arrow-ios-forward-fill';
 import arrowIosDownwardFill from '@iconify/icons-eva/arrow-ios-downward-fill';
 // material
 import { alpha, useTheme, styled } from '@mui/material/styles';
-import { Box, List, Collapse, ListItemText, ListItemIcon, ListItemButton } from '@mui/material';
+import { Box, List, Collapse, ListItemText, ListItemIcon, ListItemButton,Divider } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -161,7 +161,14 @@ export default function NavSection({ navConfig, ...other }) {
     <Box {...other}>
       <List disablePadding>
         {navConfig.map((item) => (
-          <NavItem key={item.title} item={item} active={match} />
+          <>
+            {
+              item.title === 'divider'
+              ? <Divider pt={9}></Divider>
+              : <NavItem key={item.title} item={item} active={match} />
+            }            
+          </>
+
         ))}
       </List>
     </Box>

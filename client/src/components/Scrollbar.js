@@ -46,9 +46,9 @@ export default function Scrollbar({ children, sx, ...other }) {
   );
 
   
-  console.log(navigator.userAgent);
-  console.log(sx);
-  console.log(isMobile);
+  // console.log(navigator.userAgent);
+  // console.log(sx);
+  // console.log(isMobile);
 
   if (isMobile || 1==1) {
     return (

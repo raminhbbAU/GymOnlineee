@@ -1,6 +1,6 @@
 // material
 import { Box, Grid, Container, Typography } from '@mui/material';
-
+import palette from '../../theme/palette';
 
 // components
 import Page from '../../components/Page';
@@ -23,16 +23,16 @@ export default function DashboardApp() {
 
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6} md={3}>
-              <CustomDashboardBox title={"Student/Athlete"} value={50} />
+              <CustomDashboardBox title={"Students"} value={50} color={palette.secondary} />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <CustomDashboardBox title={"Student/Athlete"} value={50} />
+              <CustomDashboardBox title={"Courses"} value={50} color={palette.info} />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <CustomDashboardBox title={"Student/Athlete"} value={50} />
+              <CustomDashboardBox title={"Monthly Income"} value={50} color={palette.primary} />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <CustomDashboardBox title={"Student/Athlete"} value={50} />
+              <CustomDashboardBox title={"Student/Athlete"} value={50} color={palette.warning}/>
             </Grid>
           </Grid>
 

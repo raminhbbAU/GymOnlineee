@@ -9,12 +9,12 @@ import { Card, Typography } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-const RootStyle = styled(Card)(({ theme,customColor }) => ({
+const RootStyle = styled(Card)(({ theme,customcolor }) => ({
   boxShadow: 'none',
   textAlign: 'center',
   padding: theme.spacing(5, 0),
-  color: customColor=='' ? theme.palette.warning.darker : theme.palette.primary.darker,
-  backgroundColor: customColor=='' ? theme.palette.warning.lighter : theme.palette.primary.lighter,
+  color: customcolor.darker,
+  backgroundColor: customcolor.lighter,
 }));
 
 const IconWrapperStyle = styled('div')(({ theme }) => ({
@@ -33,11 +33,12 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
   )} 100%)`
 }));
 
+
 // ----------------------------------------------------------------------
 
 export default function CustomDashboardBox({title,value,color}) {
   return (
-    <RootStyle customColor={''}>
+    <RootStyle customcolor={color}>
       <IconWrapperStyle>
         <Icon icon={editFill} width={24} height={24} />
       </IconWrapperStyle>

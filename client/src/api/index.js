@@ -8,3 +8,4 @@ export {registerNewStudent,editStudentInfo,newStudentCourseEnrollment,editStuden
         getFinancialStudentBalanceByID,getBillListByStudentID,getBillListByGymID,getPaymentListByStudentID,
         getPaymentListByGymID,registerNewPayment} from './student';
 export {getTrainerByGymID,registerNewTrainer} from './trainer';
+export {getDashboardInfo} from './common';

@@ -14,12 +14,15 @@ import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import { UserListHead, UserListToolbar } from '../../components/_dashboard/user';
 import EnrolmentMoreMenu from './enrolmentMoreMenu';
+import palette from '../../theme/palette';
+
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
 import {getStudentEnrolledCourses,getEnrolledCoursesByCourseID,getEnrolledCoursesByGymID} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
+
 
 // -------------------------------Header--------------------------------
 
@@ -167,7 +170,7 @@ export default function Enrolment() {
             New Enrolment
           </Button>
         </Stack>
-
+      
         <Card>
           <UserListToolbar
             numSelected={selected.length}

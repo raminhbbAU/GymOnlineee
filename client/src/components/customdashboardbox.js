@@ -36,16 +36,10 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function CustomDashboardBox({title,value,color}) {
+export default function CustomDashboardBox(props) {
   return (
-    <RootStyle customcolor={color}>
-      <IconWrapperStyle>
-        <Icon icon={editFill} width={24} height={24} />
-      </IconWrapperStyle>
-      <Typography variant="h3">{value}</Typography>
-      <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        {title}
-      </Typography>
+    <RootStyle customcolor={props.color}>
+      {props.children}
     </RootStyle>
   );
 }

@@ -183,7 +183,23 @@ const getStudentEnrolledCoursesByCourseID =  async(courseID) => {
     return res;
 }
 
+const getNeedToEnrolStudentListByGymID =  async(gymID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    
 
+    let res = await axios.get(apiPath + 'student/getNeedToEnrolStudentListByGymID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            gymID: gymID
+        }
+    });
+
+    return res;
+}
 
 
 
@@ -387,6 +403,24 @@ const getPaymentListByGymID =  async(gymID) => {
     return res;
 }
 
+const getDebtorStudentListByGymID =  async(gymID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    
+
+    let res = await axios.get(apiPath + 'student/getDebtorStudentListByGymID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            gymID,
+        }
+    });
+
+    return res;
+}
+
 
 
 export {registerNewStudent,editStudentInfo,newStudentCourseEnrollment,editStudentCourseEnrollment,
@@ -394,4 +428,4 @@ export {registerNewStudent,editStudentInfo,newStudentCourseEnrollment,editStuden
                 getStudentEnrolledCourses,getStudentEnrolledCoursesByID,getStudentEnrolledCoursesByCourseID,
                 getStudentAttendanceListbyGymID,getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID,
                 getFinancialStudentBalanceByID,getBillListByStudentID,getBillListByGymID,getPaymentListByStudentID,
-                getPaymentListByGymID,registerNewPayment};
+                getPaymentListByGymID,registerNewPayment,getNeedToEnrolStudentListByGymID,getDebtorStudentListByGymID};

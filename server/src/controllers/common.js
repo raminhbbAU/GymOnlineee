@@ -1,4 +1,5 @@
 const {router,models,bcrypt,jwt,authToken,yupValidator} = require('./index')
+const {getFirstDayOfMonth,getLastDayOfMonth} = require('../services/utility.service')
 
 router.get('/getDashboardInfo',authToken,async(req,res,next) =>{
 
@@ -24,8 +25,20 @@ router.get('/getDashboardInfo',authToken,async(req,res,next) =>{
     }
     
 
-
     try {
+
+      let queryResult = await models.sequelize.query("SELECT Count(*) as MyStudentCount FROM onlinegym.students where Bit_Active=1 and Frk_gym=" + gymID + ";");
+      activeStudentCount = queryResult[0][0].MyStudentCount
+
+      queryResult = await models.sequelize.query("SELECT Count(*) as MyCourseCount FROM onlinegym.courses where Bit_Active=1 and Frk_Gym=" + gymID + ";");
+      activeCourseCount = queryResult[0][0].MyCourseCount
+
+      queryResult = await models.sequelize.query("SELECT Sum(Int_Amount) as monthlyIncome FROM onlinegym.studentpayments inner join students on students.Prk_Student_AutoID = studentpayments.Frk_Student WHERE  (Str_GenerateDate BETWEEN '"+ getFirstDayOfMonth() + "' AND '" + getLastDayOfMonth() + "') and studentpayments.Bit_Active=1 and Frk_gym =" + gymID + ";");
+      monthlyIncome = queryResult[0][0].monthlyIncome
+
+      queryResult = await models.sequelize.query("Select ((SELECT  IFNULL(Sum(Int_Amount),0) as bill FROM studentbills inner join students on students.Prk_Student_AutoID = studentbills.Frk_Student where studentbills.Bit_Active=1 and Frk_gym=" + gymID + ") - (SELECT IFNULL(Sum(Int_Amount),0) as payment FROM studentpayments inner join students on students.Prk_Student_AutoID = studentpayments.Frk_Student where studentpayments.Bit_Active=1 and Frk_gym=" + gymID + ")) as totalReminder;");
+      totalReminder = queryResult[0][0].totalReminder
+
     
         res.status(200).json({
             res:true,

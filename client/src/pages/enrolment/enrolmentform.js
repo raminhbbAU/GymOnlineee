@@ -14,10 +14,13 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 
+
 // utils / API
 import {getStudentEnrolledCoursesByID,getCourseByGymID,getStudentInfoByGymID,editStudentCourseEnrollment,newStudentCourseEnrollment} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
+import {howManyDaysLater} from "../../utils/utility";
+
 
 export default function EnrolmentForm ({courseID,studentID}) {
 
@@ -35,7 +38,7 @@ export default function EnrolmentForm ({courseID,studentID}) {
 
     useEffect( () => {
 
-        if (enrolmentID)
+      if (enrolmentID)
         {
             setEditMode(true);
 
@@ -104,7 +107,7 @@ export default function EnrolmentForm ({courseID,studentID}) {
             Course:'' ,
             Student:'',
             RegisteredSession:0,
-            ValidUntillTo:'',
+            ValidUntillTo:howManyDaysLater(30),
         }, 
         //validationSchema: courseRegisterSchema,
         onSubmit: (values) => {

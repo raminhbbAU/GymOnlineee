@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        Int_DayOfWeek:{
+        Int_DayOfWeek:{ // 0:"Sunday" 1:"Monday" 2:"Tuesday" 3:"Wednesday" 4:"Thursday" 5:"Friday" 6:"Saturday"
             type: DataTypes.INTEGER,
             allowNull: false
         },

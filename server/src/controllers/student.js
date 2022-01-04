@@ -351,6 +351,44 @@ router.get('/getFinancialStudentBalanceByID',authToken,async(req,res,next) =>{
 
 })
 
+router.get('/getDebtorStudentListByGymID',authToken,async(req,res,next) =>{
+  
+  // Get user input
+  const { gymID } = req.query;
+
+  if (!gymID) {
+        return res.status(409).json({
+            res: false,
+            data: "gymID is not provided!",
+        });
+  }
+
+  if(isNaN(gymID)){
+    return res.status(409).json({
+      res: false,
+      data: "gymID is not properly provided!",
+  });
+  }
+    
+  //console.log(models.sequelize);
+  const debtorStudentList = await models.sequelize.query("select *,Int_BillAmount - Int_PayAmount as Int_Reminder from (select Prk_Student_AutoID,CONCAT_WS(' ', Str_Name, Str_Family) as Str_StudentFullName,Str_Mobile,IFNUll((select Sum(Int_Amount) as Int_BillAmount from studentbills where studentbills.Frk_Student = students.Prk_Student_AutoID and studentbills.Bit_Active = 1),0) as Int_BillAmount ,IFNUll((select Sum(Int_Amount) as Int_PayAmount from studentpayments where studentpayments.Frk_Student = students.Prk_Student_AutoID and studentpayments.Bit_Active = 1),0) as Int_PayAmount from students where students.Bit_Active = 1 and Frk_gym = " + gymID + ") as t where (Int_BillAmount - Int_PayAmount) > 0;");
+
+
+  if (!debtorStudentList[0]) {
+    return res.status(409).json({
+      res: false,
+      data: "There is no debtor students for given gym.",
+    });
+  }
+  else
+  {
+    res.status(200).json({
+        res: true,
+        data: debtorStudentList[0],
+      });
+  }
+
+})
 
 
 
@@ -360,22 +398,6 @@ router.post('/newStudentCourseEnrollment',authToken,async(req,res,next) =>{
 
     // Get user input
     const {Course,Student,RegisteredSession,ValidUntillTo} = req.body;
-
-    // check if user already exist
-    const oldStudentCourse = await models.studentvcourse.findOne({
-        where:{
-            Frk_Course:Course,
-            Frk_Student:Student,
-            Str_RegisterDate:getDate(),
-        }
-    });
-
-    if (oldStudentCourse) {
-        return res.status(409).json({
-            res: false,
-            data: "Student is already a member of this course.",
-          });
-     }  
   
     const courseInfo = await models.course.findOne({
       where: {
@@ -388,31 +410,42 @@ router.post('/newStudentCourseEnrollment',authToken,async(req,res,next) =>{
           res: false,
           data: "course info is not avilable at this time maybe it has been deleted before!",
         });
-   }  
+    }  
+
+
+    const oldStudentCourse = await models.studentvcourse.findOne({
+        where:{
+            Frk_Course:Course,
+            Frk_Student:Student,
+            Bit_Active:true,
+        }
+    });
 
 
 
    // start Transaction
    let newCourse; 
+   let updatedrecord;
    const transaction = await models.sequelize.transaction();
 
    try {
 
       //console.log("insert new studentvcourse");
 
+      //Enroll new course for student
       newCourse = await models.studentvcourse.create({
         Frk_Course: Course,
         Frk_student: Student,
         Int_RegisteredSession:RegisteredSession,
         Str_ValidUntillTo:ValidUntillTo,
         Str_RegisterDate: getDate(),
-        Str_RegisterTime: getTime()
+        Str_RegisterTime: getTime(),
+        Bit_Active:true,
       }, { transaction});
 
       newCourse = newCourse.dataValues;
-      // console.log(newCourse);
-      // console.log("generate new studentbill");
 
+      // Gnerate auto bill
       await models.studentbill.create({
         Frk_Student: Student,
         Frk_StudentCourse: newCourse.Prk_StudentVCourse,
@@ -424,6 +457,16 @@ router.post('/newStudentCourseEnrollment',authToken,async(req,res,next) =>{
         Str_GenerateTime: getTime(),
         Bit_Active: true,
       }, { transaction});
+
+
+      // deactive old enrolled courses
+      if (oldStudentCourse)
+      {
+          updatedrecord = await oldStudentCourse.update({
+            Bit_Active: false,
+          }, { transaction});
+      }
+
 
       await transaction.commit();     
 
@@ -585,7 +628,7 @@ router.get('/getStudentEnrolledCourses',authToken,async(req,res,next) =>{
   }
     
   //console.log(models.sequelize);
-  const studentRegisteredCourseList = await models.sequelize.query("SELECT Prk_StudentVCourse,Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_family,studentvcourses.Str_RegisterDate,Int_RegisteredSession,Str_ValidUntillTo,0 as Present,0 as Absent, 0 as AcceptableAbsence FROM courses inner join studentvcourses on Frk_Course = Prk_Course inner join students on Frk_student = Prk_Student_AutoID inner join trainers on Frk_Trainer = Prk_Trainer where students.Prk_Student_AutoID=" + studentID + ";");
+  const studentRegisteredCourseList = await models.sequelize.query("SELECT Prk_StudentVCourse,Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_family,studentvcourses.Str_RegisterDate,Int_RegisteredSession,(select Count(*) as Present from studentcheckincheckouts where Frk_StudentVCourse = Prk_StudentVCourse and Int_Status = 1) as Present,(select Count(*) as Absent from studentcheckincheckouts where Frk_StudentVCourse = Prk_StudentVCourse and Int_Status = 2) as Absent,(select Count(*) as AcceptableAbsence from studentcheckincheckouts where Frk_StudentVCourse = Prk_StudentVCourse and Int_Status = 3) as AcceptableAbsence FROM courses inner join studentvcourses on Frk_Course = Prk_Course inner join students on Frk_student = Prk_Student_AutoID inner join trainers on Frk_Trainer = Prk_Trainer where students.Prk_Student_AutoID=" + studentID + ";");
 
 
   if (!studentRegisteredCourseList[0]) {
@@ -663,7 +706,7 @@ router.get('/getStudentEnrolledCoursesByCourseID',authToken,async(req,res,next) 
   }
     
   //console.log(models.sequelize);
-  const studentRegisteredCourseList = await models.sequelize.query("SELECT Prk_StudentVCourse,Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_family,studentvcourses.Str_RegisterDate,Int_RegisteredSession,Str_ValidUntillTo,0 as Present,0 as Absent, 0 as AcceptableAbsence FROM courses inner join studentvcourses on Frk_Course = Prk_Course inner join students on Frk_student = Prk_Student_AutoID inner join trainers on Frk_Trainer = Prk_Trainer where Prk_Course=" + courseID + ";");
+  const studentRegisteredCourseList = await models.sequelize.query("SELECT Prk_StudentVCourse,Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_family,studentvcourses.Str_RegisterDate,Int_RegisteredSession,Str_ValidUntillTo,0 as Present,0 as Absent, 0 as AcceptableAbsence FROM courses inner join studentvcourses on Frk_Course = Prk_Course inner join students on Frk_student = Prk_Student_AutoID inner join trainers on Frk_Trainer = Prk_Trainer where studentvcourses.Bit_Active = 1 and courses.Bit_Active = 1 and students.Bit_Active = 1 and Prk_Course=" + courseID + ";");
 
 
   if (!studentRegisteredCourseList[0]) {
@@ -682,7 +725,55 @@ router.get('/getStudentEnrolledCoursesByCourseID',authToken,async(req,res,next) 
     
 })
 
+router.get('/getNeedToEnrolStudentListByGymID',authToken,async(req,res,next) =>{
+    
+  // Get user input
+  const { gymID } = req.query;
 
+  if (!gymID) {
+        return res.status(409).json({
+            res: false,
+            data: "gymID is not provided!",
+        });
+  }
+
+  if(isNaN(gymID)){
+    return res.status(409).json({
+      res: false,
+      data: "gymID is not properly provided!",
+  });
+  }
+  
+
+  try {
+
+    let UpcomingSessions = await models.sequelize.query("Select *,Int_RegisteredSession - Int_AttendanceCount as Int_ReminderSession from (select Prk_StudentVCourse,Prk_Course,Str_CourseName,Prk_Student_AutoID,CONCAT_WS(' ', Str_Name, Str_Family) as Str_StudentFullName,Int_RegisteredSession,(select Count(*) as Int_AttendanceCount from studentcheckincheckouts where (Int_Status=1 or Int_Status=2) and Frk_StudentVCourse = Prk_StudentVCourse) as Int_AttendanceCount from studentvcourses inner join students on students.Prk_Student_AutoID = studentvcourses.Frk_student inner join courses on courses.Prk_Course = studentvcourses.Frk_Course where studentvcourses.Bit_Active = 1 and courses.Frk_Gym = " + gymID + ") as t where (Int_RegisteredSession - Int_AttendanceCount) <=2;");
+
+
+    if (!UpcomingSessions[0]) {
+      return res.status(409).json({
+        res: false,
+        data: "There is no student for enrolling.",
+      });
+    }
+    else
+    {
+      res.status(200).json({
+          res: true,
+          data: UpcomingSessions[0],
+        });
+    }
+
+  } catch (error) {
+      return res.status(500).json({
+        res: false,
+        data: "Something wrong was happend!",
+      });
+  }
+
+
+    
+})
 
 
 

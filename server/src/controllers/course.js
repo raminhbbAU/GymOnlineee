@@ -1,5 +1,6 @@
 const {router,models,bcrypt,jwt,authToken,yupValidator} = require('./index')
 const { courseRegisterSchema } = require('../validationSchema/yup.validation.js');
+const {getDayOfWeek} = require('../services/utility.service')
 
 router.post("/registerNewCourse", authToken,yupValidator(courseRegisterSchema), async (req, res, next) => {
   // Get user input
@@ -342,7 +343,7 @@ router.get('/getEnrolledCoursesByCourseID',authToken,async(req,res,next) =>{
   }
   
 
-  let EnrolledCourseList = await models.sequelize.query("SELECT Prk_StudentVCourse,Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_family,studentvcourses.Str_RegisterDate,Int_RegisteredSession,0 as Present,0 as Absent, 0 as AcceptableAbsence FROM courses inner join studentvcourses on Frk_Course = Prk_Course inner join students on Frk_student = Prk_Student_AutoID inner join trainers on Frk_Trainer = Prk_Trainer where Prk_Course=" + courseID + ";");
+  let EnrolledCourseList = await models.sequelize.query("SELECT Prk_StudentVCourse,Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_family,studentvcourses.Str_RegisterDate,Int_RegisteredSession,(select Count(*) as Present from studentcheckincheckouts where Frk_StudentVCourse = Prk_StudentVCourse and Int_Status = 1) as Present,(select Count(*) as Absent from studentcheckincheckouts where Frk_StudentVCourse = Prk_StudentVCourse and Int_Status = 2) as Absent,(select Count(*) as AcceptableAbsence from studentcheckincheckouts where Frk_StudentVCourse = Prk_StudentVCourse and Int_Status = 3) as AcceptableAbsence FROM courses inner join studentvcourses on Frk_Course = Prk_Course inner join students on Frk_student = Prk_Student_AutoID inner join trainers on Frk_Trainer = Prk_Trainer where Prk_Course=" + courseID + ";");
 
   
 
@@ -382,7 +383,7 @@ router.get('/getEnrolledCoursesByGymID',authToken,async(req,res,next) =>{
   }
   
 
-  let EnrolledCourseList = await models.sequelize.query("SELECT Prk_StudentVCourse,Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_family,studentvcourses.Str_RegisterDate,Int_RegisteredSession,0 as Present,0 as Absent, 0 as AcceptableAbsence FROM courses inner join studentvcourses on Frk_Course = Prk_Course inner join students on Frk_student = Prk_Student_AutoID inner join trainers on Frk_Trainer = Prk_Trainer where courses.Frk_Gym=" + gymID + ";");
+  let EnrolledCourseList = await models.sequelize.query("SELECT Prk_StudentVCourse,Prk_Course,Str_CourseName,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_family,studentvcourses.Str_RegisterDate,Int_RegisteredSession,(select Count(*) as Present from studentcheckincheckouts where Frk_StudentVCourse = Prk_StudentVCourse and Int_Status = 1) as Present,(select Count(*) as Absent from studentcheckincheckouts where Frk_StudentVCourse = Prk_StudentVCourse and Int_Status = 2) as Absent,(select Count(*) as AcceptableAbsence from studentcheckincheckouts where Frk_StudentVCourse = Prk_StudentVCourse and Int_Status = 3) as AcceptableAbsence FROM courses inner join studentvcourses on Frk_Course = Prk_Course inner join students on Frk_student = Prk_Student_AutoID inner join trainers on Frk_Trainer = Prk_Trainer where courses.Frk_Gym=" + gymID + ";");
 
 
   if (!EnrolledCourseList[0]) {
@@ -398,6 +399,56 @@ router.get('/getEnrolledCoursesByGymID',authToken,async(req,res,next) =>{
         data: EnrolledCourseList[0],
       });
   }
+    
+})
+
+router.get('/getUpcomingSessionsByGymID',authToken,async(req,res,next) =>{
+    
+  // Get user input
+  const { gymID } = req.query;
+
+  if (!gymID) {
+        return res.status(409).json({
+            res: false,
+            data: "gymID is not provided!",
+        });
+  }
+
+  if(isNaN(gymID)){
+    return res.status(409).json({
+      res: false,
+      data: "gymID is not properly provided!",
+  });
+  }
+  
+
+  try {
+
+    let UpcomingSessions = await models.sequelize.query("SELECT Prk_Course,Str_CourseName,CONCAT_WS(' ', Str_TrainerName, Str_TrainerFamily) as Str_TrainerFullName,Int_DayOfWeek,Str_StartTime,Str_EndTime,case Int_DayOfWeek when 0 then 'Sunday' when 1 then 'Monday'  when 2 then 'Tuesday'  when 3 then 'Wednesday'  when 4 then 'Thursday'  when 5 then 'Friday' when 6 then 'Saturday'   else '' end as Str_DayOfWeek FROM courses INNER JOIN courseweeklyschedules ON courses.Prk_Course = courseweeklyschedules.Frk_Course inner join trainers on courses.Frk_Trainer = trainers.Prk_Trainer where Int_DayOfWeek=" + getDayOfWeek().toString() + " and courses.Frk_Gym=" + gymID + ";");
+
+
+    if (!UpcomingSessions[0]) {
+      return res.status(409).json({
+        res: false,
+        data: "There is no scheduled course for today related to this specific gym id.",
+      });
+    }
+    else
+    {
+      res.status(200).json({
+          res: true,
+          data: UpcomingSessions[0],
+        });
+    }
+
+  } catch (error) {
+      return res.status(500).json({
+        res: false,
+        data: "Something wrong was happend!",
+      });
+  }
+
+
     
 })
 

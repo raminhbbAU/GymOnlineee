@@ -14,7 +14,7 @@ import {DashboardCourse_HEAD,DashboardEnrollStudent_HEAD,DashboardDebtorStudent_
 
 // components
 import Page from '../../components/Page';
-import CustomDashboardBox from '../../components/customdashboardbox';
+import CustomDashboardBox from '../../components/CustomDashboardBox';
 import CustomDashboardCard from '../../components/CustomDashboardCard';
 import CustomDashboardGrid from '../../components/CustomDashboardGrid';
 

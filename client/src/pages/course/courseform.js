@@ -4,10 +4,14 @@ import {courseRegisterSchema} from '../../utils/yup.validation';
 import { useNavigate,useParams } from 'react-router-dom';
 
 // material
-import {TextField,Button,Stack,Container,Typography,MenuItem} from '@mui/material';
+import {FormLabel,FormGroup,Checkbox,TextField,Button,Stack,Container,Typography,MenuItem, Radio, RadioGroup, FormControlLabel, Grid, Card} from '@mui/material';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import TimePicker from '@mui/lab/TimePicker';
+import { alpha, styled } from '@mui/material/styles';
+import palette from '../../theme/palette';
+
 
 // components
 import Page from '../../components/Page';
@@ -17,6 +21,13 @@ import Scrollbar from '../../components/Scrollbar';
 import {getCourseInfoByID,getTrainerByGymID,editCourse,registerNewCourse} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
+import {getDate,howManyDaysLater} from "../../utils/utility";
+import { Box } from "@mui/system";
+
+
+// Style
+
+
 
 export default function CourseForm () {
 
@@ -87,12 +98,21 @@ export default function CourseForm () {
         initialValues: {
             CourseName:'' ,
             CourseDescription:'',
-            StartDate:'',
-            EndDate:'',
+            StartDate:getDate(),
+            EndDate:howManyDaysLater(30),
             TrainerPercent:0,
-            CourseType:1,
+            CourseType:"1",
             PerSessionCost:0,
             Trainer:0,
+            Sunday:false,
+            Monday:false,
+            Tuesday:false,
+            Wednesday:false,
+            Thursday:false,
+            Friday:false,
+            Saturday:false,
+            TimeFrom:null,
+            TimeTo:null
         }, 
         validationSchema: courseRegisterSchema,
         onSubmit: (values) => {
@@ -103,6 +123,16 @@ export default function CourseForm () {
     const handleDateChange = (filedName,newValue) => {
       formik.setFieldValue(filedName, newValue.toISOString().split('T')[0]);
     };
+
+    const handleTimeChange = (filedName,newValue) => {
+      //console.log(newValue.getHours().toString().padStart(2, '0') + ':' + newValue.getMinutes().toString().padStart(2, '0') + ':' + newValue.getSeconds().toString().padStart(2, '0'));
+      formik.setFieldValue(filedName,newValue);
+    };
+
+    const handleRadioChanges = (filedName,newValue) => {
+      formik.setFieldValue(filedName, newValue);
+    };
+    
 
     const handleSubmit = (values) => {
 
@@ -117,7 +147,16 @@ export default function CourseForm () {
                 values.EndDate,
                 values.TrainerPercent,
                 values.CourseType,
-                values.PerSessionCost
+                values.PerSessionCost,
+                values.Sunday,
+                values.Monday,
+                values.Tuesday,
+                values.Wednesday,
+                values.Thursday,
+                values.Friday,
+                values.Saturday,
+                values.TimeFrom.getHours().toString().padStart(2, '0') + ':' + values.TimeFrom.getMinutes().toString().padStart(2, '0') + ':' + values.TimeTo.getSeconds().toString().padStart(2, '0'),
+                values.TimeTo.getHours().toString().padStart(2, '0') + ':' + values.TimeTo.getMinutes().toString().padStart(2, '0') + ':' + values.TimeTo.getSeconds().toString().padStart(2, '0'),
               ).then((result) => {
                 console.log(result);
                 navigate("/gym/course");
@@ -138,7 +177,16 @@ export default function CourseForm () {
                 values.EndDate,
                 values.TrainerPercent,
                 values.CourseType,
-                values.PerSessionCost
+                values.PerSessionCost,
+                values.Sunday,
+                values.Monday,
+                values.Tuesday,
+                values.Wednesday,
+                values.Thursday,
+                values.Friday,
+                values.Saturday,
+                values.TimeFrom.getHours().toString().padStart(2, '0') + ':' + values.TimeFrom.getMinutes().toString().padStart(2, '0') + ':' + values.TimeTo.getSeconds().toString().padStart(2, '0'),
+                values.TimeTo.getHours().toString().padStart(2, '0') + ':' + values.TimeTo.getMinutes().toString().padStart(2, '0') + ':' + values.TimeTo.getSeconds().toString().padStart(2, '0'),
               ).then((result) => {
                 console.log(result);
                 navigate("/gym/course");
@@ -240,19 +288,7 @@ export default function CourseForm () {
                                        helperText={formik.touched.TrainerPercent && formik.errors.TrainerPercent}
                                        margin="normal"
                                    />
-           
-                                   <TextField
-                                       fullWidth
-                                       id="CourseType"
-                                       name="CourseType"
-                                       label="Course Type"
-                                       value={formik.values.CourseType}
-                                       onChange={formik.handleChange}
-                                       error={formik.touched.CourseType && Boolean(formik.errors.CourseType)}
-                                       helperText={formik.touched.CourseType && formik.errors.CourseType}
-                                       margin="normal"
-                                   />
-           
+         
                                    <TextField
                                        fullWidth
                                        id="PerSessionCost"
@@ -283,10 +319,77 @@ export default function CourseForm () {
                                       </MenuItem>
                                     ))}
                                   </TextField>
+
+
+                                  <Box component="div" sx={{border: '1px solid',padding:1,marginTop:2,borderRadius:1,borderColor:palette.primary.main }}>
+                                      <FormLabel component="legend" margin="normal">Working Days:</FormLabel>
+                                      <Grid container spacing={3} >
+                                        <Grid item xs={3} sm={12} md={12}>
+                                            <FormControlLabel  control={<Checkbox />} label="Sunday" id="Sunday" name="Sunday" value={formik.values.Sunday} onChange={formik.handleChange}/>
+                                            <FormControlLabel  control={<Checkbox />} label="Monday" id="Monday" name="Monday" value={formik.values.Monday} onChange={formik.handleChange}/> 
+                                            <FormControlLabel  control={<Checkbox />} label="Tuseday"  id="Tuseday" name="Tuseday" value={formik.values.Tuseday} onChange={formik.handleChange}/> 
+                                            <FormControlLabel  control={<Checkbox />} label="Wednesday"  id="Wednesday" name="Wednesday" value={formik.values.Wednesday} onChange={formik.handleChange} /> 
+                                            <FormControlLabel  control={<Checkbox />} label="Thursday"  id="Thursday" name="Thursday" value={formik.values.Thursday} onChange={formik.handleChange}/> 
+                                            <FormControlLabel  control={<Checkbox />} label="Friday"  id="Friday" name="Friday" value={formik.values.Friday} onChange={formik.handleChange}/> 
+                                            <FormControlLabel  control={<Checkbox />} label="Saturday"  id="Saturday" name="Saturday" value={formik.values.Saturday} onChange={formik.handleChange}/> 
+                                        </Grid>
+                                      </Grid>
+                                  </Box>
+
+                                 
+                                  <Box component="div"  sx={{border: '1px solid',padding:1,marginTop:2,borderRadius:1,borderColor:palette.primary.main }}>
+                                      <FormLabel component="legend" margin="normal">Working Hours:</FormLabel>
+                                      <Grid container spacing={3} >
+                                        <Grid item xs={12} sm={12} md={12}>
+
+                                              <LocalizationProvider dateAdapter={AdapterDateFns} sx={{marginRight:2}}>
+                                                <TimePicker
+                                                  id="TimeFrom"
+                                                  name="TimeFrom"
+                                                  label="From"
+                                                  ampm={false}
+                                                  value={formik.values.TimeFrom}
+                                                  onChange={(value) => handleTimeChange('TimeFrom',value)}
+                                                  error={formik.touched.TimeFrom && Boolean(formik.errors.TimeFrom)}
+                                                  helperText={formik.touched.TimeFrom && formik.errors.TimeFrom}
+                                                  sx={{marginRight:2}}
+                                                  renderInput={(params) => <TextField {...params} />}
+                                                />
+                                              </LocalizationProvider>
+
+                                              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                                <TimePicker
+                                                  id="TimeTo"
+                                                  name="TimeTo"
+                                                  label="To"
+                                                  ampm={false}
+                                                  value={formik.values.TimeTo}
+                                                  onChange={(value) => handleTimeChange('TimeTo',value)}
+                                                  error={formik.touched.TimeTo && Boolean(formik.errors.TimeTo)}
+                                                  helperText={formik.touched.TimeTo && formik.errors.TimeTo}
+                                                  renderInput={(params) => <TextField {...params} />}
+                                                />
+                                              </LocalizationProvider>                                              
+
+                                        </Grid>
+                                      </Grid>
+                                  </Box>
+
+
+
+                                  <Box component="div" sx={{border: '1px solid',padding:1,marginTop:2,marginBottom:2,borderRadius:1,borderColor:palette.primary.main }}>
+                                      <FormLabel component="legend" margin="normal">Course Type:</FormLabel>
+                                      <RadioGroup  margin="normal" row aria-label="CourseType" defaultValue={formik.values.CourseType} onChange={(e) => handleRadioChanges('CourseType',e.target.value)}>
+                                          <FormControlLabel value={"1"} control={<Radio />} label={"Gym"} />
+                                          <FormControlLabel value={"2"} control={<Radio />} label={"Online"} />
+                                      </RadioGroup>
+                                  </Box>
+
            
                                    <Button color="primary" variant="contained" fullWidth type="submit" margin="normal">
                                        Submit
                                    </Button>
+
                                </form>
                            </div>
                          </Scrollbar>

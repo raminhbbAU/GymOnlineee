@@ -4,7 +4,7 @@ import apiPath from "../constants/api.config";
 import {getFromStorage} from "../storage/localstorage.js";
 
 
-const registerNewCourse =  async(GymID,CourseName,CourseDescription,TrainerID, Active,StartDate,EndDate,TrainerPercent,CourseType,PerSessionCost) => {
+const registerNewCourse =  async(GymID,CourseName,CourseDescription,TrainerID, Active,StartDate,EndDate,TrainerPercent,CourseType,PerSessionCost,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,TimeFrom,TimeTo) => {
    
     let token = getFromStorage('JWT_Token') 
 
@@ -20,13 +20,22 @@ const registerNewCourse =  async(GymID,CourseName,CourseDescription,TrainerID, A
         TrainerPercent,
         CourseType,
         PerSessionCost,
+        Sunday,
+        Monday,
+        Tuesday,
+        Wednesday,
+        Thursday,
+        Friday,
+        Saturday,
+        TimeFrom,
+        TimeTo,
         token
     });
 
     return res;
 }
 
-const editCourse =  async(courseID,CourseName,CourseDescription,trainerID,StartDate,EndDate,TrainerPercent,CourseType,PerSessionCost) => {
+const editCourse =  async(courseID,CourseName,CourseDescription,trainerID,StartDate,EndDate,TrainerPercent,CourseType,PerSessionCost,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,TimeFrom,TimeTo) => {
    
     let token = getFromStorage('JWT_Token') 
 
@@ -41,6 +50,15 @@ const editCourse =  async(courseID,CourseName,CourseDescription,trainerID,StartD
         TrainerPercent,
         CourseType,
         PerSessionCost,
+        Sunday,
+        Monday,
+        Tuesday,
+        Wednesday,
+        Thursday,
+        Friday,
+        Saturday,
+        TimeFrom,
+        TimeTo,
         token
     });
 

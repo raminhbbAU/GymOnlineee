@@ -244,8 +244,8 @@ export default function StudentForm () {
                           helperText={formik.touched.Address && formik.errors.Address}
                           margin="normal"
                       />
-            ``
-                      <LocalizationProvider dateAdapter={AdapterDateFns} margin="normal">
+            
+                      <LocalizationProvider dateAdapter={AdapterDateFns} margin="normal" fullWidth>
                             <DesktopDatePicker
                                         fullWidth
                                         id="Birthday"

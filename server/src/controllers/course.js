@@ -3,6 +3,7 @@ const { courseRegisterSchema } = require('../validationSchema/yup.validation.js'
 const {getDayOfWeek} = require('../services/utility.service')
 
 router.post("/registerNewCourse", authToken,yupValidator(courseRegisterSchema), async (req, res, next) => {
+  
   // Get user input
   const {
     CourseName,
@@ -15,7 +16,20 @@ router.post("/registerNewCourse", authToken,yupValidator(courseRegisterSchema), 
     TrainerPercent,
     CourseType,
     PerSessionCost,
+    Sunday,
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday,
+    Saturday,
+    TimeFrom,
+    TimeTo
   } = req.body;
+
+
+  console.log(req.body);
+
 
   // check if course already exist
   const oldCourse = await models.course.findOne({
@@ -33,38 +47,131 @@ router.post("/registerNewCourse", authToken,yupValidator(courseRegisterSchema), 
     });
   }
 
-  models.course
-    .create({
-      Str_CourseName: CourseName,
-      Str_CourseDescription: CourseDescription,
-      Frk_Gym: GymID,
-      Frk_Trainer: TrainerID,
-      Bit_Active: Active,
-      Str_StartDate: StartDate,
-      Str_EndDate: EndDate,
-      Int_TrainerPercent: TrainerPercent,
-      Int_CourseType: CourseType,
-      Int_PerSessionCost: PerSessionCost,
-    })
-    .then((course) => {
-      res.status(200).json({
-        res: true,
-        data: course,
-      });
-    })
-    .catch((error) => {
-      console.log(error);
+
+
+
+   // start Transaction
+   let newCourse; 
+   const transaction = await models.sequelize.transaction();
+
+   try {
+
+
+      //Register new course
+      newCourse = await models.course.create({
+        Str_CourseName: CourseName,
+        Str_CourseDescription: CourseDescription,
+        Frk_Gym: GymID,
+        Frk_Trainer: TrainerID,
+        Bit_Active: Active,
+        Str_StartDate: StartDate,
+        Str_EndDate: EndDate,
+        Int_TrainerPercent: TrainerPercent,
+        Int_CourseType: CourseType,
+        Int_PerSessionCost: PerSessionCost,
+      }, { transaction});
+
+      newCourse = newCourse.dataValues;
+
+
+
+      // Register Course's working days and hours
+      if (Sunday)
+      {
+        await models.courseweeklyschedule.create({
+          Frk_Course: newCourse.Prk_Course,
+          Int_DayOfWeek:0,
+          Str_StartTime: TimeFrom,
+          Str_EndTime:TimeTo,
+        }, { transaction});
+      }
+
+      if (Monday)
+      {
+        await models.courseweeklyschedule.create({
+          Frk_Course: newCourse.Prk_Course,
+          Int_DayOfWeek:1,
+          Str_StartTime: TimeFrom,
+          Str_EndTime:TimeTo,
+        }, { transaction});
+      }
+
+      if (Tuesday)
+      {
+        await models.courseweeklyschedule.create({
+          Frk_Course: newCourse.Prk_Course,
+          Int_DayOfWeek:2,
+          Str_StartTime: TimeFrom,
+          Str_EndTime:TimeTo,
+        }, { transaction});
+      }
+
+      if (Wednesday)
+      {
+        await models.courseweeklyschedule.create({
+          Frk_Course: newCourse.Prk_Course,
+          Int_DayOfWeek:3,
+          Str_StartTime: TimeFrom,
+          Str_EndTime:TimeTo,
+        }, { transaction});
+      }
+
+      if (Thursday)
+      {
+        await models.courseweeklyschedule.create({
+          Frk_Course: newCourse.Prk_Course,
+          Int_DayOfWeek:4,
+          Str_StartTime: TimeFrom,
+          Str_EndTime:TimeTo,
+        }, { transaction});
+      }
+
+      if (Friday)
+      {
+        await models.courseweeklyschedule.create({
+          Frk_Course: newCourse.Prk_Course,
+          Int_DayOfWeek:5,
+          Str_StartTime: TimeFrom,
+          Str_EndTime:TimeTo,
+        }, { transaction});
+      }
+
+      if (Saturday)
+      {
+        await models.courseweeklyschedule.create({
+          Frk_Course: newCourse.Prk_Course,
+          Int_DayOfWeek:6,
+          Str_StartTime: TimeFrom,
+          Str_EndTime:TimeTo,
+        }, { transaction});
+      }
+
+      await transaction.commit();     
+
+  } catch (err) {
+
+      await transaction.rollback();
+
+      console.log(err);
       return res.status(500).json({
         res: false,
         data: "something wrong happend during registering new course. Please try again a bit later!",
       });
-    });
+
+  }
+
+  res.status(200).json({
+    res: true,
+    data: newCourse,
+  });
+
+
 });
 
 router.put("/editCourse", authToken, async (req, res, next) => {
   
   // Get user input
-  const {courseID,CourseName,CourseDescription,trainerID,StartDate,EndDate,TrainerPercent,CourseType,PerSessionCost} = req.body;
+  const {courseID,CourseName,CourseDescription,trainerID,StartDate,EndDate,TrainerPercent,CourseType,PerSessionCost,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,TimeFrom,TimeTo} = req.body;
 
   console.log(req.body);
 
@@ -82,32 +189,137 @@ router.put("/editCourse", authToken, async (req, res, next) => {
     });
   }
 
+
   //TOOD: check class activity, it can't be deleted if there were established seasions.
 
-  oldCourse
-    .update({
-      Str_CourseName: CourseName,
-      Str_CourseDescription: CourseDescription,
-      Frk_Trainer: trainerID,
-      Str_StartDate: StartDate,
-      Str_EndDate: EndDate,
-      Int_TrainerPercent: TrainerPercent,
-      Int_CourseType: CourseType,
-      Int_PerSessionCost: PerSessionCost,
-    })
-    .then((updatedrecord) => {
-      res.status(200).json({
-        res: true,
-        data: updatedrecord,
-      });
-    })
-    .catch((error) => {
-      console.log(error);
+
+  
+
+   // start Transaction
+   let newCourse; 
+   let rowcount;
+   const transaction = await models.sequelize.transaction();
+
+   try {
+
+
+      //Register new course
+      newCourse = await oldCourse.update({
+        Str_CourseName: CourseName,
+        Str_CourseDescription: CourseDescription,
+        Frk_Trainer: trainerID,
+        Str_StartDate: StartDate,
+        Str_EndDate: EndDate,
+        Int_TrainerPercent: TrainerPercent,
+        Int_CourseType: CourseType,
+        Int_PerSessionCost: PerSessionCost,
+      }, { transaction});
+
+      
+      // Delete Old Working Hours
+      console.log('///////////////////')
+      rowcount = await models.courseweeklyschedule.destroy({
+        where:{
+          Frk_Course: courseID,
+        }     
+      },{transaction})
+      console.log(rowcount)
+      console.log('///////////////////')
+
+
+      // Register Course's working days and hours
+      if (Sunday)
+      {
+        await models.courseweeklyschedule.create({
+          Frk_Course: newCourse.Prk_Course,
+          Int_DayOfWeek:0,
+          Str_StartTime: TimeFrom,
+          Str_EndTime:TimeTo,
+        }, { transaction});
+      }
+
+      if (Monday)
+      {
+        await models.courseweeklyschedule.create({
+          Frk_Course: newCourse.Prk_Course,
+          Int_DayOfWeek:1,
+          Str_StartTime: TimeFrom,
+          Str_EndTime:TimeTo,
+        }, { transaction});
+      }
+
+      if (Tuesday)
+      {
+        await models.courseweeklyschedule.create({
+          Frk_Course: newCourse.Prk_Course,
+          Int_DayOfWeek:2,
+          Str_StartTime: TimeFrom,
+          Str_EndTime:TimeTo,
+        }, { transaction});
+      }
+
+      if (Wednesday)
+      {
+        await models.courseweeklyschedule.create({
+          Frk_Course: newCourse.Prk_Course,
+          Int_DayOfWeek:3,
+          Str_StartTime: TimeFrom,
+          Str_EndTime:TimeTo,
+        }, { transaction});
+      }
+
+      if (Thursday)
+      {
+        await models.courseweeklyschedule.create({
+          Frk_Course: newCourse.Prk_Course,
+          Int_DayOfWeek:4,
+          Str_StartTime: TimeFrom,
+          Str_EndTime:TimeTo,
+        }, { transaction});
+      }
+
+      if (Friday)
+      {
+        await models.courseweeklyschedule.create({
+          Frk_Course: newCourse.Prk_Course,
+          Int_DayOfWeek:5,
+          Str_StartTime: TimeFrom,
+          Str_EndTime:TimeTo,
+        }, { transaction});
+      }
+
+      if (Saturday)
+      {
+        await models.courseweeklyschedule.create({
+          Frk_Course: newCourse.Prk_Course,
+          Int_DayOfWeek:6,
+          Str_StartTime: TimeFrom,
+          Str_EndTime:TimeTo,
+        }, { transaction});
+      }
+
+      await transaction.commit();     
+
+  } catch (err) {
+
+      await transaction.rollback();
+
+      console.log(err);
       return res.status(500).json({
         res: false,
         data: "something wrong happend during editing course. Please try again a bit later!",
       });
-    });
+
+  }
+
+  res.status(200).json({
+    res: true,
+    data: newCourse,
+  });
+
+
+
+
     
 });
 

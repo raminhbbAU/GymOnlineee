@@ -323,7 +323,7 @@ router.put("/editCourse", authToken, async (req, res, next) => {
     
 });
 
-router.delete("/delete", authToken, async (req, res, next) => {
+router.put("/activeDeactiveCourse", authToken, async (req, res, next) => {
   // Get user input
   const { id } = req.body;
 
@@ -342,27 +342,21 @@ router.delete("/delete", authToken, async (req, res, next) => {
   }
 
   oldCourse
-    .destroy()
-    .then((rowDeleted) => {
-      if (rowDeleted === 1) {
-        res.status(200).json({
+    .update({
+      Bit_Active: !oldCourse.Bit_Active,
+    })
+    .then( (updatedrecord) => {
+      res.status(200).json({
           res: true,
           data: updatedrecord,
         });
-      } else {
-        res.status(500).json({
+    }).catch( (error) => {
+          console.log(error);
+          return res.status(500).json({
           res: false,
-          data: "something wrong happend during deleting course. Please try again a bit later!",
-        });
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      return res.status(500).json({
-        res: false,
-        data: "something wrong happend during deleting course. Please try again a bit later!",
-      });
-    });
+          data: "something wrong happend during activating/deactivating course. Please try again a bit later!",
+          });
+})
 
 });
 

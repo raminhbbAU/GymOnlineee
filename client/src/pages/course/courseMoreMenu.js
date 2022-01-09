@@ -14,14 +14,11 @@ import CheckInBatchDialog from '../checkin/CheckInBatch';
 
 // ----------------------------------------------------------------------
 
-export default function StudentMoreMenu({courseID,courseName}) {
+export default function CourseMoreMenu({courseID,courseName,onActivateMenuClick}) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenCheckInDialog, setIsOpenCheckInDialog] = useState(false);
 
-  const setDisableEnable = () => {
-      console.log('call setDisableEnable!');
-  }
 
   const handleOpenCheckInDialog = () => {
     setIsOpen(false);
@@ -29,8 +26,12 @@ export default function StudentMoreMenu({courseID,courseName}) {
   }
 
   const handleCloseCheckInDialog = () => {
-
     setIsOpenCheckInDialog(false);
+  }
+
+  const handleActivateMenuClick = () => {
+    setIsOpen(false);
+    onActivateMenuClick(courseID);
   }
 
   return (
@@ -83,11 +84,11 @@ export default function StudentMoreMenu({courseID,courseName}) {
 
         <Divider />
 
-        <MenuItem sx={{ color: 'text.secondary' }} onClick={() => setDisableEnable()}>
+        <MenuItem sx={{ color: 'text.secondary' }} onClick={() => handleActivateMenuClick()}>
           <ListItemIcon>
             <Icon icon={trash2Outline} width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Disable/Enable" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText primary="Deactive/Active" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
         </Menu>
         

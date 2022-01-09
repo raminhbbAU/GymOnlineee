@@ -4,7 +4,7 @@ import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 
 // material
-import {Card,Table,Stack,Avatar,Button,Checkbox,TableRow,TableBody,TableCell,Container,Typography,TableContainer,TablePagination} from '@mui/material';
+import {Card,Table,Stack,Avatar,Button,Checkbox,TableRow,TableBody,TableCell,Container,Typography,TableContainer,TablePagination, Alert} from '@mui/material';
 
 // components
 import Page from '../../components/Page';
@@ -16,7 +16,7 @@ import CourseMoreMenu from './courseMoreMenu'
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import {getCourseByGymID} from "../../api";
+import {getCourseByGymID,activeDeactiveCourse} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 
@@ -50,6 +50,12 @@ export default function Trainer() {
 
   useEffect( () => {
 
+    loadCourseList();
+
+  },[refreshDataset])
+
+  const loadCourseList = () => {
+
     getCourseByGymID(
       Prk_Gym_AutoID
     ).then((result) => {
@@ -60,8 +66,21 @@ export default function Trainer() {
       errorNotifyByErrorObject(error);
     })
 
-  },[refreshDataset])
+  }
 
+  const handleActivateMenuClick = (courseID) => {
+    
+    activeDeactiveCourse(
+      courseID
+    ).then((result) => {
+      sucessNotify('The course status has been changed successfully!')
+      loadCourseList();
+    }).catch((error) => {
+      console.log(error.response);
+      errorNotifyByErrorObject(error);
+    })
+
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -203,7 +222,7 @@ export default function Trainer() {
                           </TableCell>
 
                           <TableCell align="right">
-                            <CourseMoreMenu courseID= {Prk_Course} courseName={Str_CourseName} />
+                            <CourseMoreMenu courseID= {Prk_Course} courseName={Str_CourseName} onActivateMenuClick={(courseID) => handleActivateMenuClick(courseID)} />
                           </TableCell>
                         </TableRow>
                       );

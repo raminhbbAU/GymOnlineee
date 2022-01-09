@@ -16,7 +16,7 @@ import StudentMoreMenu from './studentMoreMenu'
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import {getStudentInfoByGymID} from "../../api";
+import {getStudentInfoByGymID,activeDeactiveStudent} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 
@@ -48,6 +48,12 @@ export default function Student() {
 
   useEffect( () => {
 
+    loadStudnetList();
+
+  },[refreshDataset])
+
+
+  const loadStudnetList = () => {
     getStudentInfoByGymID(
       Prk_Gym_AutoID
     ).then((result) => {
@@ -57,9 +63,21 @@ export default function Student() {
       console.log(error.response);
       errorNotifyByErrorObject(error);
     })
+  }
 
-  },[refreshDataset])
+  const handleActivateMenuClick = (studentID) => {
+    
+    activeDeactiveStudent(
+      studentID
+    ).then((result) => {
+      sucessNotify('The student status has been changed successfully!')
+      loadStudnetList();
+    }).catch((error) => {
+      console.log(error.response);
+      errorNotifyByErrorObject(error);
+    })
 
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -191,7 +209,7 @@ export default function Student() {
                           </TableCell>
 
                           <TableCell align="right">
-                            <StudentMoreMenu studentID={Prk_Student_AutoID} />
+                            <StudentMoreMenu studentID={Prk_Student_AutoID}  onActivateMenuClick={(studentID) => handleActivateMenuClick(studentID)}/>
                           </TableCell>
                         </TableRow>
                       );

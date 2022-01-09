@@ -42,7 +42,13 @@ export default function Router() {
         { path: 'Dashboard', element: <DashboardApp /> },
         { path: 'Gym', element: <GymForm /> },
         { path: 'Trainer', element: <Trainer /> },
-        { path: 'NewTrainer', element: <NewTrainer /> },
+        { 
+          path: 'NewTrainer', 
+          element: <NewTrainer />,
+          children: [
+            { path: ':trainerID', element: <NewTrainer /> },
+          ]
+        },
         { path: 'Course', element: <Course /> },
         { 
           path: 'NewCourse', 

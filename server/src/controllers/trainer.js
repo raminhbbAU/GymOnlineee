@@ -96,14 +96,47 @@ router.post('/login',yupValidator(trainerLoginSchema), async (req,res,next) => {
 
 })
 
-router.post('/activateAccount',authToken,async(req,res,next) =>{
-    res.send('the activateAccount API called');
+router.put('/activeDeactiveTrainer',authToken,async(req,res,next) =>{
+  // Get user input
+  const { id } = req.body;
+
+   // check if user already exist
+   const oldTrainer = await models.trainer.findOne({
+      where:{
+        Prk_Trainer:id
+      }
+  });
+
+  if (!oldTrainer) {
+      return res.status(409).json({
+          res: false,
+          data: "The specific trainer doesn't exist! it must've deleted before.",
+        });
+  }
+
+
+  oldTrainer.update({
+      Bit_Active: !oldTrainer.Bit_Active,
+  }).then( (updatedrecord) => {
+      res.status(200).json({
+          res: true,
+          data: updatedrecord,
+        });
+  }).catch( (error) => {
+          console.log(error);
+          return res.status(500).json({
+              res: false,
+              data: "something wrong happend during activating trainer. Please try again a bit later!",
+          });
+  })
+
+
 })
 
-router.put('/edit',authToken,async(req,res,next) =>{
+router.put('/editTrainer',authToken,async(req,res,next) =>{
     
     // Get user input
-    const { id,TrainerName , TrainerFamily,  Mobile,  WhatsApp,  Gmail, UserName , Password,  Avatar} = req.body;
+    const { id,TrainerName , TrainerFamily,  Mobile,  WhatsApp,  Gmail,  Avatar} = req.body;
 
     // check if user already exist
     const oldTrainer = await models.trainer.findOne({
@@ -119,9 +152,6 @@ router.put('/edit',authToken,async(req,res,next) =>{
         });
     }
 
-    //Encrypt user password
-    encryptedPassword = await bcrypt.hash(Password, 10);
-
     oldTrainer.update
     ({
         Str_TrainerName:TrainerName,
@@ -129,8 +159,6 @@ router.put('/edit',authToken,async(req,res,next) =>{
         Str_Mobile:Mobile,
         Str_WhatsApp:WhatsApp,
         Str_Gmail:Gmail,
-        Str_UserName:UserName,
-        Str_Password:encryptedPassword,
         Str_Avatar:Avatar
     })
     .then((updatedrecord) => {
@@ -143,13 +171,13 @@ router.put('/edit',authToken,async(req,res,next) =>{
       console.log(error);
       return res.status(500).json({
         res: false,
-        data: "something wrong happend during editing course. Please try again a bit later!",
+        data: "something wrong happend during editing trainer. Please try again a bit later!",
       });
     });
 
 })
 
-router.delete('/delete',authToken,async(req,res,next) =>{
+router.delete('/deleteTrainer',authToken,async(req,res,next) =>{
    
     // Get user input
     const { id} = req.body;
@@ -231,6 +259,49 @@ router.get('/getTrainerByGymID',authToken,async(req,res,next) =>{
 
 })
 
+router.get('/getTrainerInfoByTrainerID',authToken,async(req,res,next) =>{
+   
+  // Get user input
+  const { gymID,trainerID } = req.query;
+
+  if (!gymID) {
+      return res.status(409).json({
+          res: false,
+          data: "gymID is not provided!",
+      });
+  }
+
+  if (!trainerID) {
+    return res.status(409).json({
+        res: false,
+        data: "trainerID is not provided!",
+    });
+  }
+
+  
+  // check if user already exist
+  const trainerList = await models.trainer.findOne({
+      where:{
+        Frk_gym:gymID,
+        Prk_Trainer:trainerID,
+      }
+  });
+ 
+  if (!trainerList) {
+      return res.status(409).json({
+          res: false,
+          data: "There is no trainer associated with this specific information.",
+      });
+  }
+  else
+  {
+      res.status(200).json({
+          res: true,
+          data: trainerList,
+        });
+  }
+
+})
 
 
  module.exports = router;  

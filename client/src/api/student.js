@@ -53,6 +53,19 @@ const editStudentInfo =  async(studentID,Name,Family,Mobile,WhatsApp,Telegram,Gm
     return res;
 }
 
+const activeDeactiveStudent =  async(studentID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+
+    let res = await axios.put(apiPath + 'studentinfo/activeDeactiveStudent',
+    {
+        id:studentID,
+        token
+    });
+
+    return res;
+}
+
 const getStudentInfoByGymID =  async(gymID) => {
    
     let token = getFromStorage('JWT_Token') 
@@ -423,7 +436,7 @@ const getDebtorStudentListByGymID =  async(gymID) => {
 
 
 
-export {registerNewStudent,editStudentInfo,newStudentCourseEnrollment,editStudentCourseEnrollment,
+export {registerNewStudent,editStudentInfo,activeDeactiveStudent,newStudentCourseEnrollment,editStudentCourseEnrollment,
                 registerStudentAttendance,batchRegisterStudentAttendance,getStudentInfoByGymID,getStudentInfoByStudentID,
                 getStudentEnrolledCourses,getStudentEnrolledCoursesByID,getStudentEnrolledCoursesByCourseID,
                 getStudentAttendanceListbyGymID,getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID,

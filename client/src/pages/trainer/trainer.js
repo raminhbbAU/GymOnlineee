@@ -11,11 +11,12 @@ import Page from '../../components/Page';
 import Label from '../../components/Label';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user';
+import { UserListHead, UserListToolbar } from '../../components/_dashboard/user';
+import TrainerMoreMenu from './trainerMoreMenu'
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import {getTrainerByGymID} from "../../api";
+import {getTrainerByGymID,activeDeactiveTrainer} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 
@@ -47,6 +48,12 @@ export default function Trainer() {
 
   useEffect( () => {
 
+    loadTrainerList();
+
+  },[refreshDataset])
+
+
+  const loadTrainerList = () => {
     getTrainerByGymID(
       Prk_Gym_AutoID
     ).then((result) => {
@@ -56,8 +63,21 @@ export default function Trainer() {
       console.log(error.response);
       errorNotifyByErrorObject(error);
     })
+  }
 
-  },[refreshDataset])
+  const handleActivateMenuClick = (trainerID) => {
+    
+    activeDeactiveTrainer(
+      trainerID
+    ).then((result) => {
+      sucessNotify('The trainer status has been changed successfully!')
+      loadTrainerList();
+    }).catch((error) => { 
+      console.log(error.response);
+      errorNotifyByErrorObject(error);
+    })
+
+  }
 
 
   const handleRequestSort = (event, property) => {
@@ -190,7 +210,7 @@ export default function Trainer() {
                           </TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu />
+                            <TrainerMoreMenu trainerID={Prk_Trainer}  onActivateMenuClick={(trainerID) => handleActivateMenuClick(trainerID)} />
                           </TableCell>
                         </TableRow>
                       );

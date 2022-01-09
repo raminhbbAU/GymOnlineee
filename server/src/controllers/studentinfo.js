@@ -107,14 +107,14 @@ router.post('/loginStudent',yupValidator(studentLoginSchema), async (req,res,nex
 
 })
 
-router.post('/activateAccount',authToken,async(req,res,next) =>{
+router.put('/activeDeactiveStudent',authToken,async(req,res,next) =>{
     // Get user input
-    const { ID } = req.body;
+    const { id } = req.body;
 
      // check if user already exist
      const oldStudent = await models.student.findOne({
         where:{
-            Prk_Student_AutoID:ID
+            Prk_Student_AutoID:id
         }
     });
 
@@ -124,23 +124,24 @@ router.post('/activateAccount',authToken,async(req,res,next) =>{
             data: "The specific student doesn't exist! it must've deleted before.",
           });
     }
-    else
-    {
-        oldStudent.update({
-            Bit_Active:true
-        }).then( (updatedrecord) => {
-            res.status(200).json({
-                res: true,
-                data: updatedrecord,
-              });
-        }).catch( (error) => {
-                console.log(error);
-                return res.status(500).json({
-                    res: false,
-                    data: "something wrong happend during activating student. Please try again a bit later!",
-                });
-        })
-    }
+
+
+    oldStudent.update({
+        Bit_Active: !oldStudent.Bit_Active,
+    }).then( (updatedrecord) => {
+        res.status(200).json({
+            res: true,
+            data: updatedrecord,
+          });
+    }).catch( (error) => {
+            console.log(error);
+            return res.status(500).json({
+                res: false,
+                data: "something wrong happend during activating student. Please try again a bit later!",
+            });
+    })
+
+
 })
 
 router.put('/editStudentInfo',authToken,async(req,res,next) =>{

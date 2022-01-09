@@ -11,13 +11,13 @@ import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText, Divider } from 
 
 // ----------------------------------------------------------------------
 
-export default function StudentMoreMenu({studentID,onActivateMenuClick}) {
+export default function TrainerMoreMenu({trainerID,onActivateMenuClick}) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleActivateMenuClick = () => {
     setIsOpen(false);
-    onActivateMenuClick(studentID);
+    onActivateMenuClick(trainerID);
   }
 
   return (
@@ -36,7 +36,7 @@ export default function StudentMoreMenu({studentID,onActivateMenuClick}) {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem component={RouterLink} to={`/gym/NewStudent/${studentID}`} props sx={{ color: 'text.secondary' }}>
+        <MenuItem component={RouterLink} to={`/gym/NewTrainer/${trainerID}`} props sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />
           </ListItemIcon>
@@ -45,41 +45,11 @@ export default function StudentMoreMenu({studentID,onActivateMenuClick}) {
 
         <Divider />
 
-        <MenuItem component={RouterLink} to={`/gym/EnrolmentByStudent/${studentID}`} sx={{ color: 'text.secondary' }} >
+        <MenuItem component={RouterLink} to={`/gym/CourseByTrainer/${trainerID}`} sx={{ color: 'text.secondary' }} disabled >
           <ListItemIcon>
             <Icon icon={listfill} width={24} height={24} />
           </ListItemIcon>
           <ListItemText primary="Course List" primaryTypographyProps={{ variant: 'body2' }} />
-        </MenuItem>
-
-        <MenuItem component={RouterLink} to={`/gym/CheckInByStudent/${studentID}`} sx={{ color: 'text.secondary' }} >
-          <ListItemIcon>
-            <Icon icon={listfill} width={24} height={24} />
-          </ListItemIcon>
-          <ListItemText primary="Check-In List" primaryTypographyProps={{ variant: 'body2' }} />
-        </MenuItem>
-
-        <Divider />
-
-        <MenuItem component={RouterLink} to={`/gym/StudentBalance/${studentID}`} sx={{ color: 'text.secondary' }} >
-          <ListItemIcon>
-            <Icon icon={listfill} width={24} height={24} />
-          </ListItemIcon>
-          <ListItemText primary="Financial Balance" primaryTypographyProps={{ variant: 'body2' }} />
-        </MenuItem>
-
-        <MenuItem component={RouterLink} to={`/gym/BillByStudent/${studentID}`} sx={{ color: 'text.secondary' }} >
-          <ListItemIcon>
-            <Icon icon={listfill} width={24} height={24} />
-          </ListItemIcon>
-          <ListItemText primary="Bills" primaryTypographyProps={{ variant: 'body2' }} />
-        </MenuItem>
-
-        <MenuItem component={RouterLink} to={`/gym/PaymentByStudent/${studentID}`} sx={{ color: 'text.secondary' }} >
-          <ListItemIcon>
-            <Icon icon={listfill} width={24} height={24} />
-          </ListItemIcon>
-          <ListItemText primary="Payment" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
         <Divider />

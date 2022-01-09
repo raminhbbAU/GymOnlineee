@@ -25,6 +25,41 @@ const registerNewTrainer =  async(GymID,TrainerName , TrainerFamily,  Mobile,  W
     return res;
 }
 
+const editTrainer =  async(trainerID,TrainerName , TrainerFamily,  Mobile,  WhatsApp,  Gmail,  Avatar) => {
+   
+    let token = getFromStorage('JWT_Token') 
+
+    let res = await axios.put(apiPath + 'trainer/editTrainer',
+    {
+        id:trainerID,
+        TrainerName,
+        TrainerFamily,
+        Mobile,
+        WhatsApp,
+        Gmail,
+        Avatar,
+        token
+    });
+
+    return res;
+}
+
+
+const activeDeactiveTrainer =  async(trainerID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+
+    let res = await axios.put(apiPath + 'trainer/activeDeactiveTrainer',
+    {
+        id:trainerID,
+        token
+    });
+
+    return res;
+}
+
+
+
 const getTrainerByGymID =  async(gymID) => {
    
     let token = getFromStorage('JWT_Token') 
@@ -43,5 +78,24 @@ const getTrainerByGymID =  async(gymID) => {
     return res;
 }
 
+const getTrainerInfoByTrainerID =  async(gymID,trainerID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    console.log(token);
 
-export {getTrainerByGymID,registerNewTrainer};
+    let res = await axios.get(apiPath + 'trainer/getTrainerInfoByTrainerID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            gymID: gymID,
+            trainerID:trainerID,
+        }
+    });
+
+    return res;
+}
+
+
+export {registerNewTrainer,editTrainer,activeDeactiveTrainer,getTrainerByGymID,getTrainerInfoByTrainerID};

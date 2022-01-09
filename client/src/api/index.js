@@ -1,17 +1,17 @@
 export {gymLogin,trainerLogin,studentLogin,registerNewGym} from './auth';
 
-export {registerNewCourse,editCourse,getCourseByGymID,getCourseInfoByID,getEnrolledCoursesByCourseID,
+export {registerNewCourse,editCourse,activeDeactiveCourse,getCourseByGymID,getCourseInfoByID,getEnrolledCoursesByCourseID,
         getEnrolledCoursesByGymID,getUpcomingSessionsByGymID} from './course';
 
 export {editGym} from './gym';
 
-export {registerNewStudent,editStudentInfo,newStudentCourseEnrollment,editStudentCourseEnrollment,
+export {registerNewStudent,editStudentInfo,activeDeactiveStudent,newStudentCourseEnrollment,editStudentCourseEnrollment,
         registerStudentAttendance,batchRegisterStudentAttendance,getStudentInfoByGymID,getStudentInfoByStudentID,
         getStudentEnrolledCourses,getStudentEnrolledCoursesByID,getStudentEnrolledCoursesByCourseID,
         getStudentAttendanceListbyGymID,getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID,
         getFinancialStudentBalanceByID,getBillListByStudentID,getBillListByGymID,getPaymentListByStudentID,
         getPaymentListByGymID,registerNewPayment,getNeedToEnrolStudentListByGymID,getDebtorStudentListByGymID} from './student';
 
-export {getTrainerByGymID,registerNewTrainer} from './trainer';
+export {registerNewTrainer,editTrainer,activeDeactiveTrainer,getTrainerByGymID,getTrainerInfoByTrainerID} from './trainer';
 
 export {getDashboardInfo} from './common';

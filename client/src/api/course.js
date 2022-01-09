@@ -65,6 +65,19 @@ const editCourse =  async(courseID,CourseName,CourseDescription,trainerID,StartD
     return res;
 }
 
+const activeDeactiveCourse =  async(courseID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+
+    let res = await axios.put(apiPath + 'course/activeDeactiveCourse',
+    {
+        id:courseID,
+        token
+    });
+
+    return res;
+}
+
 const getCourseByGymID =  async(gymID) => {
    
     let token = getFromStorage('JWT_Token') 
@@ -155,4 +168,4 @@ const getUpcomingSessionsByGymID =  async(gymID) => {
     return res;
 }
 
-export {registerNewCourse,editCourse,getCourseByGymID,getCourseInfoByID,getEnrolledCoursesByCourseID,getEnrolledCoursesByGymID,getUpcomingSessionsByGymID};
+export {registerNewCourse,editCourse,activeDeactiveCourse,getCourseByGymID,getCourseInfoByID,getEnrolledCoursesByCourseID,getEnrolledCoursesByGymID,getUpcomingSessionsByGymID};

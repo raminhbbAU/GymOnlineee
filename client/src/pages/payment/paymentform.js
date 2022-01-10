@@ -17,6 +17,8 @@ import Scrollbar from '../../components/Scrollbar';
 import {getStudentInfoByGymID,getStudentInfoByStudentID,registerNewPayment} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
+import {getDate} from "../../utils/utility";
+
 
 export default function PaymentForm () {
 
@@ -84,7 +86,7 @@ export default function PaymentForm () {
             PayType:1,
             Amount:0,
             TraceNumber:'',
-            Date:'',
+            Date:getDate(),
         }, 
         onSubmit: (values) => {
             handleSubmit(values);

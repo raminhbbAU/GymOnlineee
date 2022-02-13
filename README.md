@@ -32,12 +32,12 @@ I made this project with love, if you interest to contribute, please check this 
 
 ### Installation
 
-1)
-2)
-3)
+1) deploy server/src folder into your server. 
 
-### Installation
-TODO
+2) change server API URL in client/constants/api.config.js
+
+3) deploy client project by npm run build 
+
 
 
 ### License

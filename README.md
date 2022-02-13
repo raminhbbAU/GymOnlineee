@@ -9,7 +9,7 @@ Some freelance trainers prefer to hold their classes online and they have to do 
 
 ### Contribution Guidelines
 
-I made this project with love, if you interest to contribute, please check this guideline [HERE](https://github.com/larymak/Python-project-Scripts/blob/main/CONTRIBUTING.md).
+I made this project with love, if you interest to contribute, please check this guideline [HERE]().
 
 
 ### Project Structure
@@ -24,6 +24,22 @@ I made this project with love, if you interest to contribute, please check this 
 
 - BackEnd section (server)
 
-## License
-it Made with ❤️
+     - [NodeJs](https://github.com/nodejs)
+     - [Express](https://github.com/expressjs/express)
+     - [MySQL](https://github.com/mysql/mysql-server)
+     - [Sequelize](https://github.com/sequelize/sequelize)
+
+
+### Installation
+
+1)
+2)
+3)
+
+### Installation
+TODO
+
+
+### License
+it's made with ❤️.
 This project is licensed under the terms of the MIT license.

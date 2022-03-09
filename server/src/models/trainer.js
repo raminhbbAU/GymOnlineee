@@ -47,6 +47,10 @@ module.exports = (sequelize, DataTypes) => {
         Bit_Active: {
             type: DataTypes.BOOLEAN,
             allowNull: false
+        },
+        Str_ConfirmationCode: {
+          type: DataTypes.STRING(5000),
+          allowNull: false
         }
     },
     {

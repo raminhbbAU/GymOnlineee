@@ -15,7 +15,7 @@ module.exports = (app) => {
   dotenv.config();
 
   const PORT = 3000;
-  var corsOptions = {origin: `http://localhost:${PORT}`}; 
+  var corsOptions = {origin: [`http://localhost:${PORT}`,`http://localhost:3001`]}; 
   
   app.use(cors(corsOptions));
   //app.use(favicon(path.join(__dirname, '../../src/favicon.ico')));

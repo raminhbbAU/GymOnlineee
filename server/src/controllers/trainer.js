@@ -1,5 +1,7 @@
 const {router,models,bcrypt,jwt,authToken,yupValidator} = require('./index')
 const { trainerRegisterSchema,trainerLoginSchema } = require('../validationSchema/yup.validation.js');
+const {getDate,getTime,generateUUID} = require('../services/utility.service');
+const {sendEmail,htmlMaker} = require('../services/notification.service');
 
  router.post('/registerNewTrainer',authToken,yupValidator(trainerRegisterSchema), async (req,res,next) => {
     
@@ -23,7 +25,11 @@ const { trainerRegisterSchema,trainerLoginSchema } = require('../validationSchem
 
 
      //Encrypt user password
+    randomCode = generateUUID()
     encryptedPassword = await bcrypt.hash(Password, 10);
+    confirmationCode = await bcrypt.hash(getDate() + getTime(), 10);
+    confirmationCode = randomCode + confirmationCode;
+    confirmationCode = confirmationCode.toString().replaceAll('-','').replaceAll(':','').replaceAll('/','').replaceAll('\\','').replaceAll('$','').replaceAll('&','').replaceAll('+','');
 
 
      // create New User
@@ -40,10 +46,15 @@ const { trainerRegisterSchema,trainerLoginSchema } = require('../validationSchem
         Bit_Active:true
 
      }).then( (trainer) => {
+
+        // send confirmation email
+        sendEmail(Gmail,"Account Activation",htmlMaker(TrainerName,'type:trainer&uuid:' +confirmationCode))
+
         return res.status(200).json({
             res:true,
             data:trainer
         })
+
      }).catch( (error) => {
         console.log(error);
         return res.status(500).json({

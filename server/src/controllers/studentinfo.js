@@ -1,6 +1,8 @@
 const {router,models,bcrypt,jwt,authToken,yupValidator} = require('./index')
 const { studentRegisterSchema,studentLoginSchema } = require('../validationSchema/yup.validation.js');
-const {getDate,getTime} = require('../services/utility.service')
+const {getDate,getTime,generateUUID} = require('../services/utility.service');
+const {sendEmail,htmlMaker} = require('../services/notification.service');
+
 
  router.post('/registerNewStudent',authToken,yupValidator(studentRegisterSchema), async (req,res,next) => {
     
@@ -24,7 +26,11 @@ const {getDate,getTime} = require('../services/utility.service')
 
 
      //Encrypt user password
+    randomCode = generateUUID()
     encryptedPassword = await bcrypt.hash(Password, 10);
+    confirmationCode = await bcrypt.hash(getDate() + getTime(), 10);
+    confirmationCode = randomCode + confirmationCode;
+    confirmationCode = confirmationCode.toString().replaceAll('-','').replaceAll(':','').replaceAll('/','').replaceAll('\\','').replaceAll('$','').replaceAll('&','').replaceAll('+','');
 
     
 
@@ -47,6 +53,9 @@ const {getDate,getTime} = require('../services/utility.service')
         Str_Description:Description
 
      }).then( (student) => {
+
+             // send confirmation email
+             sendEmail(Gmail,"Account Activation",htmlMaker(Name,'type:student&uuid:' +confirmationCode))
 
             res.status(200).json({
                 res:true,

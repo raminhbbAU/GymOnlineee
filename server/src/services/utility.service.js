@@ -1,3 +1,5 @@
+const { v4: uuidv4 } = require('uuid');
+
 const getDate = () => {
     var today = new Date();
     return `${today.getFullYear()}/${today.getMonth()+1}/${today.getDate()}`
@@ -25,4 +27,9 @@ const getDayOfWeek = () => {
     return today.getDay();
 }
 
-module.exports = {getDate,getTime,getFirstDayOfMonth,getLastDayOfMonth,getDayOfWeek}
+
+const generateUUID = () => {
+    return uuidv4();
+}
+
+module.exports = {getDate,getTime,getFirstDayOfMonth,getLastDayOfMonth,getDayOfWeek,generateUUID}

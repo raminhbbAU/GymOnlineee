@@ -48,6 +48,10 @@ module.exports = (sequelize, DataTypes) =>  {
     Str_Description: {
       type: DataTypes.STRING(500),
       allowNull: false
+    },
+    Str_ConfirmationCode: {
+      type: DataTypes.STRING(5000),
+      allowNull: false
     }
   }, {
     timestamps: false

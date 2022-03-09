@@ -1,5 +1,7 @@
 const {router,models,bcrypt,jwt,authToken,yupValidator} = require('./index')
 const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.validation.js');
+const {sendEmail,htmlMaker} = require('../services/notification.service')
+const {getDate,getTime,generateUUID} = require('../services/utility.service')
 
  router.post('/registerNewGym',yupValidator(gymRegisterSchema), async (req,res,next) => {
     
@@ -21,7 +23,11 @@ const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.v
      }
 
      //Encrypt user password
+    randomCode = generateUUID()
     encryptedPassword = await bcrypt.hash(Password, 10);
+    confirmationCode = await bcrypt.hash(getDate() + getTime(), 10);
+    confirmationCode = randomCode + confirmationCode;
+    confirmationCode = confirmationCode.toString().replaceAll('-','').replaceAll(':','').replaceAll('/','').replaceAll('\\','').replaceAll('$','').replaceAll('&','').replaceAll('+','');
 
      // create New User
     models.gym.create({
@@ -33,26 +39,18 @@ const { gymRegisterSchema, gymLoginSchema } = require('../validationSchema/yup.v
         Str_Mobile:Mobile,
         Str_UserName:UserName,
         Str_Password:encryptedPassword,
-        Bit_Active:true,
+        Bit_Active:false,
         Str_Description:'',
-
+        Str_ConfirmationCode : confirmationCode,
      }).then( (gym) => {
+ 
+            // send confirmation email
+            sendEmail(Gmail,"Account Activation",htmlMaker(GymName,'type:gym&uuid:' +confirmationCode))
 
-            // create new token
-            let token = jwt.sign({ id: gym.Prk_Gym_AutoID,username:gym.Str_UserName}, process.env.JWT_SECRET, {
-                expiresIn: process.env.JWT_EXPIRES_IN
-              });
-    
-            if (!token) return res.status(500).json({
-                res: false,
-                data: 'There was a problem during token generation',
-              }); 
-    
+            // return response to user
             res.status(200).json({
                 res:true,
-                auth:true,
-                token,
-                data:gym
+                data:Gmail
             })
 
      }).catch( (error) => {

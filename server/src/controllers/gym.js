@@ -27,7 +27,7 @@ const {getDate,getTime,generateUUID} = require('../services/utility.service')
     encryptedPassword = await bcrypt.hash(Password, 10);
     confirmationCode = await bcrypt.hash(getDate() + getTime(), 10);
     confirmationCode = randomCode + confirmationCode;
-    confirmationCode = confirmationCode.toString().replaceAll('-','').replaceAll(':','').replaceAll('/','').replaceAll('\\','').replaceAll('$','').replaceAll('&','').replaceAll('+','');
+    confirmationCode = confirmationCode.toString().replaceAll('-','').replaceAll(':','').replaceAll('/','').replaceAll('\\','').replaceAll('$','').replaceAll('&','').replaceAll('+','').replaceAll('.','');
 
      // create New User
     models.gym.create({

@@ -3,7 +3,7 @@ const { trainerRegisterSchema,trainerLoginSchema } = require('../validationSchem
 const {getDate,getTime,generateUUID} = require('../services/utility.service');
 const {sendEmail,htmlMaker} = require('../services/notification.service');
 
- router.post('/registerNewTrainer',authToken,yupValidator(trainerRegisterSchema), async (req,res,next) => {
+ router.post('/registerNewTrainer',yupValidator(trainerRegisterSchema), async (req,res,next) => {
     
     // Get user input
     const { GymID,TrainerName , TrainerFamily,  Mobile,  WhatsApp,  Gmail, UserName , Password,  Avatar} = req.body;
@@ -29,7 +29,7 @@ const {sendEmail,htmlMaker} = require('../services/notification.service');
     encryptedPassword = await bcrypt.hash(Password, 10);
     confirmationCode = await bcrypt.hash(getDate() + getTime(), 10);
     confirmationCode = randomCode + confirmationCode;
-    confirmationCode = confirmationCode.toString().replaceAll('-','').replaceAll(':','').replaceAll('/','').replaceAll('\\','').replaceAll('$','').replaceAll('&','').replaceAll('+','');
+    confirmationCode = confirmationCode.toString().replaceAll('-','').replaceAll(':','').replaceAll('/','').replaceAll('\\','').replaceAll('$','').replaceAll('&','').replaceAll('+','').replaceAll('.','');
 
 
      // create New User
@@ -43,8 +43,8 @@ const {sendEmail,htmlMaker} = require('../services/notification.service');
         Str_UserName:UserName,
         Str_Password:encryptedPassword,
         Str_Avatar:Avatar,
-        Bit_Active:true
-
+        Bit_Active:false,
+        Str_ConfirmationCode:confirmationCode,
      }).then( (trainer) => {
 
         // send confirmation email

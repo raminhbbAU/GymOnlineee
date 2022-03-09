@@ -4,7 +4,7 @@ const {getDate,getTime,generateUUID} = require('../services/utility.service');
 const {sendEmail,htmlMaker} = require('../services/notification.service');
 
 
- router.post('/registerNewStudent',authToken,yupValidator(studentRegisterSchema), async (req,res,next) => {
+ router.post('/registerNewStudent',yupValidator(studentRegisterSchema), async (req,res,next) => {
     
     // Get user input
     const { gymID,Name,Family,Mobile,WhatsApp,Telegram,Gmail,Address,Birthday,UserName,Password,Description } = req.body;
@@ -30,7 +30,7 @@ const {sendEmail,htmlMaker} = require('../services/notification.service');
     encryptedPassword = await bcrypt.hash(Password, 10);
     confirmationCode = await bcrypt.hash(getDate() + getTime(), 10);
     confirmationCode = randomCode + confirmationCode;
-    confirmationCode = confirmationCode.toString().replaceAll('-','').replaceAll(':','').replaceAll('/','').replaceAll('\\','').replaceAll('$','').replaceAll('&','').replaceAll('+','');
+    confirmationCode = confirmationCode.toString().replaceAll('-','').replaceAll(':','').replaceAll('/','').replaceAll('\\','').replaceAll('$','').replaceAll('&','').replaceAll('+','').replaceAll('.','');
 
     
 
@@ -50,8 +50,8 @@ const {sendEmail,htmlMaker} = require('../services/notification.service');
         Str_UserName:UserName,
         Str_Password:Password,
         Bit_Active:false,
-        Str_Description:Description
-
+        Str_Description:Description,
+        Str_ConfirmationCode:confirmationCode,
      }).then( (student) => {
 
              // send confirmation email

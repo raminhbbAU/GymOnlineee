@@ -1,5 +1,5 @@
 import axios from "axios";
-import apiPath from "../constants/api.config";
+import {apiPath} from "../constants/api.config";
 
 
 const gymLogin = async(userName,password) => {

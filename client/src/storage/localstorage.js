@@ -26,7 +26,7 @@ const getFromStorage = (name) => {
         {
 
             let curPath = window.location.href
-            if (curPath.endsWith("/login")!=true && curPath.endsWith("/signUp")!=true)
+            if (curPath.toLowerCase().endsWith("/login")!=true && curPath.toLowerCase().endsWith("/signup")!=true && curPath.toLowerCase().endsWith("/gymsignup")!=true)
             {
                 curPath = curPath.replace(window.location.pathname,"/login")
                 window.location.href = curPath;

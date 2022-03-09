@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import apiPath from "../constants/api.config";
+import {apiPath} from "../constants/api.config";
 import {getFromStorage} from "../storage/localstorage.js";
 
 

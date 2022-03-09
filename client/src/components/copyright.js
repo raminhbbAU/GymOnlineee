@@ -9,12 +9,10 @@ const Copyright = (props) => {
         align="center"
         {...props}
       >
-        {"Copyright © "}
-        <Link color="inherit" href="https://www.GymOnlineee.com/">
+        {"Copyright "} {new Date().getFullYear()} {" © All rights reserved by RaminHbb "}
+        <Link color="inherit" href="https://github.com/raminhbbAU/GymOnlineee">
           GymOnlineee
         </Link>{" "}
-        {new Date().getFullYear()}
-        {"."}
       </Typography>
     );
   }

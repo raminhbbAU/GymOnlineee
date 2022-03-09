@@ -160,6 +160,7 @@ export default function Router() {
     {path: '*',element: <Navigate to="/login" replace />,},
     {path: 'login',element: <Login />,},
     {path: 'signup',element: <Signup />,},
+    {path: 'gymSignup',element: <Signup />,},
     {path: '404',element: <NotFound />,}
   ];
 

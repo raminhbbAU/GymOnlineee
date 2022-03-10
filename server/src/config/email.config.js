@@ -3,5 +3,5 @@ module.exports = {
     password:"Samsung!SyncMaster226BW",
     port:587,
     smpt:"smtp.gmail.com",
-    confirmationURL:'www.NillTeam.ir:8585'
+    confirmationURL:'http://www.nillteam.ir:8585/emailconfirmation'
 }

@@ -24,9 +24,10 @@ import StudentBalance from '../pages/balance/studentbalance';
 import StudentBill from '../pages/bill/bill';
 import StudentPayment from '../pages/payment/payment';
 import NewPayment from '../pages/payment/paymentform';
-
+import ConfirmationSendMessage from '../pages/confirmationmessage/ConfirmationSendMessage.js';
 import Login from '../pages/login/login';
 import Signup from '../pages/signup/signup';
+
 
 
 // ----------------------------------------------------------------------
@@ -161,7 +162,8 @@ export default function Router() {
     {path: 'login',element: <Login />,},
     {path: 'signup',element: <Signup />,},
     {path: 'gymSignup',element: <Signup />,},
-    {path: '404',element: <NotFound />,}
+    {path: '404',element: <NotFound />,},
+    {path: 'ConfirmationSendMessage',element: <ConfirmationSendMessage />,}
   ];
 
   return useRoutes(myRoute);

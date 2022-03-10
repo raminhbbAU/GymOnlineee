@@ -33,7 +33,7 @@ const htmlMaker = (username,link) => {
     //let Button = `<form action=${confirmationURL}/${link}> <input type="submit" value="Activate your account"/> </form>`
     //let google = `<input type="button" onclick="location.href='${confirmationURL}/${link}';" value="Go to Google" />`
 
-    return greating + message + breakLine + linksection + breakLine + Button + breakLine +  google
+    return greating + message + breakLine + linksection + breakLine
 
 }
 

@@ -45,7 +45,7 @@ const {getDate,getTime,generateUUID} = require('../services/utility.service')
      }).then( (gym) => {
  
             // send confirmation email
-            sendEmail(Gmail,"Account Activation",htmlMaker(GymName,'type:gym&uuid:' +confirmationCode))
+            sendEmail(Gmail,"Account Activation",htmlMaker(GymName,'?type=gym&uuid=' +confirmationCode))
 
             // return response to user
             res.status(200).json({
@@ -79,22 +79,33 @@ router.post('/login',yupValidator(gymLoginSchema), async (req,res,next) => {
     // Check User & Password
     if (oldGym && (await bcrypt.compare(Password,oldGym.Str_Password) ) ) {
         
-            // create new token
-            let token = jwt.sign({ id: oldGym.Prk_Gym_AutoID,username:oldGym.Str_UserName}, process.env.JWT_SECRET, {
-                expiresIn: process.env.JWT_EXPIRES_IN
-              });
-    
-              if (!token) return res.status(500).json({
-                res: false,
-                data: 'There was a problem during token generation',
-              }); 
-    
-            res.status(200).json({
-                res:true,
-                auth:true,
-                token,
-                data:oldGym
-            })
+            // check activation           
+            if (oldGym.Bit_Active === false )
+            {
+                res.status(409).json({
+                    res:false,
+                    data: "Your account has not been activated yet! please check your e-mail inbox",
+                })
+            }
+            else 
+            {
+                // create new token
+                let token = jwt.sign({ id: oldGym.Prk_Gym_AutoID,username:oldGym.Str_UserName}, process.env.JWT_SECRET, {
+                    expiresIn: process.env.JWT_EXPIRES_IN
+                });
+        
+                if (!token) return res.status(500).json({
+                    res: false,
+                    data: 'There was a problem during token generation',
+                }); 
+        
+                res.status(200).json({
+                    res:true,
+                    auth:true,
+                    token,
+                    data:oldGym
+                })
+            }
         
     }
     else
@@ -157,40 +168,50 @@ router.put('/editGym',authToken,yupValidator(gymRegisterSchema),async(req,res,ne
 
 })
 
-router.post('/activateAccount',authToken,async(req,res,next) =>{
+router.post('/gymActivateAccount',async(req,res,next) =>{
     
    // Get user input
-   const { ID} = req.body;
+   const { uuid} = req.body;
 
    // check if user already exist
    const oldGym = await models.gym.findOne({
       where:{
-        Prk_Gym_AutoID:ID
+        Str_ConfirmationCode:uuid
       }
   });
 
    if (!oldGym) {
       return res.status(409).json({
           res: false,
-          data: "The specific gym doesn't exist! it must've deleted before.",
+          data: "The activation link is not a valid link. please check carefully and try again",
         });
    }
    else {
 
-    oldGym.update({
-        Bit_Active:true
-    }).then( (updatedrecord) => {
-        res.status(200).json({
-            res: true,
-            data: updatedrecord,
-          });
-   }).catch( (error) => {
-        console.log(error);
-        return res.status(500).json({
+    if (oldGym.Bit_Active === true)
+    {
+        return res.status(409).json({
             res: false,
-            data: "something wrong happend during activating gym. Please try again a bit later!",
-        });
-   })
+            data: "The account has been activated before! Please login into your account",
+          });
+    }
+    else
+    {
+        oldGym.update({
+            Bit_Active:true
+        }).then( (updatedrecord) => {
+            res.status(200).json({
+                res: true,
+                data: updatedrecord,
+              });
+       }).catch( (error) => {
+            console.log(error);
+            return res.status(500).json({
+                res: false,
+                data: "something wrong happend during activating gym. Please try again a bit later!",
+            });
+       })
+    }
 
    }
 

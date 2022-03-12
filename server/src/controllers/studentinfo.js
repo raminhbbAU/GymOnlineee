@@ -55,7 +55,7 @@ const {sendEmail,htmlMaker} = require('../services/notification.service');
      }).then( (student) => {
 
              // send confirmation email
-             sendEmail(Gmail,"Account Activation",htmlMaker(Name,'type:student&uuid:' +confirmationCode))
+             sendEmail(Gmail,"Account Activation",htmlMaker(Name,'?type=student&uuid=' +confirmationCode))
 
             res.status(200).json({
                 res:true,

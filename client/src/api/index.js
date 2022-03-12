@@ -1,4 +1,4 @@
-export {gymLogin,trainerLogin,studentLogin,registerNewGym} from './auth';
+export {gymLogin,trainerLogin,studentLogin,registerNewGym,gymActivateAccount} from './auth';
 
 export {registerNewCourse,editCourse,activeDeactiveCourse,getCourseByGymID,getCourseInfoByID,getEnrolledCoursesByCourseID,
         getEnrolledCoursesByGymID,getUpcomingSessionsByGymID} from './course';

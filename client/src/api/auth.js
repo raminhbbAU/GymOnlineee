@@ -52,5 +52,13 @@ const registerNewGym =  async(gymname,mobile,gmail,password) => {
     return res;
 }
 
+const gymActivateAccount =  async(uuid) => {
+   
+    let res = await axios.post(apiPath + 'gym/gymActivateAccount',{
+        uuid
+    });
 
-export {gymLogin, trainerLogin, studentLogin, registerNewGym}
+    return res;
+}
+
+export {gymLogin, trainerLogin, studentLogin, registerNewGym,gymActivateAccount}

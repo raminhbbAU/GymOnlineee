@@ -26,11 +26,15 @@ const getFromStorage = (name) => {
         {
 
             let curPath = window.location.href
-            if (curPath.toLowerCase().endsWith("/login")===false && curPath.toLowerCase().endsWith("/signup")===false && curPath.toLowerCase().endsWith("/gymsignup")===false  && curPath.toLowerCase().endsWith("/confirmationsendmessage")===false )
+
+            // check Exception
+            if (curPath.toLowerCase().endsWith("/login")  || curPath.toLowerCase().endsWith("/signup") || curPath.toLowerCase().endsWith("/gymsignup") || curPath.toLowerCase().endsWith("/confirmationsendmessage") || curPath.toLowerCase().includes("/emailconfirmation"))
             {
-               
-                curPath = curPath.replace(window.location.pathname,"/login")
-                console.log(curPath);
+                return res;
+            }
+            else
+            {
+                curPath = curPath.replace(window.location.pathname,"/login")                
                 window.location.href = curPath;
             }
            

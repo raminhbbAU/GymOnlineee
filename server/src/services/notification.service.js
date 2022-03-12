@@ -29,7 +29,7 @@ const htmlMaker = (username,link) => {
     let breakLine = '<br>'
     let greating = `<h1>Welcome ${username}! </h1>`
     let message = `<p>To activate your account please click on the below link:</p>`
-    let linksection = `<a target="_blank" href='${confirmationURL}/${link}'> ${confirmationURL}/${link}</a>`
+    let linksection = `<a target="_blank" href='${confirmationURL}${link}'> ${confirmationURL}${link}</a>`
     //let Button = `<form action=${confirmationURL}/${link}> <input type="submit" value="Activate your account"/> </form>`
     //let google = `<input type="button" onclick="location.href='${confirmationURL}/${link}';" value="Go to Google" />`
 

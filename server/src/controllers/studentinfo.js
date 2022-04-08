@@ -153,6 +153,55 @@ router.put('/activeDeactiveStudent',authToken,async(req,res,next) =>{
 
 })
 
+router.post('/studentActivateAccount',async(req,res,next) =>{
+    
+    // Get user input
+    const { uuid} = req.body;
+ 
+    // check if user already exist
+    const oldStudent = await models.student.findOne({
+       where:{
+         Str_ConfirmationCode:uuid
+       }
+   });
+ 
+    if (!oldStudent) {
+       return res.status(409).json({
+           res: false,
+           data: "The activation link is not a valid link. please check carefully and try again",
+         });
+    }
+    else {
+ 
+     if (oldStudent.Bit_Active === true)
+     {
+         return res.status(409).json({
+             res: false,
+             data: "The account has been activated before! Please login into your account",
+           });
+     }
+     else
+     {
+        oldStudent.update({
+             Bit_Active:true
+         }).then( (updatedrecord) => {
+             res.status(200).json({
+                 res: true,
+                 data: updatedrecord,
+               });
+        }).catch( (error) => {
+             console.log(error);
+             return res.status(500).json({
+                 res: false,
+                 data: "something wrong happend during activating Student. Please try again a bit later!",
+             });
+        })
+     }
+ 
+    }
+ 
+ })
+
 router.put('/editStudentInfo',authToken,async(req,res,next) =>{
     
     // Get user input

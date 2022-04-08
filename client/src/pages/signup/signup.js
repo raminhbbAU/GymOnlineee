@@ -69,11 +69,15 @@ export default function SignUp() {
           data.get('password')
           ).then((result) => {
             if (result) {
-              if (result.data.auth) {
-                setToStorage('isAuth',result.data.auth);
-                setToStorage('JWT_Token',result.data.token);
-                setToStorage('logininfo', JSON.stringify(result.data.data));
-                navigate("/gym/dashboard");
+              console.log(result);
+              if (result.data.res) {
+                // setToStorage('isAuth',result.data.auth);
+                // setToStorage('JWT_Token',result.data.token);
+                // setToStorage('logininfo', JSON.stringify(result.data.data));
+                navigate("/ConfirmationSendMessage");
+              }
+              else{
+                errorNotifyByErrorObject("error");
               }
             }
           }).catch((error) => {

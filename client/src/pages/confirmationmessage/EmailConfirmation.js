@@ -28,6 +28,9 @@ export default function EmailConfirmation () {
   
     useEffect( ()=> {
 
+      console.log('EmailConfirmation calling!');
+      console.log(window.location.search);
+
       const queryParams = new URLSearchParams(window.location.search)
       const type = queryParams.get("type")
       const uuid = queryParams.get("uuid")

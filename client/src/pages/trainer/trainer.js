@@ -44,7 +44,7 @@ export default function Trainer() {
   const [dataList, setdataList] = useState([]);
   const [refreshDataset,setRefreshDataset] = useState(false);
 
-  let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
+  let {loginType, loginId} = JSON.parse(getFromStorage('logininfo'));
 
   useEffect( () => {
 
@@ -55,7 +55,7 @@ export default function Trainer() {
 
   const loadTrainerList = () => {
     getTrainerByGymID(
-      Prk_Gym_AutoID
+      loginId
     ).then((result) => {
       console.log(result);
       setdataList(result.data.data)

@@ -103,7 +103,7 @@ router.post('/login',yupValidator(gymLoginSchema), async (req,res,next) => {
                     res:true,
                     auth:true,
                     token,
-                    data:oldGym
+                    data:{loginType:'gym', loginId:oldGym.Prk_Gym_AutoID, loginName:oldGym.Str_GymName ,loginUserName: oldGym.Str_UserName}
                 })
             }
         

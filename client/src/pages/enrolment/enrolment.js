@@ -53,7 +53,7 @@ export default function Enrolment() {
 
   console.log(useParams());
 
-  let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
+  let {loginType,loginId} = JSON.parse(getFromStorage('logininfo'));
   let { studentID,courseID } = useParams();
 
 
@@ -87,7 +87,7 @@ export default function Enrolment() {
     else if (!studentID && !courseID)
     {
         getEnrolledCoursesByGymID(
-          Prk_Gym_AutoID
+          loginId
         ).then((result) => {
           console.log(result);
           setCourseList(result.data.data)

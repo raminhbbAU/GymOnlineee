@@ -48,7 +48,7 @@ export default function AccountPopover() {
   const navigate = useNavigate();
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
-  let {Str_GymName,Str_Gmail} = JSON.parse(getFromStorage('logininfo'));
+  let {loginType, loginId, loginName, loginUserName} = JSON.parse(getFromStorage('logininfo'));
 
   const handleOpen = () => {
     setOpen(true);
@@ -102,10 +102,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            {Str_GymName}
+            {loginName}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {Str_Gmail}
+            {loginUserName}
           </Typography>
         </Box>
 

@@ -30,7 +30,7 @@ export default function StudentForm () {
     const [fullName, setFullName] = useState('');
     
     let { studentID } = useParams();
-    let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
+    let {loginType, loginId} = JSON.parse(getFromStorage('logininfo'));
 
 
 
@@ -41,7 +41,7 @@ export default function StudentForm () {
             setEditMode(true);
 
             getStudentInfoByStudentID(
-                Prk_Gym_AutoID,
+                loginId,
                 studentID
               ).then((result) => {
 
@@ -121,7 +121,7 @@ export default function StudentForm () {
         else
         {
             registerNewStudent(
-                Prk_Gym_AutoID,
+                loginId,
                 values.Name,
                 values.Family,
                 values.Mobile,

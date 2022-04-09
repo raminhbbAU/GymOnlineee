@@ -49,7 +49,7 @@ DashboardSidebar.propTypes = {
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   
   const { pathname } = useLocation();
-  let {Str_GymName,Str_Gmail} = JSON.parse(getFromStorage('logininfo'));
+  let {loginType, loginId, loginName, loginUserName} = JSON.parse(getFromStorage('logininfo'));
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -77,10 +77,10 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
             <Avatar src={avator} alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {Str_GymName}
+                {loginName}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {Str_Gmail}
+                {loginUserName}
               </Typography>
             </Box>
           </AccountStyle>

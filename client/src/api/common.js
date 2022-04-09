@@ -5,11 +5,11 @@ import {getFromStorage} from "../storage/localstorage.js";
 
 
 
-const getDashboardInfo =  async(gymID) => {
+const getGymDashboardInfo =  async(gymID) => {
    
     let token = getFromStorage('JWT_Token') 
 
-    let res = await axios.get(apiPath + 'common/getDashboardInfo',
+    let res = await axios.get(apiPath + 'common/getGymDashboardInfo',
     {
         headers: {
             'x-access-token': token,
@@ -22,4 +22,39 @@ const getDashboardInfo =  async(gymID) => {
     return res;
 }
 
-export {getDashboardInfo};
+
+const getStudentDashboardInfo =  async(studentID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+
+    let res = await axios.get(apiPath + 'common/getStudentDashboardInfo',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            studentID: studentID,
+        }
+    });
+
+    return res;
+}
+
+const getTrainerDashboardInfo =  async(trainerID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+
+    let res = await axios.get(apiPath + 'common/getTrainerDashboardInfo',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            trainerID: trainerID,
+        }
+    });
+
+    return res;
+}
+
+export {getGymDashboardInfo,getStudentDashboardInfo,getTrainerDashboardInfo};

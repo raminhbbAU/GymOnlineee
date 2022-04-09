@@ -32,7 +32,7 @@ export default function EnrolmentForm ({courseID,studentID}) {
 
     
     const navigate = useNavigate();
-    let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
+    let {loginType,loginId} = JSON.parse(getFromStorage('logininfo'));
     let { enrolmentID } = useParams();
 
 
@@ -71,7 +71,7 @@ export default function EnrolmentForm ({courseID,studentID}) {
     const loadCourseList = () => {
     
       getCourseByGymID(
-        Prk_Gym_AutoID
+        loginId
       ).then((result) => {
         
         console.log(result.data.data);
@@ -88,7 +88,7 @@ export default function EnrolmentForm ({courseID,studentID}) {
     const loadStudentList = () => {
     
         getStudentInfoByGymID(
-          Prk_Gym_AutoID
+          loginId
         ).then((result) => {
           
           console.log(result.data.data);

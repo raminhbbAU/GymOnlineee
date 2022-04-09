@@ -46,7 +46,7 @@ export default function StudentBalance() {
   const [dataList, setdataList] = useState([]);
   const [refreshDataset,setRefreshDataset] = useState(false);
 
-  let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
+  let {loginType,loginId} = JSON.parse(getFromStorage('logininfo'));
   let { studentID } = useParams();
 
   useEffect( () => {

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React,{useEffect,useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -25,7 +25,7 @@ import loginback from "../../assests/images/loginback.jpg";
 import Copyright from "../../components/copyright.js"
 import {setToStorage} from "../../storage/localstorage.js";
 import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
-import {gymLogin} from "../../api";
+import {gymLogin,trainerLogin,studentLogin} from "../../api";
 
 const theme = createTheme();
 
@@ -33,31 +33,82 @@ const theme = createTheme();
 export default function SignInSide() {
 
   const navigate = useNavigate();
+  const [userType,setUserType] = useState('Gym')
+
+  const userTypeChange = (e) => {
+    e.preventDefault();
+    setUserType(e.target.value)
+  }
 
   const handleSubmit = (event) => {
 
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
+    switch (userType) {
+      case 'Gym':
+        gymLogin(
+            data.get('username'),
+            data.get('password'),
+        ).then((result) => {
+          if (result) {
+            if (result.data.auth) {
+              setToStorage('isAuth',result.data.auth);
+              setToStorage('JWT_Token',result.data.token);
+              setToStorage('logininfo', JSON.stringify(result.data.data));
+              sucessNotify("Welcome to your profile!");
+              navigate("/gym/dashboard");
+            }
+          }
+        }).catch((error) => {
+          console.log(error);
+          errorNotifyByErrorObject(error);    
+        })
+        break;
+      case 'Trainer':
+        trainerLogin(
+          data.get('username'),
+          data.get('password'),
+        ).then((result) => {
+          if (result) {
+            if (result.data.auth) {
+              setToStorage('isAuth',result.data.auth);
+              setToStorage('JWT_Token',result.data.token);
+              setToStorage('logininfo', JSON.stringify(result.data.data));
+              sucessNotify("Welcome to your profile!");
+              navigate("/trainer/dashboard");
+            }
+          }
+        }).catch((error) => {
+          console.log(error);
+          errorNotifyByErrorObject(error);    
+        })
+          break;
+      case 'Athlete':
+        studentLogin(
+          data.get('username'),
+          data.get('password'),
+        ).then((result) => {
+          if (result) {
+            if (result.data.auth) {
+              setToStorage('isAuth',result.data.auth);
+              setToStorage('JWT_Token',result.data.token);
+              setToStorage('logininfo', JSON.stringify(result.data.data));
+              sucessNotify("Welcome to your profile!");
+              navigate("/student/dashboard");
+            }
+          }
+        }).catch((error) => {
+          console.log(error);
+          errorNotifyByErrorObject(error);    
+        })
+        break;    
+      default:
+        break;
+    }
 
-    gymLogin(
-        data.get('username'),
-        data.get('password'),
-        data.get('userType')
-    ).then((result) => {
-      if (result) {
-        if (result.data.auth) {
-          setToStorage('isAuth',result.data.auth);
-          setToStorage('JWT_Token',result.data.token);
-          setToStorage('logininfo', JSON.stringify(result.data.data));
-          sucessNotify("Welcome to your profile!");
-          navigate("/gym/dashboard");
-        }
-      }
-    }).catch((error) => {
-      console.log(error);
-      errorNotifyByErrorObject(error);    
-    })
+
+
 
   };
 
@@ -127,20 +178,25 @@ export default function SignInSide() {
               />
 
               <RadioGroup
+                id='signinRadioGroup'
                 row
                 aria-label="userType"
-                defaultValue="Gym"
+                value= {userType}
+                defaultValue= "Gym"
                 name="userType"
-              >
-                <FormControlLabel value="Gym" control={<Radio />} label="Gym" />
+                onChange={(e) => userTypeChange(e)}
+                >
+                <FormControlLabel 
+                  value="Gym" 
+                  control={<Radio />} 
+                  label="Gym" 
+                />
                 <FormControlLabel
-                  // disabled
                   value="Trainer"
                   control={<Radio />}
                   label="Trainer"
                 />
                 <FormControlLabel
-                  // disabled
                   value="Athlete"
                   control={<Radio />}
                   label="Athlete"

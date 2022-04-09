@@ -89,22 +89,36 @@ router.post('/loginStudent',yupValidator(studentLoginSchema), async (req,res,nex
     // Check User & Password
     if (oldStudent && (await bcrypt.compare(Password,oldStudent.Str_Password) ) ) {
         
-            // create new token
-            let token = jwt.sign({ id: oldStudent.Prk_Student_AutoID ,username:oldStudent.Str_UserName}, process.env.JWT_SECRET, {
-                expiresIn: process.env.JWT_EXPIRES_IN
-              });
-    
-              if (!token) return res.status(500).json({
-                res: false,
-                data: 'There was a problem during token generation',
-              }); 
-    
-            res.status(200).json({
-                res:true,
-                auth:true,
-                token,
-                data:oldStudent
-            })       
+
+            // check activation           
+            if (oldStudent.Bit_Active === false )
+            {
+                res.status(409).json({
+                    res:false,
+                    data: "Your account has not been activated yet! please check your e-mail inbox",
+                })
+            }
+            else 
+            {
+                // create new token
+                let token = jwt.sign({ id: oldStudent.Prk_Student_AutoID ,username:oldStudent.Str_UserName}, process.env.JWT_SECRET, {
+                    expiresIn: process.env.JWT_EXPIRES_IN
+                });
+        
+                if (!token) return res.status(500).json({
+                    res: false,
+                    data: 'There was a problem during token generation',
+                }); 
+        
+                res.status(200).json({
+                    res:true,
+                    auth:true,
+                    token,
+                    data:{loginType:'student', loginId:oldStudent.Prk_Student_AutoID, loginName:oldStudent.Str_Name + ' ' + oldStudent.Str_Family ,loginUserName: oldStudent.Str_UserName}
+                })      
+            }
+
+ 
     }
     else
     {

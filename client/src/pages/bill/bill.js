@@ -47,7 +47,7 @@ export default function StudentBill() {
   const [dataList, setdataList] = useState([]);
   const [refreshDataset,setRefreshDataset] = useState(false);
 
-  let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
+  let {loginType,loginId} = JSON.parse(getFromStorage('logininfo'));
   let { studentID } = useParams();
 
   useEffect( () => {
@@ -55,7 +55,7 @@ export default function StudentBill() {
     if (!studentID){
 
       getBillListByGymID(
-            Prk_Gym_AutoID
+          loginId
           ).then((result) => {
             console.log(result);
             setdataList(result.data.data)

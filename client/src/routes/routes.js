@@ -37,137 +37,212 @@ import Signup from '../pages/signup/signup';
 export default function Router() {
 
   const isAuth = getFromStorage('isAuth') || false;
-  const myRoute = isAuth ? [
-    {
-      path: '/gym',
-      element: <DashboardLayout />,
-      children: [
-        { path: 'Dashboard', element: <DashboardApp /> },
-        { path: 'Gym', element: <GymForm /> },
-        { path: 'Trainer', element: <Trainer /> },
-        { 
-          path: 'NewTrainer', 
-          element: <NewTrainer />,
-          children: [
-            { path: ':trainerID', element: <NewTrainer /> },
-          ]
-        },
-        { path: 'Course', element: <Course /> },
-        { 
-          path: 'NewCourse', 
-          element: <NewCourse />,
-          children: [
-            { path: ':courseID', element: <NewCourse /> },
-          ]
-        },
-        { path: 'Student', element: <Student /> },
-        { 
-          path: 'NewStudent', 
-          element: <NewStudent />,
-          children: [
-            { path: ':studentID', element: <NewStudent /> },
-          ]
-        },
-        { path: 'Enrolment', element: <Enrolment /> },
-        { 
-          path: 'NewEnrolment', 
-          element: <NewEnrolment />,
-          children: [
-            { path: ':enrolmentID', element: <NewEnrolment /> },
-          ]
-        },
-        { 
-          path: 'EnrolmentByCourse', 
-          element: <Enrolment />,
-          children: [
-            { path: ':courseID', element: <Enrolment /> },
-          ]
-        },
-        { 
-          path: 'EnrolmentByStudent', 
-          element: <Enrolment />,
-          children: [
-            { path: ':studentID', element: <Enrolment /> },
-          ]
-        },
-        { path: 'CheckIn', element: <CheckIn /> },
-        { 
-          path: 'NewCheckIn', 
-          element: <NewCheckIn />,
-          children: [
-            { path: ':studentCheckInCheckOutId', element: <NewCheckIn/> },
-          ]
-        },
-        { 
-          path: 'CheckInByCourse', 
-          element: <CheckIn />,
-          children: [
-            { path: ':courseID', element: <CheckIn /> },
-          ]
-        },
-        { 
-          path: 'CheckInByStudent', 
-          element: <CheckIn />,
-          children: [
-            { path: ':studentID', element: <CheckIn /> },
-          ]
-        },
-        { 
-          path: 'StudentBalance', 
-          element: <StudentBalance />,
-          children: [
-            { path: ':studentID', element: <StudentBalance /> },
-          ]
-        },
-        { path: 'Bill', element: <StudentBill /> },
-        { 
-          path: 'BillByStudent', 
-          element: <StudentBill />,
-          children: [
-            { path: ':studentID', element: <StudentBill /> },
-          ]
-        },
-        { path: 'Payment', element: <StudentPayment /> },
-        { 
-          path: 'PaymentByStudent', 
-          element: <StudentPayment />,
-          children: [
-            { path: ':studentID', element: <StudentPayment /> },
-          ]
-        },
-        { path: 'newpayment', element: <NewPayment /> },
-        { 
-          path: 'newPaymentByStudent', 
-          element: <NewPayment />,
-          children: [
-            { path: ':studentID', element: <NewPayment /> },
-          ]
-        },
-      ]
-    }
-    ,
-    {
-      path: '/',
-      element: <SimpleLayout />,
-      children: [
-        { path: '404', element: <NotFound /> },
-        { path: '*', element: <Navigate to="/404" /> }
-      ]
-    },
-    { path: '*', element: <StudentPayment /> },
-    { path: '/', element: <Navigate to="/gym/Dashboard" replace /> },
-    { path: '', element: <Navigate to="/gym/Dashboard" replace /> }
-  ] : 
-  [
-    {path: '/',element: <Login />},
-    {path: '*',element: <Navigate to="/login" replace />,},
-    {path: 'login',element: <Login />,},
-    {path: 'signup',element: <Signup />,},
-    {path: 'gymSignup',element: <Signup />,},
-    {path: '404',element: <NotFound />,},
-    {path: 'ConfirmationSendMessage',element: <ConfirmationSendMessage />,},
-    {path: 'emailconfirmation',element: <EmailConfirmation />,}
-  ];
+  const logininfo = JSON.parse(getFromStorage('logininfo')) || null;
+
+  const myRoute = (isAuth && logininfo) ? authRoutes(logininfo) : nonAuthRoutes() ;
 
   return useRoutes(myRoute);
+}
+
+const nonAuthRoutes = () => {
+
+  return (
+    [
+      {path: '',element: <Login />},
+      {path: '/',element: <Login />},
+      {path: '*',element: <Navigate to="/login" replace />,},
+      {path: 'login',element: <Login />,},
+      {path: 'signup',element: <Signup />,},
+      {path: 'gymSignup',element: <Signup />,},
+      {path: '404',element: <NotFound />,},
+      {path: 'ConfirmationSendMessage',element: <ConfirmationSendMessage />,},
+      {path: 'emailconfirmation',element: <EmailConfirmation />,}
+    ]
+  )
+} 
+
+const authRoutes = (logininfo) => {
+
+    if (!logininfo) return nonAuthRoutes();
+
+    switch (logininfo.loginType) {
+      case 'gym':
+        return gymRoutes();
+        break;
+      case 'student':
+        return studentRoutes();
+        break;
+      case 'trainer':
+        return trainerRoutes();
+        break;
+      default:
+        return nonAuthRoutes();
+        break;
+    }
+
+}
+
+const gymRoutes = () => {
+
+  return(
+    [
+      {
+        path: '/gym',
+        element: <DashboardLayout />,
+        children: [
+          { path: 'Dashboard', element: <DashboardApp /> },
+          { path: 'Gym', element: <GymForm /> },
+          { path: 'Trainer', element: <Trainer /> },
+          { 
+            path: 'NewTrainer', 
+            element: <NewTrainer />,
+            children: [
+              { path: ':trainerID', element: <NewTrainer /> },
+            ]
+          },
+          { path: 'Course', element: <Course /> },
+          { 
+            path: 'NewCourse', 
+            element: <NewCourse />,
+            children: [
+              { path: ':courseID', element: <NewCourse /> },
+            ]
+          },
+          { path: 'Student', element: <Student /> },
+          { 
+            path: 'NewStudent', 
+            element: <NewStudent />,
+            children: [
+              { path: ':studentID', element: <NewStudent /> },
+            ]
+          },
+          { path: 'Enrolment', element: <Enrolment /> },
+          { 
+            path: 'NewEnrolment', 
+            element: <NewEnrolment />,
+            children: [
+              { path: ':enrolmentID', element: <NewEnrolment /> },
+            ]
+          },
+          { 
+            path: 'EnrolmentByCourse', 
+            element: <Enrolment />,
+            children: [
+              { path: ':courseID', element: <Enrolment /> },
+            ]
+          },
+          { 
+            path: 'EnrolmentByStudent', 
+            element: <Enrolment />,
+            children: [
+              { path: ':studentID', element: <Enrolment /> },
+            ]
+          },
+          { path: 'CheckIn', element: <CheckIn /> },
+          { 
+            path: 'NewCheckIn', 
+            element: <NewCheckIn />,
+            children: [
+              { path: ':studentCheckInCheckOutId', element: <NewCheckIn/> },
+            ]
+          },
+          { 
+            path: 'CheckInByCourse', 
+            element: <CheckIn />,
+            children: [
+              { path: ':courseID', element: <CheckIn /> },
+            ]
+          },
+          { 
+            path: 'CheckInByStudent', 
+            element: <CheckIn />,
+            children: [
+              { path: ':studentID', element: <CheckIn /> },
+            ]
+          },
+          { 
+            path: 'StudentBalance', 
+            element: <StudentBalance />,
+            children: [
+              { path: ':studentID', element: <StudentBalance /> },
+            ]
+          },
+          { path: 'Bill', element: <StudentBill /> },
+          { 
+            path: 'BillByStudent', 
+            element: <StudentBill />,
+            children: [
+              { path: ':studentID', element: <StudentBill /> },
+            ]
+          },
+          { path: 'Payment', element: <StudentPayment /> },
+          { 
+            path: 'PaymentByStudent', 
+            element: <StudentPayment />,
+            children: [
+              { path: ':studentID', element: <StudentPayment /> },
+            ]
+          },
+          { path: 'newpayment', element: <NewPayment /> },
+          { 
+            path: 'newPaymentByStudent', 
+            element: <NewPayment />,
+            children: [
+              { path: ':studentID', element: <NewPayment /> },
+            ]
+          },
+        ]
+      }
+      ,
+      {
+        path: '/',
+        element: <SimpleLayout />,
+        children: [
+          { path: '404', element: <NotFound /> },
+          { path: '*', element: <Navigate to="/404" /> }
+        ]
+      },
+      { path: '*', element: <StudentPayment /> },
+      { path: '/', element: <Navigate to="/gym/Dashboard" replace /> },
+      { path: '', element: <Navigate to="/gym/Dashboard" replace /> }
+    ]
+  )
+
+}
+
+const studentRoutes = () => {
+
+  return(
+    [
+      {
+        path: '/student',
+        element: <DashboardLayout />,
+        children: [
+          { path: 'Dashboard', element: <DashboardApp /> },
+          { path: 'Course', element: <Course /> },
+          { path: 'CheckIn', element: <CheckIn /> },
+          { path: 'StudentBalance', element: <StudentBalance /> },
+        ]
+      }
+      ,
+      {
+        path: '/',
+        element: <SimpleLayout />,
+        children: [
+          { path: '404', element: <NotFound /> },
+          { path: '*', element: <Navigate to="/404" /> }
+        ]
+      },
+      { path: '*', element: <Navigate to="/student/Dashboard" replace /> },
+      { path: '/', element: <Navigate to="/student/Dashboard" replace /> },
+      { path: '', element: <Navigate to="/student/Dashboard" replace /> }
+    ]
+  )
+
+}
+
+const trainerRoutes = () => {
+    return(
+      []
+    )
 }

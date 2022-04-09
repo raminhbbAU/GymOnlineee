@@ -80,22 +80,36 @@ router.post('/login',yupValidator(trainerLoginSchema), async (req,res,next) => {
     // Check User & Password
     if (oldTrainer && (await bcrypt.compare(Password,oldTrainer.Str_Password) ) ) {   
 
-            // create new token
-            let token = jwt.sign({ id: oldTrainer.Prk_Trainer,username:oldTrainer.Str_UserName}, process.env.JWT_SECRET, {
-                expiresIn: process.env.JWT_EXPIRES_IN
-              });
-    
-              if (!token) return res.status(500).json({
-                res: false,
-                data: 'There was a problem during token generation',
-              }); 
-    
-            res.status(200).json({
-                res:true,
-                auth:true,
-                token,
-                data:oldTrainer
-            }) 
+
+            // check activation           
+            if (oldTrainer.Bit_Active === false )
+            {
+                res.status(409).json({
+                    res:false,
+                    data: "Your account has not been activated yet! please check your e-mail inbox",
+                })
+            }
+            else 
+            {
+                // create new token
+                let token = jwt.sign({ id: oldTrainer.Prk_Trainer,username:oldTrainer.Str_UserName}, process.env.JWT_SECRET, {
+                  expiresIn: process.env.JWT_EXPIRES_IN
+                });
+      
+                if (!token) return res.status(500).json({
+                  res: false,
+                  data: 'There was a problem during token generation',
+                }); 
+      
+              res.status(200).json({
+                  res:true,
+                  auth:true,
+                  token,
+                  data:{loginType:'trainer', loginId:oldTrainer.Prk_Trainer, loginName:oldTrainer.Str_TrainerName + ' ' + oldTrainer.Str_TrainerFamily ,loginUserName: oldTrainer.Str_UserName}
+              }) 
+            }
+
+
     }
     else
     {
@@ -141,6 +155,55 @@ router.put('/activeDeactiveTrainer',authToken,async(req,res,next) =>{
           });
   })
 
+
+})
+
+router.post('/trainerActivateAccount',async(req,res,next) =>{
+    
+  // Get user input
+  const { uuid} = req.body;
+
+  // check if user already exist
+  const oldTrainer = await models.trainer.findOne({
+     where:{
+       Str_ConfirmationCode:uuid
+     }
+ });
+
+  if (!oldTrainer) {
+     return res.status(409).json({
+         res: false,
+         data: "The activation link is not a valid link. please check carefully and try again",
+       });
+  }
+  else {
+
+   if (oldTrainer.Bit_Active === true)
+   {
+       return res.status(409).json({
+           res: false,
+           data: "The account has been activated before! Please login into your account",
+         });
+   }
+   else
+   {
+    oldTrainer.update({
+           Bit_Active:true
+       }).then( (updatedrecord) => {
+           res.status(200).json({
+               res: true,
+               data: updatedrecord,
+             });
+      }).catch( (error) => {
+           console.log(error);
+           return res.status(500).json({
+               res: false,
+               data: "something wrong happend during activating trainer. Please try again a bit later!",
+           });
+      })
+   }
+
+  }
 
 })
 

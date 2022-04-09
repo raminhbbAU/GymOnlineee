@@ -29,7 +29,7 @@ export default function PaymentForm () {
     const [payTypeList, setPayTypeList] = useState([]);
 
     const navigate = useNavigate();
-    let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
+    let {loginType,loginId} = JSON.parse(getFromStorage('logininfo'));
     let { studentID } = useParams();
 
 
@@ -43,7 +43,7 @@ export default function PaymentForm () {
         if (!studentID)
         {
             getStudentInfoByGymID(
-                Prk_Gym_AutoID
+                loginId
               ).then((result) => {
                 
                 console.log(result.data.data);
@@ -58,7 +58,7 @@ export default function PaymentForm () {
         else
         {   
             getStudentInfoByStudentID(
-                Prk_Gym_AutoID,
+                loginId,
                 studentID
               ).then((result) => {               
                 console.log(result.data.data);

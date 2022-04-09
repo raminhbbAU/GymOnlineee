@@ -9,7 +9,7 @@ import { Box, Button, Typography, Container } from '@mui/material';
 import { MotionContainer, varBounceIn } from '../../components/animate';
 import Page from '../../components/Page';
 
-import {gymActivateAccount,studentActivateAccount} from "../../api";
+import {gymActivateAccount,studentActivateAccount,trainerActivateAccount} from "../../api";
 
 const RootStyle = styled(Page)(({ theme }) => ({
   display: 'flex',
@@ -77,9 +77,20 @@ export default function EmailConfirmation () {
 
               break;
           case 'trainer':
-            
-                break;
-              
+            trainerActivateAccount(uuid)
+            .then((res) => {
+              if (res) {
+                console.log(res);
+                isLoading(true);
+                setsuccess(true);
+              }
+            }).catch((error)=>{
+                console.log(error);
+                isLoading(true);
+                setError(error.response.data.data);
+            })
+
+              break;
           default:
             isLoading(true);
             setError('The confirmation link is not valid!')

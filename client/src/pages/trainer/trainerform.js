@@ -29,7 +29,7 @@ export default function TrainerForm () {
     // const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
     let { trainerID } = useParams();
-    let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
+    let {loginType, loginId} = JSON.parse(getFromStorage('logininfo'));
     const avatar ='';
 
 
@@ -40,7 +40,7 @@ export default function TrainerForm () {
           setEditMode(true);
 
           getTrainerInfoByTrainerID(
-              Prk_Gym_AutoID,
+              loginId,
               trainerID
             ).then((result) => {
 
@@ -102,7 +102,7 @@ export default function TrainerForm () {
       else
       {
         registerNewTrainer(
-          Prk_Gym_AutoID,
+          loginId,
           values.TrainerName,
           values.TrainerFamily,
           values.Mobile,

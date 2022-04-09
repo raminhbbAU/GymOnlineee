@@ -37,7 +37,7 @@ export default function CourseForm () {
     const [trainerList, setTrainerList] = useState([]);
 
     const navigate = useNavigate();
-    let {Prk_Gym_AutoID} = JSON.parse(getFromStorage('logininfo'));
+    let {loginType,loginId} = JSON.parse(getFromStorage('logininfo'));
     let { courseID } = useParams();
 
 
@@ -81,7 +81,7 @@ export default function CourseForm () {
     
 
       getTrainerByGymID(
-        Prk_Gym_AutoID
+        loginId
       ).then((result) => {
             
         setTrainerList(result.data.data)
@@ -168,7 +168,7 @@ export default function CourseForm () {
         else
         {
             registerNewCourse(
-                Prk_Gym_AutoID,
+                loginId,
                 values.CourseName,
                 values.CourseDescription,
                 values.Trainer,

@@ -7,7 +7,7 @@ import palette from '../../theme/palette';
 
 
 // Utils
-import {getDashboardInfo,getUpcomingSessionsByGymID,getNeedToEnrolStudentListByGymID,getDebtorStudentListByGymID} from "../../api";
+import {getGymDashboardInfo,getStudentDashboardInfo,getTrainerDashboardInfo,getUpcomingSessionsByGymID,getNeedToEnrolStudentListByGymID,getDebtorStudentListByGymID} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 import {DashboardCourse_HEAD,DashboardEnrollStudent_HEAD,DashboardDebtorStudent_HEAD} from "../../utils/gridHeader";
@@ -57,17 +57,54 @@ export default function DashboardApp() {
 
     setIsLoading(true);
 
-    getDashboardInfo(
-      logininfo.Prk_Gym_AutoID
-    ).then((result) => {
-      console.log(result.data.data);
-      setIsLoading(false);
-      setDashboardInfo(result.data.data)
-    }).catch((error) => {
-      setDashboardInfoError(true);
-      console.log(error.response);
-      errorNotifyByErrorObject(error);
-    })
+    console.log('loadDashboardInfo');
+    console.log(logininfo)
+    switch (logininfo.loginType) {
+      case 'gym':
+        getGymDashboardInfo(
+          logininfo.loginId
+        ).then((result) => {
+          console.log(result.data.data);
+          setIsLoading(false);
+          setDashboardInfo(result.data.data)
+        }).catch((error) => {
+          setDashboardInfoError(true);
+          console.log(error.response);
+          errorNotifyByErrorObject(error);
+        })
+        break;
+      case 'student':
+        getStudentDashboardInfo(
+          logininfo.loginId
+        ).then((result) => {
+          console.log(result.data.data);
+          setIsLoading(false);
+          setDashboardInfo(result.data.data)
+        }).catch((error) => {
+          setDashboardInfoError(true);
+          console.log(error.response);
+          errorNotifyByErrorObject(error);
+        })
+        break;
+      case 'trainer':
+        getTrainerDashboardInfo(
+          logininfo.loginId
+        ).then((result) => {
+          console.log(result.data.data);
+          setIsLoading(false);
+          setDashboardInfo(result.data.data)
+        }).catch((error) => {
+          setDashboardInfoError(true);
+          console.log(error.response);
+          errorNotifyByErrorObject(error);
+        })
+        break;
+      default:
+        setDashboardInfoError(true);
+        break;
+    }
+
+
 
   }
 
@@ -76,7 +113,7 @@ export default function DashboardApp() {
     setIsUpcomingSessionsLoading(true);
 
     getUpcomingSessionsByGymID(
-      logininfo.Prk_Gym_AutoID
+      logininfo.loginId
     ).then((result) => {
       console.log(result);
       setIsUpcomingSessionsLoading(false);   
@@ -94,7 +131,7 @@ export default function DashboardApp() {
     setIsEnrolStudentListLoading(true);
 
     getNeedToEnrolStudentListByGymID(
-      logininfo.Prk_Gym_AutoID
+      logininfo.loginId
     ).then((result) => {
       console.log(result);
       setIsEnrolStudentListLoading(false);   
@@ -112,7 +149,7 @@ export default function DashboardApp() {
     setIsDebtorStudentListLoading(true);
 
     getDebtorStudentListByGymID(
-      logininfo.Prk_Gym_AutoID
+      logininfo.loginId
     ).then((result) => {
       console.log(result);
       setIsDebtorStudentListLoading(false);   
@@ -126,10 +163,10 @@ export default function DashboardApp() {
   }
 
   return (
-    <Page title= {"Dashboard | " + logininfo.Str_GymName}>
+    <Page title= {"Dashboard | " + logininfo.loginName}>
       <Container maxWidth="xl">
         <Box sx={{ pb: 5 }}> 
-          <Typography variant="h3" sx={{ mb: 5 }}>Hi {logininfo.Str_GymName}! Welcome back</Typography>
+          <Typography variant="h3" sx={{ mb: 5 }}>Hi {logininfo.loginName}! Welcome back</Typography>
 
           <Grid container spacing={3}>
 

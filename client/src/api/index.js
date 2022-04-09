@@ -1,4 +1,4 @@
-export {gymLogin,trainerLogin,studentLogin,registerNewGym,gymActivateAccount,studentActivateAccount} from './auth';
+export {gymLogin,trainerLogin,studentLogin,registerNewGym,gymActivateAccount,studentActivateAccount,trainerActivateAccount} from './auth';
 
 export {registerNewCourse,editCourse,activeDeactiveCourse,getCourseByGymID,getCourseInfoByID,getEnrolledCoursesByCourseID,
         getEnrolledCoursesByGymID,getUpcomingSessionsByGymID} from './course';
@@ -14,4 +14,4 @@ export {registerNewStudent,editStudentInfo,activeDeactiveStudent,newStudentCours
 
 export {registerNewTrainer,editTrainer,activeDeactiveTrainer,getTrainerByGymID,getTrainerInfoByTrainerID} from './trainer';
 
-export {getDashboardInfo} from './common';
+export {getGymDashboardInfo,getStudentDashboardInfo,getTrainerDashboardInfo} from './common';

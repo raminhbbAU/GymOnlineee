@@ -9,7 +9,7 @@ import { Box, Button, Typography, Container } from '@mui/material';
 import { MotionContainer, varBounceIn } from '../../components/animate';
 import Page from '../../components/Page';
 
-import {gymActivateAccount} from "../../api";
+import {gymActivateAccount,studentActivateAccount} from "../../api";
 
 const RootStyle = styled(Page)(({ theme }) => ({
   display: 'flex',
@@ -49,17 +49,32 @@ export default function EmailConfirmation () {
             gymActivateAccount(uuid)
             .then((res) => {
               if (res) {
+                console.log(res);
                 isLoading(true);
                 setsuccess(true);
               }
             }).catch((error)=>{
+                console.log(error);
                 isLoading(true);
                 setError(error.response.data.data);
             })
 
             break;
           case 'student':
-            
+
+            studentActivateAccount(uuid)
+            .then((res) => {
+              if (res) {
+                console.log(res);
+                isLoading(true);
+                setsuccess(true);
+              }
+            }).catch((error)=>{
+                console.log(error);
+                isLoading(true);
+                setError(error.response.data.data);
+            })
+
               break;
           case 'trainer':
             

@@ -170,15 +170,18 @@ export default function Trainer() {
           <Typography variant="h4" gutterBottom>
             Course List
           </Typography>
-          <Button
-            visible = {loginType != 'gym' ? true : false}
-            variant="contained"
-            component={RouterLink}
-            to="/gym/newcourse"
-            startIcon={<Icon icon={plusFill} />}          
-          >
-            New Course
-          </Button>
+
+          {loginType === "gym" && (
+            <Button
+              variant="contained"
+              component={RouterLink}
+              to="/gym/newcourse"
+              startIcon={<Icon icon={plusFill} />}          
+            >
+              New Course
+            </Button>
+          )}
+
         </Stack>
 
         <Card>

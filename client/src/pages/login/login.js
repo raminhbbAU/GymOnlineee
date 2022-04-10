@@ -45,6 +45,7 @@ export default function SignInSide() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
+    console.log(userType);
     switch (userType) {
       case 'Gym':
         gymLogin(
@@ -89,6 +90,7 @@ export default function SignInSide() {
           data.get('username'),
           data.get('password'),
         ).then((result) => {
+          console.log(result);
           if (result) {
             if (result.data.auth) {
               setToStorage('isAuth',result.data.auth);

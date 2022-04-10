@@ -4,7 +4,7 @@ import {apiPath} from "../constants/api.config";
 
 const gymLogin = async(userName,password) => {
    
-    let res =  await axios.post(apiPath + 'gym/login',{
+    let res =  await axios.post(apiPath + 'gym/gymLogin',{
         UserName:userName,
         Password:password
     });
@@ -14,28 +14,23 @@ const gymLogin = async(userName,password) => {
 
 const trainerLogin =  async(userName,password) => {
 
-    await axios.post(apiPath + 'trainer/login',{
+    let res =  await axios.post(apiPath + 'trainer/trainerlogin',{
         UserName:userName,
         Password:password
-    }).then( (res) => {
-        return res;
-    }).catch( (error) => {
-        return Promise.reject(error);
-    })
+    });
+
+    return res;
 
 }
 
 const studentLogin =  async(userName,password) => {
 
-    await axios.post(apiPath + 'student/login',{
+    let res =  await axios.post(apiPath + 'student/studentLogin',{
         UserName:userName,
         Password:password
-    }).then( (res) => {
-        return res;
-    }).catch( (error) => {
-        return Promise.reject(error);
-    })
-    
+    });
+
+    return res;
 }
 
 const registerNewGym =  async(gymname,mobile,gmail,password) => {

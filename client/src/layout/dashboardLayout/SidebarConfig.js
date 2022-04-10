@@ -11,7 +11,7 @@ import alertTriangleFill from '@iconify/icons-eva/alert-triangle-fill';
 
 const getIcon = (name) => <Icon icon={name} width={22} height={22} />;
 
-const sidebarConfig = [
+const gymSidebarItems = [
   {
     title: 'Dashboard',
     path: '/gym/dashboard',
@@ -70,4 +70,91 @@ const sidebarConfig = [
   }
 ];
 
-export default sidebarConfig;
+const studentSidebarItems = [
+  {
+    title: 'Dashboard',
+    path: '/student/dashboard',
+    icon: getIcon(pieChart2Fill)
+  },
+  {
+    title: 'divider',
+    path: '',
+    icon:{}
+  },
+  {
+    title: 'Course',
+    path: '/student/course',
+    icon: getIcon(fileTextFill)
+  },
+  {
+    title: 'Check-In',
+    path: '/student/CheckIn',
+    icon: getIcon(pieChart2Fill)
+  },
+  {
+    title: 'Financial',
+    path: '/student/StudentBalance',
+    icon: getIcon(pieChart2Fill)
+  }
+];
+
+const trainerSidebarItems = [
+  {
+    title: 'Dashboard',
+    path: '/gym/dashboard',
+    icon: getIcon(pieChart2Fill)
+  },
+  {
+    title: 'Gym',
+    path: '/gym/gym',
+    icon: getIcon(peopleFill)
+  },
+  {
+    title: 'divider',
+    path: '',
+    icon:{}
+  },
+  {
+    title: 'Enrolment',
+    path: '/gym/enrolment',
+    icon: getIcon(pieChart2Fill)
+  },
+  {
+    title: 'Check-In',
+    path: '/gym/CheckIn',
+    icon: getIcon(pieChart2Fill)
+  }
+  ,
+  {
+    title: 'Bills',
+    path: '/gym/Bill',
+    icon: getIcon(pieChart2Fill)
+  },
+  {
+    title: 'Payment',
+    path: '/gym/Payment',
+    icon: getIcon(pieChart2Fill)
+  },
+  {
+    title: 'divider',
+    path: '',
+    icon:{}
+  },
+  {
+    title: 'Trainer',
+    path: '/gym/trainer',
+    icon: getIcon(shoppingBagFill)
+  },
+  {
+    title: 'Course',
+    path: '/gym/course',
+    icon: getIcon(fileTextFill)
+  },
+  {
+    title: 'Student',
+    path: '/gym/student',
+    icon: getIcon(lockFill)
+  }
+];
+
+export {gymSidebarItems,studentSidebarItems,trainerSidebarItems};

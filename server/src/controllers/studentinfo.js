@@ -48,7 +48,7 @@ const {sendEmail,htmlMaker} = require('../services/notification.service');
         Str_RegisterDate:getDate(),
         Str_RegisterTime:getTime(),
         Str_UserName:UserName,
-        Str_Password:Password,
+        Str_Password:encryptedPassword,
         Bit_Active:false,
         Str_Description:Description,
         Str_ConfirmationCode:confirmationCode,
@@ -73,7 +73,7 @@ const {sendEmail,htmlMaker} = require('../services/notification.service');
 
 })
 
-router.post('/loginStudent',yupValidator(studentLoginSchema), async (req,res,next) => {
+router.post('/studentLogin',yupValidator(studentLoginSchema), async (req,res,next) => {
     
     // Get user input
     const { UserName, Password } = req.body;

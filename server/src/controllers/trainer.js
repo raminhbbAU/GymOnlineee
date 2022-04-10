@@ -65,7 +65,7 @@ const {sendEmail,htmlMaker} = require('../services/notification.service');
 
 })
 
-router.post('/login',yupValidator(trainerLoginSchema), async (req,res,next) => {
+router.post('/trainerlogin',yupValidator(trainerLoginSchema), async (req,res,next) => {
     
     // Get user input
     const { UserName, Password } = req.body;

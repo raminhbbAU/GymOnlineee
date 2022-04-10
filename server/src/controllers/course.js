@@ -529,6 +529,84 @@ router.get("/getCourseByGymID", authToken, async (req, res, next) => {
 
 });
 
+router.get("/getCourseByStudentID", authToken, async (req, res, next) => {
+  
+  // Get user input
+  const { studentID } = req.query;
+
+  if (!studentID) {
+        return res.status(409).json({
+            res: false,
+            data: "studentID is not provided!",
+        });
+  }
+
+  if(isNaN(studentID)){
+    return res.status(409).json({
+      res: false,
+      data: "studentID is not properly provided!",
+  });
+  }
+    
+  //console.log(models.sequelize);
+  const courseList = await models.sequelize.query("SELECT courses.*,trainers.Str_TrainerName,trainers.Str_TrainerFamily FROM courses inner join trainers on Frk_Trainer = Prk_Trainer inner join studentvcourses on studentvcourses.Frk_Course = courses.Prk_Course where studentvcourses.Frk_student=" + studentID + ";");
+
+
+ if (!courseList[0]) {
+   return res.status(409).json({
+     res: false,
+     data: "There is no course related to this specific student.",
+   });
+ }
+ else
+ {
+    res.status(200).json({
+        res: true,
+        data: courseList[0],
+     });
+ }
+
+});
+
+router.get("/getCourseByTrainerID", authToken, async (req, res, next) => {
+  
+  // Get user input
+  const { trainerID } = req.query;
+
+  if (!trainerID) {
+        return res.status(409).json({
+            res: false,
+            data: "trainerID is not provided!",
+        });
+  }
+
+  if(isNaN(trainerID)){
+    return res.status(409).json({
+      res: false,
+      data: "trainerID is not properly provided!",
+  });
+  }
+    
+  //console.log(models.sequelize);
+  const courseList = await models.sequelize.query("SELECT courses.*,trainers.Str_TrainerName,trainers.Str_TrainerFamily FROM courses inner join trainers on Frk_Trainer = Prk_Trainer inner join studentvcourses on studentvcourses.Frk_Course = courses.Prk_Course where courses.Frk_Trainer=" + trainerID + ";");
+
+
+ if (!courseList[0]) {
+   return res.status(409).json({
+     res: false,
+     data: "There is no course related to this specific trainer.",
+   });
+ }
+ else
+ {
+    res.status(200).json({
+        res: true,
+        data: courseList[0],
+     });
+ }
+
+});
+
 router.get('/getEnrolledCoursesByCourseID',authToken,async(req,res,next) =>{
     
   // Get user input
@@ -637,6 +715,106 @@ router.get('/getUpcomingSessionsByGymID',authToken,async(req,res,next) =>{
       return res.status(409).json({
         res: false,
         data: "There is no scheduled course for today related to this specific gym id.",
+      });
+    }
+    else
+    {
+      res.status(200).json({
+          res: true,
+          data: UpcomingSessions[0],
+        });
+    }
+
+  } catch (error) {
+      return res.status(500).json({
+        res: false,
+        data: "Something wrong was happend!",
+      });
+  }
+
+
+    
+})
+
+router.get('/getUpcomingSessionsByStudentID',authToken,async(req,res,next) =>{
+    
+  // Get user input
+  const { studentID } = req.query;
+
+  if (!studentID) {
+        return res.status(409).json({
+            res: false,
+            data: "studentID is not provided!",
+        });
+  }
+
+  if(isNaN(studentID)){
+    return res.status(409).json({
+      res: false,
+      data: "studentID is not properly provided!",
+  });
+  }
+  
+
+  try {
+
+    let UpcomingSessions = await models.sequelize.query("SELECT Prk_Course,Str_CourseName,CONCAT_WS(' ', Str_TrainerName, Str_TrainerFamily) as Str_TrainerFullName,Int_DayOfWeek,Str_StartTime,Str_EndTime,case Int_DayOfWeek when 0 then 'Sunday' when 1 then 'Monday'  when 2 then 'Tuesday'  when 3 then 'Wednesday'  when 4 then 'Thursday'  when 5 then 'Friday' when 6 then 'Saturday'   else '' end as Str_DayOfWeek FROM courses INNER JOIN courseweeklyschedules ON courses.Prk_Course = courseweeklyschedules.Frk_Course inner join trainers on courses.Frk_Trainer = trainers.Prk_Trainer inner join studentvcourses on studentvcourses.Frk_Course = courses.Prk_Course  where Int_DayOfWeek=" + getDayOfWeek().toString() + " and studentvcourses.Frk_student=" + studentID + ";");
+
+
+    if (!UpcomingSessions[0]) {
+      return res.status(409).json({
+        res: false,
+        data: "There is no scheduled course for today related to this specific student id.",
+      });
+    }
+    else
+    {
+      res.status(200).json({
+          res: true,
+          data: UpcomingSessions[0],
+        });
+    }
+
+  } catch (error) {
+      return res.status(500).json({
+        res: false,
+        data: "Something wrong was happend!",
+      });
+  }
+
+
+    
+})
+
+router.get('/getUpcomingSessionsByTrainerID',authToken,async(req,res,next) =>{
+    
+  // Get user input
+  const { trainerID } = req.query;
+
+  if (!trainerID) {
+        return res.status(409).json({
+            res: false,
+            data: "trainerID is not provided!",
+        });
+  }
+
+  if(isNaN(trainerID)){
+    return res.status(409).json({
+      res: false,
+      data: "trainerID is not properly provided!",
+  });
+  }
+  
+
+  try {
+
+    let UpcomingSessions = await models.sequelize.query("SELECT Prk_Course,Str_CourseName,CONCAT_WS(' ', Str_TrainerName, Str_TrainerFamily) as Str_TrainerFullName,Int_DayOfWeek,Str_StartTime,Str_EndTime,case Int_DayOfWeek when 0 then 'Sunday' when 1 then 'Monday'  when 2 then 'Tuesday'  when 3 then 'Wednesday'  when 4 then 'Thursday'  when 5 then 'Friday' when 6 then 'Saturday'   else '' end as Str_DayOfWeek FROM courses INNER JOIN courseweeklyschedules ON courses.Prk_Course = courseweeklyschedules.Frk_Course inner join trainers on courses.Frk_Trainer = trainers.Prk_Trainer where Int_DayOfWeek=" + getDayOfWeek().toString() + " and trainers.Prk_Trainer=" + trainerID + ";");
+
+
+    if (!UpcomingSessions[0]) {
+      return res.status(409).json({
+        res: false,
+        data: "There is no scheduled course for today related to this specific trainer id.",
       });
     }
     else

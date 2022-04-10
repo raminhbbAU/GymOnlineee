@@ -390,6 +390,50 @@ router.get('/getDebtorStudentListByGymID',authToken,async(req,res,next) =>{
 
 })
 
+router.get('/getDebtorStudentListByStudentID',authToken,async(req,res,next) =>{
+  
+  // Get user input
+  const { studentID } = req.query;
+
+  if (!studentID) {
+        return res.status(409).json({
+            res: false,
+            data: "studentID is not provided!",
+        });
+  }
+
+  if(isNaN(studentID)){
+    return res.status(409).json({
+      res: false,
+      data: "studentID is not properly provided!",
+  });
+  }
+    
+  //console.log(models.sequelize);
+  const debtorStudentList = await models.sequelize.query("select *,Int_BillAmount - Int_PayAmount as Int_Reminder from (select Prk_Student_AutoID,CONCAT_WS(' ', Str_Name, Str_Family) as Str_StudentFullName,Str_Mobile,IFNUll((select Sum(Int_Amount) as Int_BillAmount from studentbills where studentbills.Frk_Student = students.Prk_Student_AutoID and studentbills.Bit_Active = 1),0) as Int_BillAmount ,IFNUll((select Sum(Int_Amount) as Int_PayAmount from studentpayments where studentpayments.Frk_Student = students.Prk_Student_AutoID and studentpayments.Bit_Active = 1),0) as Int_PayAmount from students where students.Bit_Active = 1 and students.Prk_Student_AutoID = " + studentID + ") as t where (Int_BillAmount - Int_PayAmount) > 0;");
+
+
+  if (!debtorStudentList[0]) {
+    return res.status(409).json({
+      res: false,
+      data: "There is no debt for the given student.",
+    });
+  }
+  else
+  {
+    res.status(200).json({
+        res: true,
+        data: debtorStudentList[0],
+      });
+  }
+
+})
+
+router.get('/getDebtorStudentListByTrainerID',authToken,async(req,res,next) =>{
+  
+ 
+
+})
 
 
 
@@ -775,6 +819,105 @@ router.get('/getNeedToEnrolStudentListByGymID',authToken,async(req,res,next) =>{
     
 })
 
+router.get('/getNeedToEnrolStudentListByStudentID',authToken,async(req,res,next) =>{
+    
+  // Get user input
+  const { studentID } = req.query;
+
+  if (!studentID) {
+        return res.status(409).json({
+            res: false,
+            data: "studentID is not provided!",
+        });
+  }
+
+  if(isNaN(studentID)){
+    return res.status(409).json({
+      res: false,
+      data: "studentID is not properly provided!",
+  });
+  }
+  
+
+  try {
+
+    let UpcomingSessions = await models.sequelize.query("Select *,Int_RegisteredSession - Int_AttendanceCount as Int_ReminderSession from (select Prk_StudentVCourse,Prk_Course,Str_CourseName,Prk_Student_AutoID,CONCAT_WS(' ', Str_Name, Str_Family) as Str_StudentFullName,Int_RegisteredSession,(select Count(*) as Int_AttendanceCount from studentcheckincheckouts where (Int_Status=1 or Int_Status=2) and Frk_StudentVCourse = Prk_StudentVCourse) as Int_AttendanceCount from studentvcourses inner join students on students.Prk_Student_AutoID = studentvcourses.Frk_student inner join courses on courses.Prk_Course = studentvcourses.Frk_Course where studentvcourses.Bit_Active = 1 and studentvcourses.Frk_student = " + studentID + ") as t where (Int_RegisteredSession - Int_AttendanceCount) <=2;");
+
+
+    if (!UpcomingSessions[0]) {
+      return res.status(409).json({
+        res: false,
+        data: "There is no student for enrolling.",
+      });
+    }
+    else
+    {
+      res.status(200).json({
+          res: true,
+          data: UpcomingSessions[0],
+        });
+    }
+
+  } catch (error) {
+      return res.status(500).json({
+        res: false,
+        data: "Something wrong was happend!",
+      });
+  }
+
+
+    
+})
+
+router.get('/getNeedToEnrolStudentListByTrainerID',authToken,async(req,res,next) =>{
+    
+  // Get user input
+  const { trainerID } = req.query;
+
+  if (!trainerID) {
+        return res.status(409).json({
+            res: false,
+            data: "trainerID is not provided!",
+        });
+  }
+
+  if(isNaN(trainerID)){
+    return res.status(409).json({
+      res: false,
+      data: "trainerID is not properly provided!",
+  });
+  }
+  
+
+  try {
+
+    let UpcomingSessions = await models.sequelize.query("Select *,Int_RegisteredSession - Int_AttendanceCount as Int_ReminderSession from (select Prk_StudentVCourse,Prk_Course,Str_CourseName,Prk_Student_AutoID,CONCAT_WS(' ', Str_Name, Str_Family) as Str_StudentFullName,Int_RegisteredSession,(select Count(*) as Int_AttendanceCount from studentcheckincheckouts where (Int_Status=1 or Int_Status=2) and Frk_StudentVCourse = Prk_StudentVCourse) as Int_AttendanceCount from studentvcourses inner join students on students.Prk_Student_AutoID = studentvcourses.Frk_student inner join courses on courses.Prk_Course = studentvcourses.Frk_Course where studentvcourses.Bit_Active = 1 and courses.Frk_Trainer = " + trainerID + ") as t where (Int_RegisteredSession - Int_AttendanceCount) <=2;");
+
+
+    if (!UpcomingSessions[0]) {
+      return res.status(409).json({
+        res: false,
+        data: "There is no student for enrolling.",
+      });
+    }
+    else
+    {
+      res.status(200).json({
+          res: true,
+          data: UpcomingSessions[0],
+        });
+    }
+
+  } catch (error) {
+      return res.status(500).json({
+        res: false,
+        data: "Something wrong was happend!",
+      });
+  }
+
+
+    
+})
 
 
 

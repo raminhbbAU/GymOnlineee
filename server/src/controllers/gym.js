@@ -63,7 +63,7 @@ const {getDate,getTime,generateUUID} = require('../services/utility.service')
 
 })
 
-router.post('/login',yupValidator(gymLoginSchema), async (req,res,next) => {
+router.post('/gymLogin',yupValidator(gymLoginSchema), async (req,res,next) => {
     
     // Get user input
     const { UserName, Password } = req.body;

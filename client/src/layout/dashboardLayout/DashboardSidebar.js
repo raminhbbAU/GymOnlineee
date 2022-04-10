@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 
 // material
@@ -13,7 +13,7 @@ import NavSection from '../../components/NavSection';
 import { MHidden } from '../../components/@material-extend';
 
 //
-import sidebarConfig from './SidebarConfig';
+import {gymSidebarItems,studentSidebarItems,trainerSidebarItems} from './SidebarConfig';
 
 // utils / API
 import {getFromStorage,removeFromStorage} from "../../storage/localstorage.js";
@@ -49,12 +49,37 @@ DashboardSidebar.propTypes = {
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   
   const { pathname } = useLocation();
-  let {loginType, loginId, loginName, loginUserName} = JSON.parse(getFromStorage('logininfo'));
+  let logininfo = JSON.parse(getFromStorage('logininfo'));
+  let [sidebarConfig,setSidebarConfig] = useState(gymSidebarItems);
 
   useEffect(() => {
+
     if (isOpenSidebar) {
       onCloseSidebar();
     }
+
+    if (logininfo)
+    {
+      switch (logininfo.loginType) {
+        case 'gym':
+          setSidebarConfig(gymSidebarItems);
+          break;
+        case 'student':
+          setSidebarConfig(studentSidebarItems);
+          break;
+        case 'trainer':
+          setSidebarConfig(trainerSidebarItems);
+          break;
+        default:
+          setSidebarConfig(gymSidebarItems);
+          break;
+      }
+    }
+    else
+    {
+      setSidebarConfig(gymSidebarItems);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
@@ -77,10 +102,10 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
             <Avatar src={avator} alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {loginName}
+                {logininfo.loginName}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {loginUserName}
+                {logininfo.loginUserName}
               </Typography>
             </Box>
           </AccountStyle>

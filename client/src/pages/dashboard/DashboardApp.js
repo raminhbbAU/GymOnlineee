@@ -7,7 +7,7 @@ import palette from '../../theme/palette';
 
 
 // Utils
-import {getGymDashboardInfo,getStudentDashboardInfo,getTrainerDashboardInfo,getUpcomingSessionsByGymID,getNeedToEnrolStudentListByGymID,getDebtorStudentListByGymID} from "../../api";
+import {getGymDashboardInfo,getStudentDashboardInfo,getTrainerDashboardInfo,getUpcomingSessionsByGymID,getUpcomingSessionsByStudentID,getUpcomingSessionsByTrainerID,getNeedToEnrolStudentListByGymID, getNeedToEnrolStudentListByStudentID, getNeedToEnrolStudentListByTrainerID,getDebtorStudentListByGymID,getDebtorStudentListByStudentID,getDebtorStudentListByTrainerID} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 import {DashboardCourse_HEAD,DashboardEnrollStudent_HEAD,DashboardDebtorStudent_HEAD} from "../../utils/gridHeader";
@@ -18,6 +18,21 @@ import CustomDashboardBox from '../../components/CustomDashboardBox';
 import CustomDashboardCard from '../../components/CustomDashboardCard';
 import CustomDashboardGrid from '../../components/CustomDashboardGrid';
 
+// Constants
+const gymDashboardBoxes = [
+  {id:0, title:'Students',dataField:'activeStudentCount',postfix:''},{id:1, title:'Courses',dataField:'activeCourseCount',postfix:''},
+  {id:2, title:'Monthly Income',dataField:'monthlyIncome',postfix:' $'},{id:3, title:'Total Reminder',dataField:'totalReminder',postfix:' $'}
+]
+
+const studentDashboardBoxes = [
+  {id:0, title:'Courses',dataField:'activeCourseCount',postfix:''},{id:1, title:'Total Debt',dataField:'totalDebt',postfix:' $'},
+  {id:2, title:'BMI',dataField:'latestBMI',postfix:''},{id:3, title:'Weight',dataField:'latestWeight',postfix:' kg'}
+]
+
+const trainerDashboardBoxes = [
+  {id:0, title:'Students',dataField:'activeStudentCount',postfix:''},{id:1, title:'Courses',dataField:'activeCourseCount',postfix:''},
+  {id:2, title:'Monthly Income',dataField:'monthlyIncome',postfix:' $'},{id:3, title:'Total Reminder',dataField:'totalReminder',postfix:' $'}
+]
 
 
 
@@ -28,6 +43,7 @@ export default function DashboardApp() {
   let [isLoading,setIsLoading] = useState(false);
   let [dashboardInfoError,setDashboardInfoError] = useState(false);
   let [dashboardInfo,setDashboardInfo] = useState({});
+  let [dashboardBoxes,setDashboardBoxes] = useState(gymDashboardBoxes);
 
   let [isUpcomingSessionsLoading,setIsUpcomingSessionsLoading] = useState(false);
   let [UpcomingSessionsError,setUpcomingSessionsError] = useState(false);
@@ -57,8 +73,6 @@ export default function DashboardApp() {
 
     setIsLoading(true);
 
-    console.log('loadDashboardInfo');
-    console.log(logininfo)
     switch (logininfo.loginType) {
       case 'gym':
         getGymDashboardInfo(
@@ -66,24 +80,27 @@ export default function DashboardApp() {
         ).then((result) => {
           console.log(result.data.data);
           setIsLoading(false);
-          setDashboardInfo(result.data.data)
+          setDashboardInfo(result.data.data);
+          setDashboardBoxes(gymDashboardBoxes);
         }).catch((error) => {
           setDashboardInfoError(true);
           console.log(error.response);
           errorNotifyByErrorObject(error);
+          setIsLoading(false);
         })
         break;
       case 'student':
         getStudentDashboardInfo(
           logininfo.loginId
         ).then((result) => {
-          console.log(result.data.data);
           setIsLoading(false);
           setDashboardInfo(result.data.data)
+          setDashboardBoxes(studentDashboardBoxes);
         }).catch((error) => {
           setDashboardInfoError(true);
           console.log(error.response);
           errorNotifyByErrorObject(error);
+          setIsLoading(false);
         })
         break;
       case 'trainer':
@@ -92,11 +109,13 @@ export default function DashboardApp() {
         ).then((result) => {
           console.log(result.data.data);
           setIsLoading(false);
-          setDashboardInfo(result.data.data)
+          setDashboardInfo(result.data.data);
+          setDashboardBoxes(trainerDashboardBoxes);
         }).catch((error) => {
           setDashboardInfoError(true);
           console.log(error.response);
           errorNotifyByErrorObject(error);
+          setIsLoading(false);
         })
         break;
       default:
@@ -112,17 +131,51 @@ export default function DashboardApp() {
 
     setIsUpcomingSessionsLoading(true);
 
-    getUpcomingSessionsByGymID(
-      logininfo.loginId
-    ).then((result) => {
-      console.log(result);
-      setIsUpcomingSessionsLoading(false);   
-      setUpcomingSessions(result.data.data)
-    }).catch((error) => {
-      console.log(error);
-      setUpcomingSessionsError(true);      
-      errorNotifyByErrorObject(error);
-    })
+    switch (logininfo.loginType) {
+      case 'gym':
+        getUpcomingSessionsByGymID(
+          logininfo.loginId
+        ).then((result) => {
+          console.log(result);
+          setIsUpcomingSessionsLoading(false);   
+          setUpcomingSessions(result.data.data)
+        }).catch((error) => {
+          console.log(error);
+          setUpcomingSessionsError(true);      
+          errorNotifyByErrorObject(error);
+        })
+        break;
+      case 'student':
+        getUpcomingSessionsByStudentID(
+          logininfo.loginId
+        ).then((result) => {
+          setIsUpcomingSessionsLoading(false);   
+          setUpcomingSessions(result.data.data)
+        }).catch((error) => {
+          console.log(error);
+          setUpcomingSessionsError(true);      
+          errorNotifyByErrorObject(error);
+        })
+        break;
+      case 'trainer':
+        getUpcomingSessionsByTrainerID(
+          logininfo.loginId
+        ).then((result) => {
+          console.log(result);
+          setIsUpcomingSessionsLoading(false);   
+          setUpcomingSessions(result.data.data)
+        }).catch((error) => {
+          console.log(error);
+          setUpcomingSessionsError(true);      
+          errorNotifyByErrorObject(error);
+        })
+        break;
+      default:
+        setUpcomingSessionsError(true);
+        break;
+    }
+
+
 
   }
 
@@ -130,17 +183,50 @@ export default function DashboardApp() {
 
     setIsEnrolStudentListLoading(true);
 
-    getNeedToEnrolStudentListByGymID(
-      logininfo.loginId
-    ).then((result) => {
-      console.log(result);
-      setIsEnrolStudentListLoading(false);   
-      setEnrolStudentList(result.data.data)
-    }).catch((error) => {
-      console.log(error);
-      setEnrolStudentListError(true);      
-      errorNotifyByErrorObject(error);
-    })
+    switch (logininfo.loginType) {
+      case 'gym':
+        getNeedToEnrolStudentListByGymID(
+          logininfo.loginId
+        ).then((result) => {
+          console.log(result);
+          setIsEnrolStudentListLoading(false);   
+          setEnrolStudentList(result.data.data)
+        }).catch((error) => {
+          console.log(error);
+          setEnrolStudentListError(true);      
+          errorNotifyByErrorObject(error);
+        })
+        break;
+      case 'student':
+        getNeedToEnrolStudentListByStudentID(
+          logininfo.loginId
+        ).then((result) => {
+          console.log(result);
+          setIsEnrolStudentListLoading(false);   
+          setEnrolStudentList(result.data.data)
+        }).catch((error) => {
+          console.log(error);
+          setEnrolStudentListError(true);      
+          errorNotifyByErrorObject(error);
+        })
+        break;
+      case 'trainer':
+        getNeedToEnrolStudentListByTrainerID(
+          logininfo.loginId
+        ).then((result) => {
+          console.log(result);
+          setIsEnrolStudentListLoading(false);   
+          setEnrolStudentList(result.data.data)
+        }).catch((error) => {
+          console.log(error);
+          setEnrolStudentListError(true);      
+          errorNotifyByErrorObject(error);
+        })
+        break;
+      default:
+        setEnrolStudentListError(true);
+        break;
+    }
 
   }
 
@@ -148,17 +234,42 @@ export default function DashboardApp() {
 
     setIsDebtorStudentListLoading(true);
 
-    getDebtorStudentListByGymID(
-      logininfo.loginId
-    ).then((result) => {
-      console.log(result);
-      setIsDebtorStudentListLoading(false);   
-      setDebtorStudentList(result.data.data)
-    }).catch((error) => {
-      console.log(error);
-      setdebtorStudentListError(true);      
-      errorNotifyByErrorObject(error);
-    })
+    switch (logininfo.loginType) {
+      case 'gym':
+        getDebtorStudentListByGymID(
+          logininfo.loginId
+        ).then((result) => {
+          console.log(result);
+          setIsDebtorStudentListLoading(false);   
+          setDebtorStudentList(result.data.data)
+        }).catch((error) => {
+          console.log(error);
+          setdebtorStudentListError(true);      
+          errorNotifyByErrorObject(error);
+        })
+        break;
+      case 'student':
+        getDebtorStudentListByStudentID(
+          logininfo.loginId
+        ).then((result) => {
+          console.log(result);
+          setIsDebtorStudentListLoading(false);   
+          setDebtorStudentList(result.data.data)
+        }).catch((error) => {
+          console.log(error);
+          setdebtorStudentListError(true);      
+          errorNotifyByErrorObject(error);
+        })
+        break;
+      case 'trainer':
+        setdebtorStudentListError(true);
+        break;
+      default:
+        setdebtorStudentListError(true);      
+        break;
+    }
+
+
 
   }
 
@@ -172,25 +283,25 @@ export default function DashboardApp() {
 
             <Grid item xs={12} sm={6} md={3}>
               <CustomDashboardBox color={palette.success}>
-                <CustomDashboardCard title={"Students"} value={dashboardInfo.activeStudentCount} isLoading={isLoading} isError={dashboardInfoError}/>
+                <CustomDashboardCard title={dashboardBoxes[0].title} value={dashboardInfo[dashboardBoxes[0].dataField] + dashboardBoxes[0].postfix} isLoading={isLoading} isError={dashboardInfoError}/>
               </CustomDashboardBox>
             </Grid>
 
             <Grid item xs={12} sm={6} md={3}>
               <CustomDashboardBox color={palette.error}>
-                <CustomDashboardCard title={"Courses"} value={dashboardInfo.activeCourseCount} isLoading={isLoading} isError={dashboardInfoError}/>
+                <CustomDashboardCard title={dashboardBoxes[1].title} value={dashboardInfo[dashboardBoxes[1].dataField] + dashboardBoxes[1].postfix} isLoading={isLoading} isError={dashboardInfoError}/>
               </CustomDashboardBox>
             </Grid>
 
             <Grid item xs={12} sm={6} md={3}>
               <CustomDashboardBox color={palette.info}>
-                <CustomDashboardCard title={"Monthly Income"} value={dashboardInfo.monthlyIncome + '$'} isLoading={isLoading} isError={dashboardInfoError}/>
+                <CustomDashboardCard title={dashboardBoxes[2].title} value={dashboardInfo[dashboardBoxes[2].dataField] + dashboardBoxes[2].postfix} isLoading={isLoading} isError={dashboardInfoError}/>
               </CustomDashboardBox>
             </Grid>
 
             <Grid item xs={12} sm={6} md={3}>
               <CustomDashboardBox color={palette.warning}>
-                <CustomDashboardCard title={"Total Reminder"} value={dashboardInfo.totalReminder + '$'} isLoading={isLoading} isError={dashboardInfoError}/>
+                <CustomDashboardCard title={dashboardBoxes[3].title} value={dashboardInfo[dashboardBoxes[3].dataField] + dashboardBoxes[3].postfix} isLoading={isLoading} isError={dashboardInfoError}/>
               </CustomDashboardBox>
             </Grid>
 

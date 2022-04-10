@@ -68,10 +68,10 @@ router.get('/getStudentDashboardInfo',authToken,async(req,res,next) =>{
 
     // Get user input
     const { studentID } = req.query;
-    let activeCourseCount=0;
-    let totalDebt =0
-    let latestBMI=0;
-    let latestWeight=0
+    let activeCourseCount='0';
+    let totalDebt ='0'
+    let latestBMI='0';
+    let latestWeight='0'
 
     if (!studentID) {
           return res.status(409).json({
@@ -91,14 +91,14 @@ router.get('/getStudentDashboardInfo',authToken,async(req,res,next) =>{
     try {
 
       let queryResult = await models.sequelize.query("SELECT Count(*) as MyCourseCount FROM onlinegym.studentvcourses where Bit_Active=1 and Frk_student=" + studentID + ";");
-      activeCourseCount = queryResult[0][0].MyCourseCount
+      activeCourseCount = queryResult[0][0].MyCourseCount;
 
       queryResult = await models.sequelize.query("Select ((SELECT  IFNULL(Sum(Int_Amount),0) as bill FROM studentbills inner join students on students.Prk_Student_AutoID = studentbills.Frk_Student where studentbills.Bit_Active=1 and Prk_Student_AutoID=" + studentID + ") - (SELECT IFNULL(Sum(Int_Amount),0) as payment FROM studentpayments inner join students on students.Prk_Student_AutoID = studentpayments.Frk_Student where studentpayments.Bit_Active=1 and Prk_Student_AutoID=" + studentID + ")) as totalDebt;");
-      totalDebt = queryResult[0][0].totalDebt
+      totalDebt = queryResult[0][0].totalDebt;
 
-      latestBMI=0
+      latestBMI='0'
 
-      latestWeight=0
+      latestWeight='0'
 
     
         res.status(200).json({

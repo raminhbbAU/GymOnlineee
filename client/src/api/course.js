@@ -96,6 +96,42 @@ const getCourseByGymID =  async(gymID) => {
     return res;
 }
 
+const getCourseByStudentID =  async(studentID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    console.log(token);
+
+    let res = await axios.get(apiPath + 'course/getCourseByStudentID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            studentID,
+        }
+    });
+
+    return res;
+}
+
+const getCourseByTrainerID =  async(trainerID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    console.log(token);
+
+    let res = await axios.get(apiPath + 'course/getCourseByTrainerID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            trainerID,
+        }
+    });
+
+    return res;
+}
+
 const getCourseInfoByID =  async(courseID) => {
    
     let token = getFromStorage('JWT_Token') 
@@ -168,4 +204,43 @@ const getUpcomingSessionsByGymID =  async(gymID) => {
     return res;
 }
 
-export {registerNewCourse,editCourse,activeDeactiveCourse,getCourseByGymID,getCourseInfoByID,getEnrolledCoursesByCourseID,getEnrolledCoursesByGymID,getUpcomingSessionsByGymID};
+const getUpcomingSessionsByStudentID =  async(studentID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    console.log(token);
+
+    let res = await axios.get(apiPath + 'course/getUpcomingSessionsByStudentID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            studentID
+        }
+    });
+
+    return res;
+}
+
+const getUpcomingSessionsByTrainerID =  async(trainerID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    console.log(token);
+
+    let res = await axios.get(apiPath + 'course/getUpcomingSessionsByTrainerID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            trainerID
+        }
+    });
+
+    return res;
+}
+
+
+export {registerNewCourse,editCourse,activeDeactiveCourse,getCourseByGymID,getCourseByStudentID,getCourseByTrainerID,
+        getCourseInfoByID,getEnrolledCoursesByCourseID,getEnrolledCoursesByGymID,getUpcomingSessionsByGymID,
+        getUpcomingSessionsByStudentID,getUpcomingSessionsByTrainerID};

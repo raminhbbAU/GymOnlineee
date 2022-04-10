@@ -16,7 +16,7 @@ import CourseMoreMenu from './courseMoreMenu'
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import {getCourseByGymID,activeDeactiveCourse} from "../../api";
+import {getCourseByGymID,getCourseByStudentID,getCourseByTrainerID,activeDeactiveCourse} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 
@@ -56,15 +56,44 @@ export default function Trainer() {
 
   const loadCourseList = () => {
 
-    getCourseByGymID(
-      loginId
-    ).then((result) => {
-      console.log(result);
-      setCourseList(result.data.data)
-    }).catch((error) => {
-      console.log(error.response);
-      errorNotifyByErrorObject(error);
-    })
+    switch (loginType) {
+
+      case 'student':
+        getCourseByStudentID(
+          loginId
+        ).then((result) => {
+          console.log(result);
+          setCourseList(result.data.data)
+        }).catch((error) => {
+          console.log(error.response);
+          errorNotifyByErrorObject(error);
+        })
+        break;
+      case 'trainer':
+        getCourseByTrainerID(
+          loginId
+        ).then((result) => {
+          console.log(result);
+          setCourseList(result.data.data)
+        }).catch((error) => {
+          console.log(error.response);
+          errorNotifyByErrorObject(error);
+        })
+        break;
+      default:
+        getCourseByGymID(
+          loginId
+        ).then((result) => {
+          console.log(result);
+          setCourseList(result.data.data)
+        }).catch((error) => {
+          console.log(error.response);
+          errorNotifyByErrorObject(error);
+        })
+        break;
+    }
+
+
 
   }
 
@@ -142,6 +171,7 @@ export default function Trainer() {
             Course List
           </Typography>
           <Button
+            visible = {loginType != 'gym' ? true : false}
             variant="contained"
             component={RouterLink}
             to="/gym/newcourse"

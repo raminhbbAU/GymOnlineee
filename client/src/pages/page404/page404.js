@@ -1,3 +1,6 @@
+import { useEffect, useState } from 'react';
+
+
 import { motion } from 'framer-motion';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -8,6 +11,8 @@ import { Box, Button, Typography, Container } from '@mui/material';
 // components
 import { MotionContainer, varBounceIn } from '../../components/animate';
 import Page from '../../components/Page';
+import {getFromStorage} from "../../storage/localstorage.js";
+
 
 // ----------------------------------------------------------------------
 
@@ -22,6 +27,31 @@ const RootStyle = styled(Page)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Page404() {
+
+  let logininfo = JSON.parse(getFromStorage('logininfo'));
+  let [homePath,setHomePath] = useState('');
+
+  useEffect(()=>{
+
+      if (!logininfo) setHomePath('/gym/Dashboard')
+
+      switch (logininfo.loginType) {
+        case 'gym':
+          setHomePath('/gym/Dashboard')
+          break;
+        case 'student':
+          setHomePath('/student/Dashboard')
+          break;
+        case 'trainer':
+          setHomePath('/trainer/Dashboard')
+          break;
+        default:
+          setHomePath('/gym/Dashboard')
+          break;
+      }
+
+  },[])
+
   return (
     <RootStyle title="404 Page Not Found | Gymonlineee">
       <Container>
@@ -45,7 +75,7 @@ export default function Page404() {
               />
             </motion.div>
 
-            <Button to="/gym/Dashboard" size="large" variant="contained" component={RouterLink}>
+            <Button to={homePath} size="large" variant="contained" component={RouterLink}>
               Go to Home
             </Button>
           </Box>

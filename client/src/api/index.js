@@ -1,7 +1,8 @@
 export {gymLogin,trainerLogin,studentLogin,registerNewGym,gymActivateAccount,studentActivateAccount,trainerActivateAccount} from './auth';
 
-export {registerNewCourse,editCourse,activeDeactiveCourse,getCourseByGymID,getCourseInfoByID,getEnrolledCoursesByCourseID,
-        getEnrolledCoursesByGymID,getUpcomingSessionsByGymID} from './course';
+export {registerNewCourse,editCourse,activeDeactiveCourse,getCourseByGymID,getCourseByStudentID,getCourseByTrainerID,getCourseInfoByID,
+        getEnrolledCoursesByCourseID,getEnrolledCoursesByGymID,getUpcomingSessionsByGymID,getUpcomingSessionsByStudentID,
+        getUpcomingSessionsByTrainerID} from './course';
 
 export {editGym} from './gym';
 
@@ -10,7 +11,9 @@ export {registerNewStudent,editStudentInfo,activeDeactiveStudent,newStudentCours
         getStudentEnrolledCourses,getStudentEnrolledCoursesByID,getStudentEnrolledCoursesByCourseID,
         getStudentAttendanceListbyGymID,getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID,
         getFinancialStudentBalanceByID,getBillListByStudentID,getBillListByGymID,getPaymentListByStudentID,
-        getPaymentListByGymID,registerNewPayment,getNeedToEnrolStudentListByGymID,getDebtorStudentListByGymID} from './student';
+        getPaymentListByGymID,registerNewPayment,getNeedToEnrolStudentListByGymID,getNeedToEnrolStudentListByStudentID,
+        getNeedToEnrolStudentListByTrainerID,getDebtorStudentListByGymID,getDebtorStudentListByStudentID,
+        getDebtorStudentListByTrainerID} from './student';
 
 export {registerNewTrainer,editTrainer,activeDeactiveTrainer,getTrainerByGymID,getTrainerInfoByTrainerID} from './trainer';
 

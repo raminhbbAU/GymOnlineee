@@ -214,6 +214,41 @@ const getNeedToEnrolStudentListByGymID =  async(gymID) => {
     return res;
 }
 
+const getNeedToEnrolStudentListByStudentID =  async(studentID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    
+
+    let res = await axios.get(apiPath + 'student/getNeedToEnrolStudentListByStudentID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            studentID
+        }
+    });
+
+    return res;
+}
+
+const getNeedToEnrolStudentListByTrainerID =  async(trainerID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    
+
+    let res = await axios.get(apiPath + 'student/getNeedToEnrolStudentListByTrainerID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            trainerID
+        }
+    });
+
+    return res;
+}
 
 
 
@@ -434,6 +469,41 @@ const getDebtorStudentListByGymID =  async(gymID) => {
     return res;
 }
 
+const getDebtorStudentListByStudentID =  async(studentID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    
+
+    let res = await axios.get(apiPath + 'student/getDebtorStudentListByStudentID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            studentID,
+        }
+    });
+
+    return res;
+}
+
+const getDebtorStudentListByTrainerID =  async(trainerID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    
+
+    let res = await axios.get(apiPath + 'student/getDebtorStudentListByTrainerID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            trainerID,
+        }
+    });
+
+    return res;
+}
 
 
 export {registerNewStudent,editStudentInfo,activeDeactiveStudent,newStudentCourseEnrollment,editStudentCourseEnrollment,
@@ -441,4 +511,5 @@ export {registerNewStudent,editStudentInfo,activeDeactiveStudent,newStudentCours
                 getStudentEnrolledCourses,getStudentEnrolledCoursesByID,getStudentEnrolledCoursesByCourseID,
                 getStudentAttendanceListbyGymID,getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID,
                 getFinancialStudentBalanceByID,getBillListByStudentID,getBillListByGymID,getPaymentListByStudentID,
-                getPaymentListByGymID,registerNewPayment,getNeedToEnrolStudentListByGymID,getDebtorStudentListByGymID};
+                getPaymentListByGymID,registerNewPayment,getNeedToEnrolStudentListByGymID,getNeedToEnrolStudentListByStudentID,
+                getNeedToEnrolStudentListByTrainerID,getDebtorStudentListByGymID,getDebtorStudentListByStudentID,getDebtorStudentListByTrainerID};

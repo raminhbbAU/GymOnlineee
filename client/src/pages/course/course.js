@@ -255,7 +255,9 @@ export default function Trainer() {
                           </TableCell>
 
                           <TableCell align="right">
-                            <CourseMoreMenu courseID= {Prk_Course} courseName={Str_CourseName} onActivateMenuClick={(courseID) => handleActivateMenuClick(courseID)} />
+                            {loginType === "gym" && (
+                              <CourseMoreMenu courseID= {Prk_Course} courseName={Str_CourseName} onActivateMenuClick={(courseID) => handleActivateMenuClick(courseID)} />
+                            )}             
                           </TableCell>
                         </TableRow>
                       );

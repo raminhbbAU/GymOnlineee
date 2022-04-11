@@ -52,8 +52,14 @@ export default function Enrolment() {
   let { studentID,courseID } = useParams();
 
 
+  
 
   useEffect( () => {
+
+    if (!studentID && !courseID && loginType==='student')
+    {
+        studentID = loginId;
+    }
 
     if (studentID && !courseID)
     {
@@ -156,14 +162,18 @@ export default function Enrolment() {
           <Typography variant="h4" gutterBottom>
             Check-in Activity List
           </Typography>
-          <Button
-            variant="contained"
-            component={RouterLink}
-            to="/gym/NewCheckIn"
-            startIcon={<Icon icon={plusFill} />}          
-          >
-            New Check-In
-          </Button>
+
+          {loginType === "gym" && (
+            <Button
+              variant="contained"
+              component={RouterLink}
+              to="/gym/NewCheckIn"
+              startIcon={<Icon icon={plusFill} />}          
+            >
+              New Check-In
+            </Button>
+          )}
+
         </Stack>
 
         <Card>
@@ -233,8 +243,12 @@ export default function Enrolment() {
                           </TableCell>
 
                           <TableCell align="right">
-                            <CheckInMoreMenu StudentCheckInCheckOut={Prk_StudentCheckInCheckOut} />
+                            {loginType === "gym" && (
+                              <CheckInMoreMenu StudentCheckInCheckOut={Prk_StudentCheckInCheckOut} />
+                            )}                  
                           </TableCell>
+
+                          
                         </TableRow>
                       );
                     })}

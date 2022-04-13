@@ -78,7 +78,7 @@ const getTrainerByGymID =  async(gymID) => {
     return res;
 }
 
-const getTrainerInfoByTrainerID =  async(gymID,trainerID) => {
+const getTrainerInfoByTrainerID =  async(trainerID) => {
    
     let token = getFromStorage('JWT_Token') 
     console.log(token);
@@ -89,7 +89,6 @@ const getTrainerInfoByTrainerID =  async(gymID,trainerID) => {
             'x-access-token': token,
         },
         params: {
-            gymID: gymID,
             trainerID:trainerID,
         }
     });

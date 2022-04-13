@@ -19,7 +19,7 @@ const gymSidebarItems = [
   },
   {
     title: 'Gym',
-    path: '/gym/gym',
+    path: '/gym/profile',
     icon: getIcon(peopleFill)
   },
   {
@@ -77,6 +77,11 @@ const studentSidebarItems = [
     icon: getIcon(pieChart2Fill)
   },
   {
+    title: 'Profile',
+    path: '/student/profile',
+    icon: getIcon(pieChart2Fill)
+  },
+  {
     title: 'divider',
     path: '',
     icon:{}
@@ -101,59 +106,33 @@ const studentSidebarItems = [
 const trainerSidebarItems = [
   {
     title: 'Dashboard',
-    path: '/gym/dashboard',
+    path: '/trainer/dashboard',
     icon: getIcon(pieChart2Fill)
   },
   {
-    title: 'Gym',
-    path: '/gym/gym',
-    icon: getIcon(peopleFill)
-  },
-  {
-    title: 'divider',
-    path: '',
-    icon:{}
-  },
-  {
-    title: 'Enrolment',
-    path: '/gym/enrolment',
-    icon: getIcon(pieChart2Fill)
-  },
-  {
-    title: 'Check-In',
-    path: '/gym/CheckIn',
-    icon: getIcon(pieChart2Fill)
-  }
-  ,
-  {
-    title: 'Bills',
-    path: '/gym/Bill',
-    icon: getIcon(pieChart2Fill)
-  },
-  {
-    title: 'Payment',
-    path: '/gym/Payment',
+    title: 'Profile',
+    path: '/trainer/profile',
     icon: getIcon(pieChart2Fill)
   },
   {
     title: 'divider',
     path: '',
     icon:{}
-  },
-  {
-    title: 'Trainer',
-    path: '/gym/trainer',
-    icon: getIcon(shoppingBagFill)
   },
   {
     title: 'Course',
-    path: '/gym/course',
+    path: '/trainer/course',
     icon: getIcon(fileTextFill)
   },
   {
-    title: 'Student',
-    path: '/gym/student',
-    icon: getIcon(lockFill)
+    title: 'Check-In',
+    path: '/trainer/CheckIn',
+    icon: getIcon(pieChart2Fill)
+  },
+  {
+    title: 'Financial',
+    path: '/trainer/TrainerBalance',
+    icon: getIcon(pieChart2Fill)
   }
 ];
 

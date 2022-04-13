@@ -588,7 +588,7 @@ router.get("/getCourseByTrainerID", authToken, async (req, res, next) => {
   }
     
   //console.log(models.sequelize);
-  const courseList = await models.sequelize.query("SELECT courses.*,trainers.Str_TrainerName,trainers.Str_TrainerFamily FROM courses inner join trainers on Frk_Trainer = Prk_Trainer inner join studentvcourses on studentvcourses.Frk_Course = courses.Prk_Course where courses.Frk_Trainer=" + trainerID + ";");
+  const courseList = await models.sequelize.query("SELECT courses.*,trainers.Str_TrainerName,trainers.Str_TrainerFamily FROM courses inner join trainers on Frk_Trainer = Prk_Trainer where courses.Frk_Trainer=" + trainerID + ";");
 
 
  if (!courseList[0]) {

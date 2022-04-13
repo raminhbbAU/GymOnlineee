@@ -212,6 +212,8 @@ router.put('/editTrainer',authToken,async(req,res,next) =>{
     // Get user input
     const { id,TrainerName , TrainerFamily,  Mobile,  WhatsApp,  Gmail,  Avatar} = req.body;
 
+    console.table(req.body);
+
     // check if user already exist
     const oldTrainer = await models.trainer.findOne({
         where:{
@@ -336,14 +338,8 @@ router.get('/getTrainerByGymID',authToken,async(req,res,next) =>{
 router.get('/getTrainerInfoByTrainerID',authToken,async(req,res,next) =>{
    
   // Get user input
-  const { gymID,trainerID } = req.query;
+  const { trainerID } = req.query;
 
-  if (!gymID) {
-      return res.status(409).json({
-          res: false,
-          data: "gymID is not provided!",
-      });
-  }
 
   if (!trainerID) {
     return res.status(409).json({
@@ -356,7 +352,6 @@ router.get('/getTrainerInfoByTrainerID',authToken,async(req,res,next) =>{
   // check if user already exist
   const trainerList = await models.trainer.findOne({
       where:{
-        Frk_gym:gymID,
         Prk_Trainer:trainerID,
       }
   });

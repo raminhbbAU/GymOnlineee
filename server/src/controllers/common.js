@@ -123,25 +123,21 @@ router.get('/getStudentDashboardInfo',authToken,async(req,res,next) =>{
 
 router.get('/getTrainerDashboardInfo',authToken,async(req,res,next) =>{
 
-    /////////////////////////////////
-    //TODO : It's not complete
-    /////////////////////////////////
-
     // Get user input
-    const { TrainerID } = req.query;
+    const { trainerID } = req.query;
     let activeStudentCount=0;
     let activeCourseCount=0;
     let monthlyIncome=0;
     let totalReminder=0
 
-    if (!TrainerID) {
+    if (!trainerID) {
           return res.status(409).json({
               res: false,
               data: "TrainerID is not provided!",
           });
     }
   
-    if(isNaN(TrainerID)){
+    if(isNaN(trainerID)){
       return res.status(409).json({
         res: false,
         data: "TrainerID is not properly provided!",
@@ -151,17 +147,15 @@ router.get('/getTrainerDashboardInfo',authToken,async(req,res,next) =>{
 
     try {
 
-      let queryResult = await models.sequelize.query("SELECT Count(*) as MyStudentCount FROM onlinegym.students where Bit_Active=1 and Frk_gym=" + gymID + ";");
+      let queryResult = await models.sequelize.query("SELECT count(distinct Prk_Student_AutoID) as MyStudentCount FROM students inner join studentvcourses on Frk_student = Prk_Student_AutoID  inner join courses on Prk_Course = Frk_Course where students.Bit_Active=1 and studentvcourses.Bit_Active=1 and courses.Bit_Active=1 and Frk_Trainer= " + trainerID + ";");
       activeStudentCount = queryResult[0][0].MyStudentCount
 
-      queryResult = await models.sequelize.query("SELECT Count(*) as MyCourseCount FROM onlinegym.courses where Bit_Active=1 and Frk_Gym=" + gymID + ";");
+      queryResult = await models.sequelize.query("SELECT Count(*) as MyCourseCount FROM onlinegym.courses where Bit_Active=1 and Frk_Trainer = " + trainerID + ";");
       activeCourseCount = queryResult[0][0].MyCourseCount
 
-      queryResult = await models.sequelize.query("SELECT Sum(Int_Amount) as monthlyIncome FROM onlinegym.studentpayments inner join students on students.Prk_Student_AutoID = studentpayments.Frk_Student WHERE  (Str_GenerateDate BETWEEN '"+ getFirstDayOfMonth() + "' AND '" + getLastDayOfMonth() + "') and studentpayments.Bit_Active=1 and Frk_gym =" + gymID + ";");
-      monthlyIncome = queryResult[0][0].monthlyIncome
+      monthlyIncome = '0'
 
-      queryResult = await models.sequelize.query("Select ((SELECT  IFNULL(Sum(Int_Amount),0) as bill FROM studentbills inner join students on students.Prk_Student_AutoID = studentbills.Frk_Student where studentbills.Bit_Active=1 and Frk_gym=" + gymID + ") - (SELECT IFNULL(Sum(Int_Amount),0) as payment FROM studentpayments inner join students on students.Prk_Student_AutoID = studentpayments.Frk_Student where studentpayments.Bit_Active=1 and Frk_gym=" + gymID + ")) as totalReminder;");
-      totalReminder = queryResult[0][0].totalReminder
+      totalReminder = '0'
 
     
         res.status(200).json({
@@ -181,10 +175,6 @@ router.get('/getTrainerDashboardInfo',authToken,async(req,res,next) =>{
             data: "something wrong was happend!",
           });
     }
-
-    //const courseList = await models.sequelize.query("SELECT courses.*,trainers.Str_TrainerName,trainers.Str_TrainerFamily FROM courses inner join trainers on Frk_Trainer = Prk_Trainer where courses.Prk_Course=" + courseID + ";");
-  
-
   
   })
 

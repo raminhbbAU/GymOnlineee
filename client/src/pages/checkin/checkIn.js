@@ -17,7 +17,7 @@ import CheckInMoreMenu from './checkInMoreMenu';
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
-import {getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID,getStudentAttendanceListbyGymID} from "../../api";
+import {getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID,getStudentAttendanceListbyTrainerID,getStudentAttendanceListbyGymID} from "../../api";
 import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 import {getFromStorage} from "../../storage/localstorage.js";
 
@@ -56,47 +56,74 @@ export default function Enrolment() {
 
   useEffect( () => {
 
-    if (!studentID && !courseID && loginType==='student')
+    if (loginType === 'gym')
     {
-        studentID = loginId;
+
+      if (studentID && !courseID)
+      {
+          getStudentAttendanceListbyStudentID(
+            studentID
+          ).then((result) => {
+            console.log(result);
+            setCheckInList(result.data.data)
+          }).catch((error) => {
+            console.log(error.response);
+            errorNotifyByErrorObject(error);
+          })
+      }
+      else if (!studentID && courseID)
+      {
+          getStudentAttendanceListbyCourseID(
+            courseID
+          ).then((result) => {
+            console.log(result);
+            setCheckInList(result.data.data)
+          }).catch((error) => {
+            console.log(error.response);
+            errorNotifyByErrorObject(error);
+          })
+      }
+      else if (!studentID && !courseID)
+      {
+          getStudentAttendanceListbyGymID(
+            loginId
+          ).then((result) => {
+            console.log(result);
+            setCheckInList(result.data.data)
+          }).catch((error) => {
+            console.log(error.response);
+            errorNotifyByErrorObject(error);
+          })
+      }
+
+    }
+    else if (loginType === 'student')
+    {
+      getStudentAttendanceListbyStudentID(
+        loginId
+      ).then((result) => {
+        console.log(result);
+        setCheckInList(result.data.data)
+      }).catch((error) => {
+        console.log(error.response);
+        errorNotifyByErrorObject(error);
+      })
+    }
+    else if (loginType === 'trainer')
+    {     
+      getStudentAttendanceListbyTrainerID(
+        loginId
+      ).then((result) => {
+        console.log(result);
+        setCheckInList(result.data.data)
+      }).catch((error) => {
+        console.log(error.response);
+        errorNotifyByErrorObject(error);
+      })
     }
 
-    if (studentID && !courseID)
-    {
-        getStudentAttendanceListbyStudentID(
-          studentID
-        ).then((result) => {
-          console.log(result);
-          setCheckInList(result.data.data)
-        }).catch((error) => {
-          console.log(error.response);
-          errorNotifyByErrorObject(error);
-        })
-    }
-    else if (!studentID && courseID)
-    {
-        getStudentAttendanceListbyCourseID(
-          courseID
-        ).then((result) => {
-          console.log(result);
-          setCheckInList(result.data.data)
-        }).catch((error) => {
-          console.log(error.response);
-          errorNotifyByErrorObject(error);
-        })
-    }
-    else if (!studentID && !courseID)
-    {
-        getStudentAttendanceListbyGymID(
-          loginId
-        ).then((result) => {
-          console.log(result);
-          setCheckInList(result.data.data)
-        }).catch((error) => {
-          console.log(error.response);
-          errorNotifyByErrorObject(error);
-        })
-    }
+
+
 
   },[refreshDataset])
 

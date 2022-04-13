@@ -91,7 +91,7 @@ const gymRoutes = () => {
         element: <DashboardLayout />,
         children: [
           { path: 'Dashboard', element: <DashboardApp /> },
-          { path: 'Gym', element: <GymForm /> },
+          { path: 'Profile', element: <GymForm /> },
           { path: 'Trainer', element: <Trainer /> },
           { 
             path: 'NewTrainer', 
@@ -194,6 +194,8 @@ const gymRoutes = () => {
         ]
       }
       ,
+      {path: 'ConfirmationSendMessage',element: <ConfirmationSendMessage />,},
+      {path: 'emailconfirmation',element: <EmailConfirmation />,},
       {
         path: '/',
         element: <SimpleLayout />,
@@ -219,12 +221,14 @@ const studentRoutes = () => {
         element: <DashboardLayout />,
         children: [
           { path: 'Dashboard', element: <DashboardApp /> },
+          { path: 'Profile', element: <NewStudent /> },          
           { path: 'Course', element: <Course /> },
           { path: 'CheckIn', element: <CheckIn /> },
           { path: 'StudentBalance', element: <StudentBalance /> },
         ]
-      }
-      ,
+      },
+      {path: 'ConfirmationSendMessage',element: <ConfirmationSendMessage />,},
+      {path: 'emailconfirmation',element: <EmailConfirmation />,},
       {
         path: '/',
         element: <SimpleLayout />,
@@ -242,7 +246,34 @@ const studentRoutes = () => {
 }
 
 const trainerRoutes = () => {
-    return(
-      []
-    )
+
+  return(
+    [
+      {
+        path: '/trainer',
+        element: <DashboardLayout />,
+        children: [
+          { path: 'Dashboard', element: <DashboardApp /> },
+          { path: 'Profile', element: <NewTrainer /> },          
+          { path: 'Course', element: <Course /> },
+          { path: 'CheckIn', element: <CheckIn /> },
+          { path: 'TrainerBalance', element: <NotFound /> },
+        ]
+      },
+      {path: 'ConfirmationSendMessage',element: <ConfirmationSendMessage />,},
+      {path: 'emailconfirmation',element: <EmailConfirmation />,},
+      {
+        path: '/',
+        element: <SimpleLayout />,
+        children: [
+          { path: '404', element: <NotFound /> },
+          { path: '*', element: <Navigate to="/404" /> }
+        ]
+      },
+      { path: '*', element: <Navigate to="/trainer/Dashboard" replace /> },
+      { path: '/', element: <Navigate to="/trainer/Dashboard" replace /> },
+      { path: '', element: <Navigate to="/trainer/Dashboard" replace /> }
+    ]
+  )
+
 }

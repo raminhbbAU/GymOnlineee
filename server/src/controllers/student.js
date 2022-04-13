@@ -1149,4 +1149,44 @@ router.get('/getStudentAttendanceListbyCourseID',authToken,async(req,res,next) =
 
 })
 
+router.get('/getStudentAttendanceListbyTrainerID',authToken,async(req,res,next) =>{
+    
+  // Get user input
+  const { trainerID } = req.query;
+
+  if (!trainerID) {
+        return res.status(409).json({
+            res: false,
+            data: "trainerID is not provided!",
+        });
+  }
+
+  if(isNaN(trainerID)){
+    return res.status(409).json({
+      res: false,
+      data: "trainerID is not properly provided!",
+  });
+  }
+    
+  //console.log(models.sequelize);
+  const StudentAttendanceList = await models.sequelize.query("SELECT Prk_StudentCheckInCheckOut,Str_Date,Int_Status,Str_AbsentReason,Str_TrainerNote,Prk_Course,Str_CourseName,Prk_Trainer,Str_TrainerName,Str_TrainerFamily,Prk_Student_AutoID,Str_Name,Str_Family from studentcheckincheckouts inner join courses on studentcheckincheckouts.frk_Course = courses.Prk_Course inner join trainers on courses.Frk_Trainer = trainers.Prk_Trainer inner join studentvcourses on studentvcourses.Prk_StudentVCourse = studentcheckincheckouts.Frk_StudentVCourse inner join students on students.Prk_Student_AutoID = studentvcourses.Frk_student where prk_Trainer = " + trainerID + ";");
+
+
+  if (!StudentAttendanceList[0]) {
+    return res.status(409).json({
+      res: false,
+      data: "There is no registered student attendance list related to this specific trainer.",
+    });
+  }
+  else
+  {
+    res.status(200).json({
+        res: true,
+        data: StudentAttendanceList[0],
+      });
+  }
+    
+
+})
+
  module.exports = router;  

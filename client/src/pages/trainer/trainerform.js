@@ -35,13 +35,13 @@ export default function TrainerForm () {
 
     useEffect( () => {
 
-      if (trainerID)
+
+      if (trainerID || loginType === 'trainer')
       {        
           setEditMode(true);
 
           getTrainerInfoByTrainerID(
-              loginId,
-              trainerID
+            loginType === 'trainer' ? loginId : trainerID
             ).then((result) => {
 
               console.log(result.data.data)
@@ -83,8 +83,8 @@ export default function TrainerForm () {
 
       if (editMode)
       {
-        editTrainer(
-          trainerID,
+        editTrainer(     
+          loginType === 'trainer' ? loginId : trainerID,
           values.TrainerName,
           values.TrainerFamily,
           values.Mobile,
@@ -92,8 +92,7 @@ export default function TrainerForm () {
           values.Gmail,
           avatar,
         ).then((result) => {
-          console.log(result);
-          navigate("/gym/trainer");
+          navigate(loginType === 'trainer' ? "/trainer/dashboard" : "/gym/trainer");
         }).catch((error) => {
           console.log(error.response);
           errorNotifyByErrorObject(error);

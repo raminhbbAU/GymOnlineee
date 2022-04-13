@@ -9,7 +9,7 @@ export {editGym} from './gym';
 export {registerNewStudent,editStudentInfo,activeDeactiveStudent,newStudentCourseEnrollment,editStudentCourseEnrollment,
         registerStudentAttendance,batchRegisterStudentAttendance,getStudentInfoByGymID,getStudentInfoByStudentID,
         getStudentEnrolledCourses,getStudentEnrolledCoursesByID,getStudentEnrolledCoursesByCourseID,
-        getStudentAttendanceListbyGymID,getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID,
+        getStudentAttendanceListbyGymID,getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID,getStudentAttendanceListbyTrainerID,
         getFinancialStudentBalanceByID,getBillListByStudentID,getBillListByGymID,getPaymentListByStudentID,
         getPaymentListByGymID,registerNewPayment,getNeedToEnrolStudentListByGymID,getNeedToEnrolStudentListByStudentID,
         getNeedToEnrolStudentListByTrainerID,getDebtorStudentListByGymID,getDebtorStudentListByStudentID,

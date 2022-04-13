@@ -339,6 +339,24 @@ const getStudentAttendanceListbyCourseID =  async(courseID) => {
     return res;
 }
 
+const getStudentAttendanceListbyTrainerID =  async(trainerID) => {
+   
+    let token = getFromStorage('JWT_Token') 
+    
+
+    let res = await axios.get(apiPath + 'student/getStudentAttendanceListbyTrainerID',
+    {
+        headers: {
+            'x-access-token': token,
+        },
+        params: {
+            trainerID,
+        }
+    });
+
+    return res;
+}
+
 
 
 
@@ -509,7 +527,7 @@ const getDebtorStudentListByTrainerID =  async(trainerID) => {
 export {registerNewStudent,editStudentInfo,activeDeactiveStudent,newStudentCourseEnrollment,editStudentCourseEnrollment,
                 registerStudentAttendance,batchRegisterStudentAttendance,getStudentInfoByGymID,getStudentInfoByStudentID,
                 getStudentEnrolledCourses,getStudentEnrolledCoursesByID,getStudentEnrolledCoursesByCourseID,
-                getStudentAttendanceListbyGymID,getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID,
+                getStudentAttendanceListbyGymID,getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID,getStudentAttendanceListbyTrainerID,
                 getFinancialStudentBalanceByID,getBillListByStudentID,getBillListByGymID,getPaymentListByStudentID,
                 getPaymentListByGymID,registerNewPayment,getNeedToEnrolStudentListByGymID,getNeedToEnrolStudentListByStudentID,
                 getNeedToEnrolStudentListByTrainerID,getDebtorStudentListByGymID,getDebtorStudentListByStudentID,getDebtorStudentListByTrainerID};

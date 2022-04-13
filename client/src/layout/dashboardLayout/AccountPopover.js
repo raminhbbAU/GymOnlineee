@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 import { Icon } from '@iconify/react';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import homeFill from '@iconify/icons-eva/home-fill';
 import personFill from '@iconify/icons-eva/person-fill';
 import settings2Fill from '@iconify/icons-eva/settings-2-fill';
@@ -19,36 +19,65 @@ import MenuPopover from '../../components/MenuPopover';
 import {getFromStorage,removeFromStorage} from "../../storage/localstorage.js";
 
 
-
-
-const MENU_OPTIONS = [
-  {
-    label: 'Home',
-    icon: homeFill,
-    linkTo: '/gym/dashboard'
-  },
-  {
-    label: 'Profile',
-    icon: personFill,
-    linkTo: '/gym/gym'
-  },
-  {
-    label: 'Settings',
-    icon: settings2Fill,
-    linkTo: '#'
-  }
-];
-
 const avator = '/assets/avatar/avatar_default.jpg';
 
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+
+
   
+
   const navigate = useNavigate();
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
+  let [homePath,setHomePath] = useState('/gym/dashboard');
+  let [profilePath,setProfilePath] = useState('/gym/profile');
+  let [settingPath,setSettingPath] = useState('#');
   let {loginType, loginId, loginName, loginUserName} = JSON.parse(getFromStorage('logininfo'));
+
+
+  let MENU_OPTIONS = [
+    {
+      label: 'Home',
+      icon: homeFill,
+      linkTo: homePath
+    },
+    {
+      label: 'Profile',
+      icon: personFill,
+      linkTo: profilePath
+    },
+    {
+      label: 'Settings',
+      icon: settings2Fill,
+      linkTo: settingPath
+    }
+  ];
+  
+
+  useEffect(()=>{
+
+    switch (loginType) {
+      case 'gym':
+        setHomePath('/gym/Dashboard')
+        setProfilePath('/gym/profile')
+        break;
+      case 'student':
+        setHomePath('/student/Dashboard')
+        setProfilePath('/student/profile')
+        break;
+      case 'trainer':
+        setHomePath('/trainer/Dashboard')
+        setProfilePath('/trainer/profile')
+        break;
+      default:
+        setHomePath('/gym/Dashboard')
+        setProfilePath('/gym/Dashboard')
+        break;
+    }
+
+},[])
 
   const handleOpen = () => {
     setOpen(true);

@@ -51,6 +51,11 @@ export default function StudentBalance() {
 
   useEffect( () => {
 
+    if (loginType === 'student')
+    {
+      studentID = loginId;
+    }
+
     getFinancialStudentBalanceByID(
       studentID
     ).then((result) => {

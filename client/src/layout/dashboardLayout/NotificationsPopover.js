@@ -169,7 +169,7 @@ function NotificationItem({ notification }) {
 export default function NotificationsPopover() {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
-  const [notifications, setNotifications] = useState(NOTIFICATIONS);
+  const [notifications, setNotifications] = useState([]) //useState(NOTIFICATIONS);
   const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
 
   const handleOpen = () => {

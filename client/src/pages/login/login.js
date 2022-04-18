@@ -19,6 +19,9 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+import { withTranslation } from "react-i18next";
+import i18n from "i18next";
+
 
 import loginback from "../../assests/images/loginback.jpg";
 
@@ -30,14 +33,16 @@ import {gymLogin,trainerLogin,studentLogin} from "../../api";
 const theme = createTheme();
 
 
-export default function SignInSide() {
+function SignInSide({ t })  {
 
   const navigate = useNavigate();
   const [userType,setUserType] = useState('Gym')
+  const [language,setLanguage] = useState('en')
+
 
   const userTypeChange = (e) => {
     e.preventDefault();
-    setUserType(e.target.value)
+    setUserType(e.target.value) 
   }
 
   const handleSubmit = (event) => {
@@ -150,7 +155,7 @@ export default function SignInSide() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+               {t('Sign_In')}
             </Typography>
             <Box
               component="form"
@@ -163,7 +168,7 @@ export default function SignInSide() {
                 required
                 fullWidth
                 id="username"
-                label="UserName"
+                label={t('User Name')}
                 name="username"
                 autoComplete="username"
                 autoFocus
@@ -173,7 +178,7 @@ export default function SignInSide() {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label={t('Password')}
                 type="password"
                 id="password"
                 autoComplete="current-password"
@@ -191,17 +196,17 @@ export default function SignInSide() {
                 <FormControlLabel 
                   value="Gym" 
                   control={<Radio />} 
-                  label="Gym" 
+                  label={t('gym')} 
                 />
                 <FormControlLabel
                   value="Trainer"
                   control={<Radio />}
-                  label="Trainer"
+                  label={t('trainer')}
                 />
                 <FormControlLabel
                   value="Athlete"
                   control={<Radio />}
-                  label="Athlete"
+                  label={t('Athlete')}
                 />
               </RadioGroup>
 
@@ -211,21 +216,21 @@ export default function SignInSide() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Sign In
+                {t('Sign_In_Button')}
               </Button>
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
+                label={t('Remember_me')}
               />
               <Grid container>
                 <Grid item xs>
                   <Link href="/forgetPassword" variant="body2">
-                    Forgot password?
+                    {t('Forgot_Passowrd')}
                   </Link>
                 </Grid>
                 <Grid item>
                   <Link href="/signUp" variant="body2">
-                    {"Don't have an account? Sign Up"}
+                    {t('Dont_have_an_account_Sign_Up')}
                   </Link>
                 </Grid>
               </Grid>
@@ -237,3 +242,5 @@ export default function SignInSide() {
     </ThemeProvider>
   );
 }
+
+export default withTranslation()(SignInSide);

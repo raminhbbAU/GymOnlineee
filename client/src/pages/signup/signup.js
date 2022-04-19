@@ -17,6 +17,7 @@ import Container from '@mui/material/Container';
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { withTranslation } from "react-i18next";
 
 import Copyright from "../../components/copyright.js"
 import {registerNewGym,registerNewStudent,registerNewTrainer} from "../../api";
@@ -27,7 +28,7 @@ import {gymID} from "../../constants/api.config";
 const theme = createTheme();
 
 
-export default function SignUp() {
+function SignUp({ t })  {
 
   
   const navigate = useNavigate();
@@ -153,7 +154,7 @@ export default function SignUp() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            {t('Sign up')}
           </Typography>
 
         <RadioGroup
@@ -169,19 +170,19 @@ export default function SignUp() {
             disabled = {!enableGymSignUp}
             value="Gym" 
             control={<Radio />} 
-            label="Gym" 
+            label={t('gym')}
           />
           <FormControlLabel
             disabled = {enableGymSignUp}
             value="Trainer"
             control={<Radio />}
-            label="Trainer"
+            label={t('trainer')}
           />
           <FormControlLabel
             disabled = {enableGymSignUp}
             value="Athlete"
             control={<Radio />}
-            label="Athlete"
+            label={t('Athlete')}
           />
         </RadioGroup>
 
@@ -194,7 +195,7 @@ export default function SignUp() {
                 required
                 fullWidth
                 id="name"
-                label="Name"
+                label= {t('Name')} 
                 autoFocus
               />
             </Grid>
@@ -207,7 +208,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="family"
-                  label="Family"
+                  label= {t('Family')}
                   autoFocus
                 />
               </Grid>
@@ -218,7 +219,7 @@ export default function SignUp() {
                 required
                 fullWidth
                 id="mobile"
-                label="Mobile"
+                label= {t('Mobile')}
                 name="mobile"
                 autoComplete="mobile"
               />
@@ -228,7 +229,7 @@ export default function SignUp() {
                 required
                 fullWidth
                 id="gmail"
-                label="Gmail Address / User Name"
+                label= {t('GmailAddress_UserName')}
                 name="gmail"
                 autoComplete="gmail"
               />
@@ -238,7 +239,7 @@ export default function SignUp() {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label={t('Password')}
                 type="password"
                 id="password"
                 autoComplete="new-password"
@@ -251,7 +252,7 @@ export default function SignUp() {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign Up
+            {t('Sign up Button')}
           </Button>
           </Box>
 
@@ -261,7 +262,7 @@ export default function SignUp() {
         <Grid container justifyContent="flex-end">
           <Grid item>
             <Link href="#" variant="body2">
-              Already have an account? Sign in
+            {t('Already have an account Sign in')}
             </Link>
           </Grid>
         </Grid>
@@ -270,3 +271,6 @@ export default function SignUp() {
     </ThemeProvider>
   );
 }
+
+
+export default withTranslation()(SignUp);

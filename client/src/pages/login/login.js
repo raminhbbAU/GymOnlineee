@@ -18,9 +18,7 @@ import Typography from "@mui/material/Typography";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
 import { withTranslation } from "react-i18next";
-import i18n from "i18next";
 
 
 import loginback from "../../assests/images/loginback.jpg";
@@ -40,7 +38,6 @@ function SignInSide({ t })  {
   const navigate = useNavigate();
   const myContext = useContext(AppContext)
   const [userType,setUserType] = useState('Gym')
-  const [language,setLanguage] = useState('en')
 
 
   const userTypeChange = (e) => {
@@ -49,25 +46,6 @@ function SignInSide({ t })  {
   }
 
   const handleSubmit = (event) => {
-
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-
-    //console.log(myContext);
-    console.log(myContext.language);    
-
-    if (myContext.language === 'en')
-    {
-      myContext.setLanguage('fa');
-    }
-    else
-    {
-      myContext.setLanguage('en');
-    }
-
-  };
-
-  const handleSubmit2 = (event) => {
 
     event.preventDefault();
     const data = new FormData(event.currentTarget);

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { withTranslation } from "react-i18next";
 
 // material
 import { styled } from '@mui/material/styles';
@@ -14,6 +15,7 @@ import { MHidden } from '../../components/@material-extend';
 
 //
 import {gymSidebarItems,studentSidebarItems,trainerSidebarItems} from './SidebarConfig';
+
 
 // utils / API
 import {getFromStorage,removeFromStorage} from "../../storage/localstorage.js";
@@ -46,11 +48,12 @@ DashboardSidebar.propTypes = {
   onCloseSidebar: PropTypes.func
 };
 
-export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
+function DashboardSidebar({ t,isOpenSidebar, onCloseSidebar }) {
+//export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   
   const { pathname } = useLocation();
   let logininfo = JSON.parse(getFromStorage('logininfo'));
-  let [sidebarConfig,setSidebarConfig] = useState(gymSidebarItems);
+  let [sidebarConfig,setSidebarConfig] = useState(gymSidebarItems(t));
 
   useEffect(() => {
 
@@ -62,16 +65,16 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
     {
       switch (logininfo.loginType) {
         case 'gym':
-          setSidebarConfig(gymSidebarItems);
+          setSidebarConfig(gymSidebarItems(t));
           break;
         case 'student':
-          setSidebarConfig(studentSidebarItems);
+          setSidebarConfig(studentSidebarItems(t));
           break;
         case 'trainer':
-          setSidebarConfig(trainerSidebarItems);
+          setSidebarConfig(trainerSidebarItems(t));
           break;
         default:
-          setSidebarConfig(gymSidebarItems);
+          setSidebarConfig(gymSidebarItems(t));
           break;
       }
     }
@@ -165,3 +168,5 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
     </RootStyle>
   );
 }
+
+export default withTranslation()(DashboardSidebar);

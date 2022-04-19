@@ -20,22 +20,10 @@ import { descendingComparator,getComparator,applySortFilter } from "../../utils/
 import {getFinancialStudentBalanceByID} from "../../api";
 import {getFromStorage} from "../../storage/localstorage.js";
 import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
-
-// -------------------------------Header--------------------------------
-
-const TABLE_HEAD = [
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: 'title', label: 'Title', alignRight: false },
-  { id: 'datetime', label: 'Date/Time', alignRight: false },
-  { id: 'deposits', label: 'Deposit', alignRight: false },
-  { id: 'withdrawals', label: 'Withdrawals', alignRight: false },
-];
+import { withTranslation } from "react-i18next";
 
 
-
-
-
-export default function StudentBalance() {
+function StudentBalance({ t })  {
 
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -45,6 +33,15 @@ export default function StudentBalance() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [dataList, setdataList] = useState([]);
   const [refreshDataset,setRefreshDataset] = useState(false);
+
+  const TABLE_HEAD = [
+    { id: 'status', label: t('Status'), alignRight: false },
+    { id: 'title', label:  t('Title'), alignRight: false },
+    { id: 'datetime', label:  t('Date/Time'), alignRight: false },
+    { id: 'deposits', label:  t('Deposit'), alignRight: false },
+    { id: 'withdrawals', label:  t('Withdrawals'), alignRight: false },
+  ];
+  
 
   let {loginType,loginId} = JSON.parse(getFromStorage('logininfo'));
   let { studentID } = useParams();
@@ -122,11 +119,11 @@ export default function StudentBalance() {
   const isUserNotFound = filteredItems.length === 0;
 
   return (
-    <Page title="Student Balance | GymOnlineee">
+    <Page title= {t('Student Balance') + ' | GymOnlineee'}>
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Student Balance
+            {t('Student Balance')}
           </Typography>
         </Stack>
 
@@ -233,3 +230,5 @@ export default function StudentBalance() {
     </Page>
   );
 }
+
+export default withTranslation()(StudentBalance);

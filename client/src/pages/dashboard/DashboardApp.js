@@ -11,6 +11,7 @@ import {getGymDashboardInfo,getStudentDashboardInfo,getTrainerDashboardInfo,getU
 import {getFromStorage} from "../../storage/localstorage.js";
 import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 import {DashboardCourse_HEAD,DashboardEnrollStudent_HEAD,DashboardDebtorStudent_HEAD} from "../../utils/gridHeader";
+import { withTranslation } from "react-i18next";
 
 // components
 import Page from '../../components/Page';
@@ -18,25 +19,25 @@ import CustomDashboardBox from '../../components/CustomDashboardBox';
 import CustomDashboardCard from '../../components/CustomDashboardCard';
 import CustomDashboardGrid from '../../components/CustomDashboardGrid';
 
-// Constants
-const gymDashboardBoxes = [
-  {id:0, title:'Students',dataField:'activeStudentCount',postfix:''},{id:1, title:'Courses',dataField:'activeCourseCount',postfix:''},
-  {id:2, title:'Monthly Income',dataField:'monthlyIncome',postfix:' $'},{id:3, title:'Total Reminder',dataField:'totalReminder',postfix:' $'}
-]
-
-const studentDashboardBoxes = [
-  {id:0, title:'Courses',dataField:'activeCourseCount',postfix:''},{id:1, title:'Total Debt',dataField:'totalDebt',postfix:' $'},
-  {id:2, title:'BMI',dataField:'latestBMI',postfix:''},{id:3, title:'Weight',dataField:'latestWeight',postfix:' kg'}
-]
-
-const trainerDashboardBoxes = [
-  {id:0, title:'Students',dataField:'activeStudentCount',postfix:''},{id:1, title:'Courses',dataField:'activeCourseCount',postfix:''},
-  {id:2, title:'Monthly Income',dataField:'monthlyIncome',postfix:' $'},{id:3, title:'Total Reminder',dataField:'totalReminder',postfix:' $'}
-]
 
 
 
-export default function DashboardApp() {
+function DashboardApp({ t }) {
+
+  const gymDashboardBoxes = [
+    {id:0, title:t('Students'),dataField:'activeStudentCount',postfix:''},{id:1, title:t('Courses'),dataField:'activeCourseCount',postfix:''},
+    {id:2, title:t('Monthly Income'),dataField:'monthlyIncome',postfix:' $'},{id:3, title:t('Total Reminder'),dataField:'totalReminder',postfix:' $'}
+  ]
+  
+  const studentDashboardBoxes = [
+    {id:0, title:t('Courses'),dataField:'activeCourseCount',postfix:''},{id:1, title:t('Total Debt'),dataField:'totalDebt',postfix:' $'},
+    {id:2, title:t('BMI'),dataField:'latestBMI',postfix:''},{id:3, title:'Weight',dataField:t('latestWeight'),postfix:' kg'}
+  ]
+  
+  const trainerDashboardBoxes = [
+    {id:0, title:t('Students'),dataField:'activeStudentCount',postfix:''},{id:1, title:t('Courses'),dataField:'activeCourseCount',postfix:''},
+    {id:2, title:t('Monthly Income'),dataField:'monthlyIncome',postfix:' $'},{id:3, title:t('Total Reminder'),dataField:'totalReminder',postfix:' $'}
+  ]
 
   let logininfo = JSON.parse(getFromStorage('logininfo'));
 
@@ -57,6 +58,7 @@ export default function DashboardApp() {
   let [isDebtorStudentListLoading,setIsDebtorStudentListLoading] = useState(false);
   let [debtorStudentListError,setdebtorStudentListError] = useState(false);
   let [debtorStudentList,setDebtorStudentList] = useState([]);
+
 
 
   useEffect( () => {
@@ -81,7 +83,17 @@ export default function DashboardApp() {
           console.log(result.data.data);
           setIsLoading(false);
           setDashboardInfo(result.data.data);
-          setDashboardBoxes(gymDashboardBoxes);
+
+          if (dashboardBoxes === gymDashboardBoxes)
+          {
+            setDashboardBoxes(trainerDashboardBoxes);
+            setDashboardBoxes(gymDashboardBoxes);
+          }
+          else
+          {
+            setDashboardBoxes(gymDashboardBoxes);
+          }
+          
         }).catch((error) => {
           setDashboardInfoError(true);
           console.log(error.response);
@@ -274,10 +286,10 @@ export default function DashboardApp() {
   }
 
   return (
-    <Page title= {"Dashboard | " + logininfo.loginName}>
+    <Page title= {t('Dashboard') + ' | ' + logininfo.loginName}>
       <Container maxWidth="xl">
         <Box sx={{ pb: 5 }}> 
-          <Typography variant="h3" sx={{ mb: 5 }}>Hi {logininfo.loginName}! Welcome back</Typography>
+          <Typography variant="h3" sx={{ mb: 5 }}> {t('Hi') + logininfo.loginName + t('Welcome back')}</Typography>
 
           <Grid container spacing={3}>
 
@@ -308,24 +320,24 @@ export default function DashboardApp() {
           </Grid>
 
           <Grid item xs={12} md={12} lg={12} sx={{ mt: 8 }}>
-            <Typography variant="h5" sx={{ mb: 2 }}>Upcoming Sessions</Typography>
+            <Typography variant="h5" sx={{ mb: 2 }}>{t('Upcoming Sessions')}</Typography>
             <CustomDashboardBox color={palette.success}>
-                <CustomDashboardGrid TABLE_HEAD={DashboardCourse_HEAD} dataList={upcomingSessions} idFieldName={"Prk_Course"} isLoading={isUpcomingSessionsLoading} isError={UpcomingSessionsError} />
+                <CustomDashboardGrid TABLE_HEAD={DashboardCourse_HEAD(t)} dataList={upcomingSessions} idFieldName={"Prk_Course"} isLoading={isUpcomingSessionsLoading} isError={UpcomingSessionsError} />
             </CustomDashboardBox>
           </Grid>
 
 
           <Grid item xs={12} md={12} lg={12} sx={{ mt: 8 }}>
-            <Typography variant="h5" sx={{ mb: 2 }}>Need to enroll</Typography>
+            <Typography variant="h5" sx={{ mb: 2 }}>{t('Need to enroll')}</Typography>
             <CustomDashboardBox  color={palette.error}>
-                <CustomDashboardGrid TABLE_HEAD={DashboardEnrollStudent_HEAD} dataList={enrolStudentList} idFieldName={"Prk_StudentVCourse"} isLoading={isEnrolStudentListLoading} isError={enrolStudentListError} />
+                <CustomDashboardGrid TABLE_HEAD={DashboardEnrollStudent_HEAD(t)} dataList={enrolStudentList} idFieldName={"Prk_StudentVCourse"} isLoading={isEnrolStudentListLoading} isError={enrolStudentListError} />
             </CustomDashboardBox>
           </Grid>
 
           <Grid item xs={12} md={12} lg={12} sx={{ mt: 8 }}>
-            <Typography variant="h5" sx={{ mb: 2 }}>Debtor Students</Typography>
+            <Typography variant="h5" sx={{ mb: 2 }}>{t('Debtor Students')}</Typography>
             <CustomDashboardBox color={palette.info}>
-                <CustomDashboardGrid TABLE_HEAD={DashboardDebtorStudent_HEAD} dataList={debtorStudentList} idFieldName={"Prk_Student_AutoID"} isLoading={isDebtorStudentListLoading} isError={debtorStudentListError} />
+                <CustomDashboardGrid TABLE_HEAD={DashboardDebtorStudent_HEAD(t)} dataList={debtorStudentList} idFieldName={"Prk_Student_AutoID"} isLoading={isDebtorStudentListLoading} isError={debtorStudentListError} />
             </CustomDashboardBox>
           </Grid>
 
@@ -334,3 +346,5 @@ export default function DashboardApp() {
     </Page>
   );
 }
+
+export default withTranslation()(DashboardApp);

@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from 'react';
+import React,{useContext, useEffect,useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -29,6 +29,8 @@ import Copyright from "../../components/copyright.js"
 import {setToStorage} from "../../storage/localstorage.js";
 import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 import {gymLogin,trainerLogin,studentLogin} from "../../api";
+import AppContext from '../../storage/AppContext';
+
 
 const theme = createTheme();
 
@@ -36,6 +38,7 @@ const theme = createTheme();
 function SignInSide({ t })  {
 
   const navigate = useNavigate();
+  const myContext = useContext(AppContext)
   const [userType,setUserType] = useState('Gym')
   const [language,setLanguage] = useState('en')
 
@@ -46,6 +49,25 @@ function SignInSide({ t })  {
   }
 
   const handleSubmit = (event) => {
+
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    //console.log(myContext);
+    console.log(myContext.language);    
+
+    if (myContext.language === 'en')
+    {
+      myContext.setLanguage('fa');
+    }
+    else
+    {
+      myContext.setLanguage('en');
+    }
+
+  };
+
+  const handleSubmit2 = (event) => {
 
     event.preventDefault();
     const data = new FormData(event.currentTarget);

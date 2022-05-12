@@ -4,7 +4,7 @@ export {registerNewCourse,editCourse,activeDeactiveCourse,getCourseByGymID,getCo
         getEnrolledCoursesByCourseID,getEnrolledCoursesByGymID,getUpcomingSessionsByGymID,getUpcomingSessionsByStudentID,
         getUpcomingSessionsByTrainerID} from './course';
 
-export {editGym} from './gym';
+export {editGym,getGymByID} from './gym';
 
 export {registerNewStudent,editStudentInfo,activeDeactiveStudent,newStudentCourseEnrollment,editStudentCourseEnrollment,
         registerStudentAttendance,batchRegisterStudentAttendance,getStudentInfoByGymID,getStudentInfoByStudentID,

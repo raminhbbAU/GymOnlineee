@@ -26,6 +26,16 @@ const gymRegisterSchema = yup.object({
     Str_Description: descriptionValidator
 })
 
+const gymUpdateSchema = yup.object({
+    Str_GymName:yup.string().required('Gym Name is required.').min(3,'Gym Name is too short.').max(100,'Gym Name is too long'),
+    Str_OwnerTitle:yup.string().required('Owner Title is required.').min(3,'Owner Title is too short.').max(100,'Gym Name is too long'),
+    Str_Address: addressValidator,
+    Str_Tel: telValidator,
+    Str_Gmail: gmailValidator,
+    Str_Mobile:mobileValidator,
+    Str_Description: descriptionValidator
+})
+
 const studentRegisterSchema = yup.object({
     Name:nameValidator ,
     Family:familyValidator,
@@ -64,4 +74,4 @@ const courseRegisterSchema = yup.object({
 })
 
 
-export {gymRegisterSchema,studentRegisterSchema,trainerRegisterSchema,courseRegisterSchema}
+export {gymRegisterSchema,gymUpdateSchema,studentRegisterSchema,trainerRegisterSchema,courseRegisterSchema}

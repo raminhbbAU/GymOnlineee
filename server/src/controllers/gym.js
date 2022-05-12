@@ -118,6 +118,49 @@ router.post('/gymLogin',yupValidator(gymLoginSchema), async (req,res,next) => {
 
 })
 
+
+router.get('/getGymByID',authToken,async(req,res,next) => {
+
+    console.log('///////////\\\\\\\\\\\\\/////////////////\\\\\\\\\\\\\\\\\/////////////');
+    console.log(req);
+    const {gymID} = req.query;
+
+    if (!gymID){
+        return res.status(409).json({
+            res:false,
+            data:"GymID is not provided"
+        })
+    }
+
+    if (isNaN(gymID)){
+        return res.status(409).json({
+            res:false,
+            data:"gymID is not properly provided!"
+        })
+    }
+
+    const oldGym = await models.gym.findOne({
+        where:{
+            Prk_Gym_AutoID:gymID
+        }
+    });
+
+    if (!oldGym){
+        return res.status(409).json({
+            res:false,
+            data:"The specific gym doesn't exist! it must've deleted before."
+        })
+    }
+    else
+    {
+        res.status(200).json({
+            res: true,
+            data: oldGym,
+        });
+    }
+
+})
+
 router.put('/editGym',authToken,yupValidator(gymRegisterSchema),async(req,res,next) =>{
     
    // Get user input
@@ -148,8 +191,8 @@ router.put('/editGym',authToken,yupValidator(gymRegisterSchema),async(req,res,ne
           Str_Tel:Tel,
           Str_Gmail:Gmail,
           Str_Mobile:Mobile,
-          Str_UserName:UserName,
-          Str_Password:encryptedPassword,
+        //   Str_UserName:UserName,
+        //   Str_Password:encryptedPassword,
           Str_Description:Description,
       }).then( (updatedrecord) => {
           res.status(200).json({

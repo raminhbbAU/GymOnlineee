@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useContext } from 'react';
 
 
 // material
@@ -18,7 +18,7 @@ import Page from '../../components/Page';
 import CustomDashboardBox from '../../components/CustomDashboardBox';
 import CustomDashboardCard from '../../components/CustomDashboardCard';
 import CustomDashboardGrid from '../../components/CustomDashboardGrid';
-
+import AppContext from '../../storage/AppContext';
 
 
 
@@ -40,6 +40,7 @@ function DashboardApp({ t }) {
   ]
 
   let logininfo = JSON.parse(getFromStorage('logininfo'));
+  const myContext = useContext(AppContext)
 
   let [isLoading,setIsLoading] = useState(false);
   let [dashboardInfoError,setDashboardInfoError] = useState(false);
@@ -63,12 +64,15 @@ function DashboardApp({ t }) {
 
   useEffect( () => {
 
-    loadDashboardInfo();
-    loadUpcomingSessions();
-    loadNeedtoEnrolStudentList();
-    loadDebtorStudentList();
+    if (! isLoading)
+    {
+      loadDashboardInfo();
+      loadUpcomingSessions();
+      loadNeedtoEnrolStudentList();
+      loadDebtorStudentList();
+    }
 
-  },[])
+  },[myContext.language])
 
 
   let loadDashboardInfo = () => {

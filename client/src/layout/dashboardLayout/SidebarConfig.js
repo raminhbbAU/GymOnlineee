@@ -13,10 +13,6 @@ const getIcon = (name) => <Icon icon={name} width={22} height={22} />;
 
 const gymSidebarItems = (t) => {
 
-  console.log("gymSidebarItems");
-  console.log(t);
-  console.log(t('Dashboard'));
-
   return(
     [
       {

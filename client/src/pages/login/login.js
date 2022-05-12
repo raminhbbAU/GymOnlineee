@@ -27,7 +27,7 @@ import Copyright from "../../components/copyright.js"
 import {setToStorage} from "../../storage/localstorage.js";
 import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 import {gymLogin,trainerLogin,studentLogin} from "../../api";
-import AppContext from '../../storage/AppContext';
+
 
 
 const theme = createTheme();
@@ -36,7 +36,6 @@ const theme = createTheme();
 function SignInSide({ t })  {
 
   const navigate = useNavigate();
-  const myContext = useContext(AppContext)
   const [userType,setUserType] = useState('Gym')
 
 

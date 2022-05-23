@@ -249,17 +249,21 @@ const getNeedToEnrolStudentListByTrainerID =  async(trainerID) => {
 
     return res;
 }
+ 
 
 
 
-
-const registerStudentAttendance =  async(StudentVCourse,Date,Status,AbsentReason,TrainerNote) => {
+const registerStudentAttendance =  async(StudentVCourse,Course,Date,Status,AbsentReason,TrainerNote) => {
    
     let token = getFromStorage('JWT_Token') 
+
+    console.log(StudentVCourse);
+    console.log(Course);
 
     let res = await axios.post(apiPath + 'student/registerStudentAttendance',
     {
         StudentVCourse,
+        Course,
         Date,
         Status,
         AbsentReason,

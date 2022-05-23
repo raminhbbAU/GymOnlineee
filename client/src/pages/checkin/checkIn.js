@@ -14,12 +14,14 @@ import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import { UserListHead, UserListToolbar } from '../../components/_dashboard/user';
 import CheckInMoreMenu from './checkInMoreMenu';
+import CheckInIndividualDialog from './CheckInIndividual';
 
 // utils / API
 import { descendingComparator,getComparator,applySortFilter } from "../../utils/grid-filter";
 import {getStudentAttendanceListbyStudentID,getStudentAttendanceListbyCourseID,getStudentAttendanceListbyTrainerID,getStudentAttendanceListbyGymID} from "../../api";
 import {sucessNotify,errorNotifyByErrorObject} from "../../utils/toast.notification";
 import {getFromStorage} from "../../storage/localstorage.js";
+
 
 
 // -------------------------------Header--------------------------------
@@ -33,28 +35,26 @@ const TABLE_HEAD = [
 ];
 
 
-
-
-export default function Enrolment() {
+export default function CheckIn() {
 
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState('courseName');
   const [filterName, setFilterName] = useState('');
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [checkInList, setCheckInList] = useState([]);
-  const [refreshDataset,setRefreshDataset] = useState(false);
 
-  console.log(useParams());
 
   let {loginType,loginId} = JSON.parse(getFromStorage('logininfo'));
   let { studentID,courseID } = useParams();
-
+  let [openNewCheckInDialog,setOpenNewCheckInDialog] = useState(false);
 
   
 
   useEffect( () => {
+
+    console.log("useEffect called");
 
     if (loginType === 'gym')
     {
@@ -121,11 +121,7 @@ export default function Enrolment() {
         errorNotifyByErrorObject(error);
       })
     }
-
-
-
-
-  },[refreshDataset])
+  },[])
 
 
   const handleRequestSort = (event, property) => {
@@ -184,6 +180,7 @@ export default function Enrolment() {
 
   return (
     <Page title="Check-in Activity List | GymOnlineee">
+
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
@@ -193,8 +190,7 @@ export default function Enrolment() {
           {loginType === "gym" && (
             <Button
               variant="contained"
-              component={RouterLink}
-              to="/gym/NewCheckIn"
+              onClick = { () => setOpenNewCheckInDialog(true)}
               startIcon={<Icon icon={plusFill} />}          
             >
               New Check-In
@@ -269,11 +265,11 @@ export default function Enrolment() {
                             })()}
                           </TableCell>
 
-                          <TableCell align="right">
+                          {/* <TableCell align="right">
                             {loginType === "gym" && (
                               <CheckInMoreMenu StudentCheckInCheckOut={Prk_StudentCheckInCheckOut} />
                             )}                  
-                          </TableCell>
+                          </TableCell> */}
 
                           
                         </TableRow>
@@ -309,6 +305,11 @@ export default function Enrolment() {
           />
         </Card>
       </Container>
+
+      { openNewCheckInDialog && (
+        <CheckInIndividualDialog open={openNewCheckInDialog} handleClose={()=> setOpenNewCheckInDialog(false)}/>
+      )}            
+
     </Page>
   );
 }

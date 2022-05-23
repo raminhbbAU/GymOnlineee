@@ -452,7 +452,7 @@ router.post('/newStudentCourseEnrollment',authToken,async(req,res,next) =>{
     if (!courseInfo) {
       return res.status(409).json({
           res: false,
-          data: "course info is not avilable at this time maybe it has been deleted before!",
+          data: "course info is not available at this time maybe it has been deleted before!",
         });
     }  
 
@@ -563,7 +563,7 @@ router.put('/editStudentCourseEnrollment',authToken,async(req,res,next) =>{
   if (!courseInfo) {
     return res.status(409).json({
         res: false,
-        data: "course info is not avilable at this time maybe it has been deleted before!",
+        data: "course info is not available at this time maybe it has been deleted before!",
       });
  }  
 
@@ -964,7 +964,52 @@ router.post('/registerStudentAttendance',authToken,async(req,res,next) =>{
         // Get user input
         const {StudentVCourse,Course,Date,Status,AbsentReason,TrainerNote} = req.body;
 
-        models.studentcheckincheckout
+        const courseInfo = await models.course.findOne({
+          where: {
+            Prk_Course: Course,
+          },
+        }); 
+    
+        if (!courseInfo) {
+          return res.status(409).json({
+              res: false,
+              data: "course info is not available at this time maybe it has been deleted before!",
+            });
+        }  
+
+
+        const studentCourse = await models.studentvcourse.findOne({
+          where: {
+            Prk_StudentVCourse: StudentVCourse,
+          },
+        }); 
+    
+        if (!studentCourse) {
+          return res.status(409).json({
+              res: false,
+              data: "student info is not available at this time maybe it has been deleted before!",
+            });
+        }  
+
+        console.log('//////////////////////%%%%%%%%%%%%%%%%%%%');
+
+
+        const transaction = await models.sequelize.transaction();
+
+        try {
+     
+          
+          await models.studentcheckincheckout
+          .destroy({
+            where:{
+              Frk_Course:Course,
+              Frk_StudentVCourse:StudentVCourse,
+              Str_Date:Date,
+            }
+          }, { transaction})  
+
+
+          newCheckIn = await models.studentcheckincheckout
           .create({
             Frk_StudentVCourse: StudentVCourse,
             Frk_Course:Course,
@@ -972,20 +1017,33 @@ router.post('/registerStudentAttendance',authToken,async(req,res,next) =>{
             Int_Status: Status,
             Str_AbsentReason: AbsentReason,
             Str_TrainerNote: TrainerNote
-          })
-          .then((course) => {
-            res.status(200).json({
-              res: true,
-              data: course,
-            });
-          })
-          .catch((error) => {
-            console.log(error);
-            return res.status(500).json({
-              res: false,
-              data: "something wrong happend during registering new student's attendance. Please try again a bit later!",
-            });
-          });
+          }, { transaction})
+     
+
+          newCheckIn = newCheckIn.dataValues;
+     
+          await transaction.commit();     
+     
+       } catch (err) {
+     
+           await transaction.rollback();
+     
+           console.log(err);
+           return res.status(500).json({
+             res: false,
+             data: "something wrong happend during registering new student's attendance. Please try again a bit later!",
+           });
+     
+       }
+     
+       res.status(200).json({
+         res: true,
+         data: newCheckIn,
+       });
+
+
+
+
 
 })
 

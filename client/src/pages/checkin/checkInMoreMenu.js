@@ -35,14 +35,14 @@ export default function CheckInMoreMenu({StudentCheckInCheckOut}) {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem sx={{ color: 'text.secondary' }} onClick={() => setDisableEnable()}>
+        <MenuItem disable sx={{ color: 'text.secondary' }} onClick={() => setDisableEnable()}>
           <ListItemIcon>
             <Icon icon={trash2Outline} width={24} height={24} />
           </ListItemIcon>
           <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
-        <MenuItem component={RouterLink} to={`/gym/NewCheckIn/${StudentCheckInCheckOut}`} props sx={{ color: 'text.secondary' }}>
+        <MenuItem  component={RouterLink} to={`/gym/NewCheckIn/${StudentCheckInCheckOut}`} props sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />
           </ListItemIcon>
